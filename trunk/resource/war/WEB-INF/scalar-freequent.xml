@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- Multipart resolver using commons fileupload -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>1073741824</value>
+		</property>
+	</bean>
+
+	<util:properties id="freequentProperties" location="classpath:com/scalar/freequent/config/freequent.properties" />
+	<bean id="global" class="com.scalar.freequent.util.Global" factory-method="get">
+		<property name="properties">
+			<ref local="freequentProperties" />
+		</property>
+	</bean>
+
+	<!-- Handlers -->
+	<!--<bean id="defaultHandlerAdapter" class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>-->
+
+	<bean id="addErrorInfoObjInterceptor" class="com.scalar.freequent.web.spring.interceptor.AddErrorInfoObjInterceptor"/>
+
+<!-- ========================= DEFINITIONS OF PUBLIC CONTROLLERS ========================= -->
+	<bean id="handlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="addErrorInfoObjInterceptor"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="publicHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="order" value="1"/>
+        <property name="interceptors">
+            <list>
+                <ref bean="addErrorInfoObjInterceptor"/>
+            </list>
+        </property>
+        <property name="mappings">
+            <props>
+                <!--<prop key="/login">loginController</prop>
+                <prop key="/logout.htm">logoutController</prop>
+                <prop key="/notfound.htm">errorsController</prop>-->
+            </props>
+        </property>
+    </bean>
+
+<!-- ========================= DEFINITIONS OF PROTECTED CONTROLLERS ========================= -->
+	<bean id="loginCheckInterceptor" class="com.scalar.freequent.web.spring.interceptor.LoginCheckInterceptor"/>
+
+	<bean id="secureHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="order" value="2"/>
+        <property name="interceptors">
+			<list>
+                <ref bean="addErrorInfoObjInterceptor"/>
+                <ref bean="loginCheckInterceptor"/>
+            </list>
+		</property>
+        <property name="mappings">
+            <props>
+                <!--<prop key="/index.htm">urlFilenameViewController</prop>-->
+                <!--<prop key="/**/*.view">urlFilenameViewController</prop>
+                <prop key="/invDataEntry.htm">invDataEntryController</prop>-->
+            </props>
+        </property>
+    </bean>
+
+	<!-- Handler mappings -->
+
+    <!-- View resolver -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+
+    <!-- Views  -->
+</beans>
