@@ -34,7 +34,7 @@ import com.scalar.freequent.web.spring.propertyeditor.CustomPrimitiveNumberEdito
 public abstract class ActionFormController extends SimpleFormController {
 	protected final Log logger = LogFactory.getLog(getClass());
 	private final Map<String, String> viewMap = new HashMap<String, String>();
-	private MethodNameResolver methodNameResolver = new ParamMethodNameResolver();
+	private MethodNameResolver methodNameResolver = new UrlMethodNameResolver();
 
 	/*public Map<String,String> getViewMap()
 		 {

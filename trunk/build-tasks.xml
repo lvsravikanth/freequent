@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-tasks">
+	<!-- environment  -->
+	<property environment="env" />
+
+	<!-- debug mode -->
+	<condition property="ui.debug.set" value="true" else="false">
+		<isset property="debug.mode" />
+	</condition>
+
+	<condition property="ui.debug.value" value="true" else="false">
+		<istrue value="${debug.mode}" />
+	</condition>
+
+	<condition property="ui.debug.mode" value="true">
+		<istrue value="${debug.mode}" />
+	</condition>
+
+	<!-- tools -->
+	<property name="build.tools.dir" value="./tools" />
+
+	<property name="ui-tools.jar" value="${build.tools.dir}/vui/vui-tools.jar" />
+	<property name="checkascii.classes" value="${build.tools.dir}/CheckAscii/classes" />
+	<property name="doccheck.jar" value="${build.tools.dir}/doccheck/doccheck.jar" />
+	<property name="custom_rhino.jar" value="${build.tools.dir}/dojo/custom_rhino.jar" />
+	<property name="jslint-tasks.jar" value="${build.tools.dir}/jslint/jslint-tasks.jar" />
+	<property name="jslint.js" value="${build.tools.dir}/jslint/jslint.js" />
+	<property name="jsdoc.dir" value="${build.tools.dir}/jsdoc/" />
+	<property name="jsdoc.jar" value="${jsdoc.dir}jsrun.jar" />
+	<property name="jsdoc-tasks.jar" value="${jsdoc.dir}jsdoctoolkit-ant-task.jar" />
+	<property name="jsdoc.template" value="vign" />
+	<property name="rhino.jar" value="${jsdoc.dir}/java/classes/js.jar" />
+	<property name="junit.jar" value="${build.tools.dir}/junit/junit.jar"/>
+
+	<property name="thirdparty.dir" value="${fileset.dir}/thirdparty" />
+
+	<!-- properties -->
+	<loadfile property="copyright" srcFile="${basedir}/file/java/copyright.txt" />
+
+	<!-- jdk; defaults to the one in fileset.dir, unless overridden via JAVA_HOME_VUI env var -->
+	<condition property="jdk.home" value="${env.JAVA_HOME_VUI}">
+		<isset property="env.JAVA_HOME_VUI" />
+	</condition>
+
+	<condition property="jdk.home" value="${java.home}">
+		<os family="mac" />
+	</condition>
+
+	<property name="jdk.home" value="${build.java.home}"/>
+
+	<property name="jdk.javac" value="${jdk.home}/bin/javac" />
+	<property name="jdk.javadoc" value="${jdk.home}/bin/javadoc" />
+
+	<!-- compiler -->
+	<property name="compiler.debug" value="on" />
+	<property name="compiler.generate.no.warnings" value="off" />
+	<property name="compiler.args" value="-Xlint -Xlint:-path " /><!-- -Werror -->
+	<property name="compiler.initial.memory" value="128m" />
+	<property name="compiler.max.memory" value="512m" />
+
+	<!-- output -->
+	<property name="temp.dir" value="${basedir}/temp" />
+	<property name="depend-cache.dir" value="${temp.dir}/depend-cache" />
+	<property name="classes.dir" value="${temp.dir}/classes" />
+	<property name="doccheck.dir" value="${temp.dir}/doccheck" />
+	<property name="jslint-cache.dir" value="${temp.dir}/jslint-cache" />
+	<property name="docs.dir" value="${temp.dir}/docs" />
+	<property name="jsdocs.dir" value="${temp.dir}/jsdocs" />
+	<property name="jars.dir" value="${temp.dir}/jars" />
+	<property name="resources.dir" value="${temp.dir}/resource" />
+	<property name="scripts.dir" value="${resources.dir}/script" />
+	<property name="properties.dir" value="${resources.dir}/properties" />
+	<property name="flash.dir" value="${resources.dir}/flash" />
+	<property name="thirdparty.scripts.dir" value="${scripts.dir}/thirdparty" />
+	<property name="wars.dir" value="${temp.dir}/wars" />
+	<property name="ears.dir" value="${temp.dir}/ears" />
+	<property name="ptree.dir" value="${basedir}/ptree" />
+
+	<!-- source -->
+	<property name="source.dir" value="${basedir}/src" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="lib.build.dir" value="${lib.dir}/build"/>
+	<property name="ui.lib.dir" value="${basedir}/lib/buildship/vui" />
+	<property name="resource.dir" value="${basedir}/resource" />
+	<property name="jar.resource.dir" value="${resource.dir}/jar" />
+	<property name="war.resource.dir" value="${resource.dir}/war" />
+	<property name="ear.resource.dir" value="${resource.dir}/ear" />
+	<property name="war.properties.dir" value="${war.resource.dir}/properties" />
+	<property name="war.script.dir" value="${war.resource.dir}/script" />
+	<property name="jar.meta-inf.dir" value="${jar.resource.dir}/META-INF" />
+	<property name="war.meta-inf.dir" value="${war.resource.dir}/META-INF" />
+	<property name="ear.meta-inf.dir" value="${ear.resource.dir}/META-INF" />
+	<property name="gen.source.dir" value="${temp.dir}/gen-src" />
+
+	<!-- test dirs and tools -->
+	<property name="test.dir" value="${basedir}/tests"/>
+	<property name="test.source.dir" value="${test.dir}/src"/>
+	<property name="test.results.dir" value="${test.dir}/results"/>
+	<property name="test.classes.dir" value="${temp.dir}/test.classes" />
+
+	<condition property="vgnpropgen.jar" value="${propgen.jar}" else="${lib.build.dir}/common/vgnpropgen.jar">
+		<and>
+			<isset property="ui.debug.mode" />
+			<isset property="propgen.jar" />
+		</and>
+	</condition>
+
+	<property name="cobertura.jar" value="${cobertura.dir}/cobertura.jar"/>
+	<!-- files -->
+	<property name="file.dir" value="${basedir}/file" />
+	<property name="jslint-options.js" value="${file.dir}/jslint-options.js" />
+	<property name="overview.html" value="${file.dir}/overview.html" />
+
+	<!-- version -->
+	<property name="version.major" value="8" />
+	<property name="version.minor" value="1" />
+	<property name="version.revision" value="0" />
+	<property name="version.patchlevel" value="0" />
+
+	<property name="build.version.major" value="version.major" />
+	<property name="build.version.minor" value="version.minor" />
+	<property name="build.version.revision" value="version.revision" />
+	<property name="build.version.patchlevel" value="version.patchlevel" />
+	<property name="build.version.buildtime" value="version.buildtime" />
+	<property name="build.version.timepattern" value="version.timepattern" />
+	<property name="build.time.pattern" value="yyyy-MM-dd HH:mm:ss z" />
+
+	<!-- taskdefs -->
+	<taskdef name="checkascii" classpath="${checkascii.classes}" classname="com.vignette.tools.CheckAscii" />
+	<taskdef name="jslint" classpath="${jslint-tasks.jar}" classname="com.vignette.jslint.build.JSLint" />
+	<taskdef name="jsdoctoolkit" classpath="${jsdoc-tasks.jar};${rhino.jar}" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit" />
+	<taskdef name="propgen" classpath="${vgnpropgen.jar}" classname="com.vignette.tools.propgen.PropGenTask" />
+	<!--<taskdef resource="tasks.properties" />-->
+
+	<tstamp>
+		<format property="build.time" pattern="${build.time.pattern}" />
+	</tstamp>
+
+	<!-- init -->
+	<target name="build.init">
+		<echo message="debug mode set = ${ui.debug.set}" />
+		<echo message="   debug value = ${ui.debug.value}" />
+	</target>
+
+	<!-- clean -->
+	<target name="build.clean">
+		<delete dir="${temp.dir}" />
+	</target>
+
+	<!-- resourcegen -->
+	<target name="build.resourcegen">
+		<taskdef name="resourcegen" classpath="${ui-tools.jar}" classname="com.vignette.ui.tools.ResourceGenTask" />
+
+		<resourcegen pkgs="${param.resourcegen.package}" srcDir="${source.dir}" dstDir="${gen.source.dir}">
+		</resourcegen>
+	</target>
+
+	<!-- checkascii resource -->
+	<target name="build.checkascii-resource">
+		<checkascii srcdir="${param.source.dir}" all="true">
+			<include name="**/*.css" />
+			<include name="**/*.jsp" />
+			<include name="**/*.inc" />
+			<include name="**/*.js" />
+			<include name="**/*.properties" />
+			<include name="**/*.html" />
+			<include name="**/*.xml" />
+			<include name="**/*.ftl" />
+			<include name="**/*.groovy" />
+			<include name="**/*.tcl" />
+			<include name="**/*.vm" />
+			<include name="**/*.xsl" />
+			<include name="**/*.xml" />
+			<exclude name="**/script/vuit/**/*" />
+		</checkascii>
+	</target>
+
+	<!-- checkascii java -->
+	<target name="build.checkascii-java">
+		<checkascii srcdir="${param.source.dir}" all="true">
+			<include name="**/*.java" />
+			<include name="**/*.properties" />
+			<include name="**/*.html" />
+		</checkascii>
+	</target>
+
+	<!-- jslint task -->
+	<target name="build.jslint">
+		<mkdir dir="${jslint-cache.dir}/${param.name}" />
+		<jslint srcdir="${param.script.dir}/${param.name}" rhinojar="${custom_rhino.jar}" jslint="${jslint.js}" options="${jslint-options.js}" cache="${jslint-cache.dir}/${param.name}">
+			<include name="**/*.js" />
+		</jslint>
+	</target>
+
+	<!-- jsdoc task -->
+	<target name="build.jsdoc">
+		<echo message="Running jsdoc..." />
+		<jsdoctoolkit jsdochome="${jsdoc.dir}" template="${jsdoc.template}" outputdir="${jsdocs.dir}" inputdir="${param.script.dir}">
+		</jsdoctoolkit>
+		<echo message="...success!" />
+	</target>
+
+
+	<!-- docs -->
+	<target name="build.docs">
+		<parallel failonany="true">
+			<sequential>
+				<mkdir dir="${doccheck.dir}" />
+				<mkdir dir="${gen.source.dir}" />
+				<javadoc sourcepath="${source.dir};${gen.source.dir}" destdir="${doccheck.dir}" packagenames="${source.packages}" maxmemory="512m" classpathref="classpath.ref" access="protected" doclet="com.sun.tools.doclets.doccheck.DocCheck" docletpath="${doccheck.jar}" additionalparam="-Xwerror -skipclass '${param.docs.skipclass}'" failonerror="true" executable="${jdk.javadoc}" />
+
+				<echo message="Verifying doccheck..." />
+				<exec executable="grep" failifexecutionfails="true" failonerror="true" dir="${doccheck.dir}">
+					<arg value="\(Congratulations\)" />
+					<arg value="ExecutiveSummary.html" />
+				</exec>
+				<echo message="...success!" />
+			</sequential>
+			<sequential>
+				<mkdir dir="${docs.dir}" />
+				<javadoc sourcepath="${source.dir};${gen.source.dir}" destdir="${docs.dir}" packagenames="${source.packages}" maxmemory="512m" classpathref="classpath.ref" access="protected" overview="${overview.html}" additionalparam="-Xwerror" failonerror="true" executable="${jdk.javadoc}" />
+			</sequential>
+		</parallel>
+	</target>
+
+	<!-- compile -->
+	<target name="build.compile">
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${gen.source.dir}" />
+
+		<depend srcdir="${param.source.dir}" destdir="${classes.dir}" cache="${depend-cache.dir}" closure="false">
+			<classpath refid="dependpath.ref" />
+		</depend>
+
+		<depend srcdir="${gen.source.dir}" destdir="${classes.dir}" cache="${depend-cache.dir}" closure="false">
+			<classpath refid="dependpath.ref" />
+		</depend>
+
+		<javac destdir="${classes.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryInitialSize="${compiler.initial.memory}" memoryMaximumSize="${compiler.max.memory}" executable="${jdk.javac}" includeAntRuntime="no" fork="true">
+			<compilerarg line="${compiler.args}" />
+			<classpath refid="classpath.ref" />
+			<src path="${param.source.dir}" />
+			<src path="${gen.source.dir}" />
+		</javac>
+		
+		<antcall target="instrumentation" />
+		
+		<copy todir="${classes.dir}">
+			<fileset dir="${param.source.dir}">
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+				<include name="**/*.xsd" />
+				<include name="**/*.xsl" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- compile -->
+	<target name="build.compile.safe">
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${gen.source.dir}" />
+
+		<depend srcdir="${param.source.dir}" destdir="${classes.dir}" cache="${depend-cache.dir}" closure="false">
+			<classpath refid="dependpath.ref" />
+		</depend>
+
+		<depend srcdir="${gen.source.dir}" destdir="${classes.dir}" cache="${depend-cache.dir}" closure="false">
+			<classpath refid="dependpath.ref" />
+		</depend>
+
+		<javac destdir="${classes.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryInitialSize="${compiler.initial.memory}" memoryMaximumSize="${compiler.max.memory}" executable="${jdk.javac}" includeAntRuntime="no" fork="true">
+			<classpath refid="${classpath.tests}" />
+			<src path="${param.source.dir}" />
+			<src path="${gen.source.dir}" />
+		</javac>
+
+		<copy todir="${classes.dir}">
+			<fileset dir="${param.source.dir}">
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+				<include name="**/*.xsd" />
+				<include name="**/*.xsl" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- jar -->
+	<target name="build.jar">
+		<mkdir dir="${jars.dir}" />
+		<jar destfile="${param.file.jar}" duplicate="fail">
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+			</manifest>
+			<fileset dir="${classes.dir}" />
+		</jar>
+	</target>
+
+	<!-- jar & metainf -->
+	<target name="build.metainf.jar">
+		<mkdir dir="${jars.dir}" />
+		<jar destfile="${param.file.jar}" duplicate="fail">
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+			</manifest>
+			<metainf dir="${jar.meta-inf.dir}"/>
+			<fileset dir="${classes.dir}" />
+		</jar>
+	</target>
+
+	<!-- version js file -->
+	<target name="build.version.js">
+		<delete file="${param.script.dir}/version.js" />
+		<echo message="Creating: ${param.script.dir}/version.js" />
+
+		<echo file="${param.script.dir}/version.js" message="vui.provide('${param.prefix}.version');${line.separator}" />
+		<echo file="${param.script.dir}/version.js" append="true" message="${param.prefix}.${build.version.major}='${param.major}';${line.separator}" />
+		<echo file="${param.script.dir}/version.js" append="true" message="${param.prefix}.${build.version.minor}='${param.minor}';${line.separator}" />
+		<echo file="${param.script.dir}/version.js" append="true" message="${param.prefix}.${build.version.revision}='${param.revision}';${line.separator}" />
+		<echo file="${param.script.dir}/version.js" append="true" message="${param.prefix}.${build.version.patchlevel}='${param.patchlevel}';${line.separator}" />
+		<echo file="${param.script.dir}/version.js" append="true" message="${param.prefix}.${build.version.buildtime}='${build.time}';${line.separator}" />
+		<echo file="${param.script.dir}/version.js" append="true" message="${param.prefix}.${build.version.timepattern}='${build.time.pattern}';${line.separator}" />
+	</target>
+
+	<!-- version properties file -->
+	<target name="build.version.properties">
+		<mkdir dir="${param.properties.dir}" />
+
+		<delete file="${param.properties.dir}/${param.prefix}-version.properties" />
+
+		<propertyfile file="${param.properties.dir}/${param.prefix}-version.properties">
+			<entry key="${param.prefix}.${build.version.major}" value="${param.major}" />
+			<entry key="${param.prefix}.${build.version.minor}" value="${param.minor}" />
+			<entry key="${param.prefix}.${build.version.revision}" value="${param.revision}" />
+			<entry key="${param.prefix}.${build.version.patchlevel}" value="${param.patchlevel}" />
+			<entry key="${param.prefix}.${build.version.buildtime}" value="${build.time}" />
+			<entry key="${param.prefix}.${build.version.timepattern}" value="${build.time.pattern}" />
+		</propertyfile>
+	</target>
+
+	<!-- concat scripts -->
+	<target name="build.scripts.concat">
+		<mkdir dir="${param.dst.dir}" />
+
+		<taskdef name="jsdeps" classpath="${ui-tools.jar}" classname="com.vignette.ui.tools.BuildJavaScriptDependencies" />
+
+		<jsdeps srcDir="${param.src.dir}" namespace="vuit"
+			excludenames="${param.exclude.list}"  excludeenabled="${param.exclude.enabled}"
+			sourcename="${param.src.name}" rootname="${param.root.name}" property="ordered.list"
+			includes="**/*.js" />
+
+
+		<!-- Concat -->
+		<concat fixlastline="yes" destfile="${param.dst.dir}/${param.file.name}.uncompressed.js">
+			<filelist dir="${param.src.dir}" files="${ordered.list}" />
+		</concat>
+
+		<!-- Remove self-referential requires -->
+		<replaceregexp match='^(vuit|vui)\.(require|requireAfterIf|requireIf|kwCompoundRequire)\("${param.root.name}\..*?\);' byline="true" flags="g" file="${param.dst.dir}/${param.file.name}.uncompressed.js">
+			<substitution expression="" />
+		</replaceregexp>
+
+		<!-- Compress -->
+		<java jar="${custom_rhino.jar}" maxmemory="512m" failonerror="true" fork="true" logerror="true" output="${param.dst.dir}/${param.file.name}.js">
+			<arg value="-strict" />
+			<arg value="-opt" />
+			<arg value="-1" />
+			<arg value="-c" />
+			<arg value="${param.dst.dir}/${param.file.name}.uncompressed.js" />
+		</java>
+
+		<!-- Add copyright notice -->
+		<replaceregexp match="^" byline="false" replace="${copyright}">
+			<fileset dir="${param.dst.dir}">
+				<include name="${param.file.name}.js" />
+			</fileset>
+		</replaceregexp>
+
+		<!-- Copy other files -->
+		<copy todir="${param.dst.dir}" includeEmptyDirs="false">
+			<fileset dir="${param.src.dir}">
+				<exclude name="**/*.js" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- concat thirdparty scripts -->
+	<target name="build.scripts.thirdparty.concat">
+		<mkdir dir="${param.dst.dir}" />
+
+		<!-- Concat -->
+		<concat fixlastline="yes" destfile="${param.dst.dir}/${param.file.name}.uncompressed.js">
+			<filelist dir="${param.src.dir}" files="${param.ordered.list}" />
+		</concat>
+
+		<!-- Compress -->
+		<java jar="${custom_rhino.jar}" maxmemory="512m" failonerror="true" fork="true" logerror="true" output="${param.dst.dir}/${param.file.name}.js">
+			<arg value="-strict" />
+			<arg value="-opt" />
+			<arg value="-1" />
+			<arg value="-c" />
+			<arg value="${param.dst.dir}/${param.file.name}.uncompressed.js" />
+		</java>
+
+		<!-- Copy other files -->
+		<copy todir="${param.dst.dir}" includeEmptyDirs="false">
+			<fileset dir="${param.src.dir}">
+				<exclude name="**/*.js" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- p4jar -->
+	<target name="build.p4jar">
+		<condition property="commandpath" value="c:/bldenv">
+			<os family="windows" />
+		</condition>
+		<property name="commandpath" value="/u/build/bin" />
+		<exec executable="sh" failonerror="true">
+			<arg line="${commandpath}/build_ptree.sh" />
+		</exec>
+	</target>
+	
+	<!-- Cobertura Instrumentation -->
+	<target name="instrumentation" if="${cobertura.enabled}">
+		<property name="instr.classes.dir" value="${classes.dir}" />
+		<cobertura-instrument datafile="${cobertura.coverage.dir}/${cobertura.out.metadatafile}">
+			<fileset dir="${instr.classes.dir}">
+				<include name="**/*.class"/>
+			</fileset>
+		</cobertura-instrument>
+	</target>
+
+	
+</project>
