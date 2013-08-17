@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="freequent" default="all">
+	<!-- build properties -->
+	<property file="${basedir}/build.properties" />
+
+	<!-- use the default fileset directory if not set in build.properties -->
+	<condition property="fileset.dir" value="/dev/main/fileset">
+		<not>
+			<isset property="fileset.dir" />
+		</not>
+	</condition>
+
+	<!-- JSP pre-compile flag -->
+	<condition property="scalar.jsp.precompile.disable" value="true">
+		<istrue value="${jsp.precompile.disable}" />
+	</condition>
+
+	<!-- extra jsp precompile classpath element -->
+	<property name="jsp.precompile.extra.path.element" value="" />
+
+
+    <!-- imports -->
+	<import file="build-tasks.xml" />
+
+	<!-- BEA JDK -->
+	<property name="bea.jdk.dir" value="${build.java.home}" />
+	<property name="bea.jdk.jars" value="${bea.jdk.dir}/jre/lib/rt.jar${path.separator}${bea.jdk.dir}/lib/tools.jar${path.separator}${bea.jdk.dir}/jre/lib/jsse.jar${path.separator}${bea.jdk.dir}/jre/lib/security.jar" />
+	<property name="bea.jdk.jvm" value="${bea.jdk.dir}/bin/java" />
+
+	<condition property="scalar.tomcat.dir" value="${tomcat.dir}" else="${thirdparty.dir}/tomcat/lib/apache-tomcat-7.0.26">
+		<isset property="tomcat.dir" />
+	</condition>
+
+	<path id="scalar.tomcat.classpath">
+		<fileset dir="${scalar.tomcat.dir}/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<condition property="scalar.tomcat.deployer.dir" value="${tomcat.deployer.dir}" else="${thirdparty.dir}/tomcat/lib/apache-tomcat-7.0.26-deployer">
+		<isset property="tomcat.deployer.dir" />
+	</condition>
+
+	<!-- packages -->
+	<property name="source.packages" value="com.scalar.freequent.*" />
+
+	<property name="scalar-freequent.jar" value="${jars.dir}/scalar-freequent.jar" />
+	<property name="scalar-freequent-msgs.jar" value="${jars.dir}/scalar-freequent-msgs.jar" />
+	<property name="scalar-freequent-web.jar" value="${jars.dir}/scalar-freequent-web.jar" />
+	<property name="scalar-freequent-config.jar" value="${jars.dir}/scalar-freequent-config.jar" />
+
+	<!-- wars -->
+	<property name="exploded.war" value="${temp.dir}/scalar-freeqent.war" />
+	<property name="scalar-freequent.war" value="${wars.dir}/scalar-freequent.war" />
+
+	<!-- thirdparty jars -->
+	<property name="castor.jar" value="${thirdparty.dir}/castor/dist/castor.jar" />
+	<property name="castor-xml.jar" value="${thirdparty.dir}/castor/dist/castor-xml.jar" />
+	<property name="commons-io.jar" value="${thirdparty.dir}/jakarta-commons/io/commons-io.jar" />
+	<property name="commons-fileupload.jar" value="${thirdparty.dir}/jakarta-commons/fileupload/commons-fileupload.jar" />
+	<property name="commons-codec.jar" value="${thirdparty.dir}/jakarta-commons/commons-codec/commons-codec.jar" />
+	<property name="commons-httpclient.jar" value="${thirdparty.dir}/jakarta-commons/commons-httpclient/commons-httpclient.jar" />
+	<property name="commons-dbcp.jar" value="${thirdparty.dir}/jakarta-commons/dbcp/commons-dbcp.jar" />
+	<property name="concurrentlinkedhashmap.jar" value="${thirdparty.dir}/concurrentlinkedhashmap/concurrentlinkedhashmap-lru-1.2.jar" />	
+	<property name="j2ee.jar" value="${thirdparty.dir}/sun-java/j2sdk/j2ee.jar" />
+	<property name="jericho-html.jar" value="${thirdparty.dir}/jericho-html/jericho-html.jar" />
+	<property name="json.jar" value="${thirdparty.dir}/json/json.jar" />
+	<property name="jstl.jar" value="${thirdparty.dir}/jakarta-taglibs/standard/lib/jstl.jar" />
+	<property name="log4j.jar" value="${thirdparty.dir}/apache-log4j/dist/lib/log4j.jar" />
+	<property name="pullparser.jar" value="${thirdparty.dir}/PullParser/lib/pullparser.jar" />
+	<property name="sanselan.jar" value="${thirdparty.dir}/apache-sanselan/sanselan-0.97.jar" />
+	<property name="script-api.jar" value="${thirdparty.dir}/jsr223/reference-implementation/script-api.jar" />
+	<property name="standard.jar" value="${thirdparty.dir}/jakarta-taglibs/standard/lib/standard.jar" />
+	<property name="commons-beanutils.jar" value="${thirdparty.dir}/jakarta-commons/commons-beanutils/1.7.0/commons-beanutils.jar" />
+	<property name="struts.jar" value="${thirdparty.dir}/apache-struts/release/lib/struts.jar" />
+	<property name="xerces.jar" value="${thirdparty.dir}/xml-xerces/xerces.jar" />
+	<property name="org.springframework.asm.jar" value="${thirdparty.dir}/spring/org.springframework.asm-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.beans.jar" value="${thirdparty.dir}/spring/org.springframework.beans-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.context.jar" value="${thirdparty.dir}/spring/org.springframework.context-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.context.support.jar" value="${thirdparty.dir}/spring/org.springframework.context.support-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.core.jar" value="${thirdparty.dir}/spring/org.springframework.core-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.expression.jar" value="${thirdparty.dir}/spring/org.springframework.expression-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.web.jar" value="${thirdparty.dir}/spring/org.springframework.web-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.web.servlet.jar" value="${thirdparty.dir}/spring/org.springframework.web.servlet-3.0.4.RELEASE.jar" />
+	<property name="hibernate.jar" value="${thirdparty.dir}/hibernate/hibernate.jar" />
+	<property name="oracle.jar" value="${thirdparty.dir}/oracle/lib/ojdbc5.jar"/>
+	<property name="vgnjdbc.jar" value="${thirdparty.dir}/DataDirect/ConnectForJDBC/vgnjdbc.jar"/>
+	<property name="ldapjdk.jar" value="${thirdparty.dir}/ldapsdk/lib/ldapjdk.jar"/>
+	<property name="commons-lang.jar" value="${thirdparty.dir}/jakarta-commons/commons-lang/2.3/commons-lang.jar"/>
+	<property name="commons-collections.jar" value="${thirdparty.dir}/jakarta-commons/collections/3.2.1/common-collections.jar"/>
+	<property name="commons-logging.jar" value="${thirdparty.dir}/jakarta-commons/logging/1.0.4/commons-logging.jar"/>
+	<property name="dom4j.jar" value="${thirdparty.dir}/dom4j/dom4j.jar"/>
+	<property name="javassist.jar" value="${thirdparty.dir}/hibernate/javassist.jar"/>
+	<property name="slf4j-api.jar" value="${thirdparty.dir}/hibernate/slf4j-api.jar" />
+	<property name="slf4j-log4j.jar" value="${thirdparty.dir}/hibernate/slf4j-log4j.jar" />
+	<property name="xmlunit.jar" value="${lib.dir}/build/tests/xmlunit.jar" />
+	<property name="elib-api.jar" value="${thirdparty.dir}/opentext/els/lib/elib_api.jar"/>
+
+	<path id="axis.jars.ref">
+		<fileset dir="${thirdparty.dir}/apache-axis/lib">
+			<exclude name="axis-ant.jar" />
+		</fileset>
+	</path>
+	<path id="jstl.jars.ref">
+		<fileset dir="${thirdparty.dir}/jakarta-taglibs/standard/lib"/>
+	</path>
+
+	<!-- paths -->
+	<path id="classpath.ref">
+		<fileset dir="${lib.dir}">
+			<include name="**/*" />
+			<exclude name="buildship/vui/**/*" />
+			<exclude name="ship/**/*" />
+		</fileset>
+		<!--<fileset file="${jericho-html.jar}" />
+		<fileset file="${json.jar}" />
+		<fileset file="${castor.jar}" />
+		<fileset file="${commons-io.jar}" />
+		<fileset file="${commons-fileupload.jar}" />
+		<fileset file="${commons-beanutils.jar}" />
+		<fileset file="${commons-dbcp.jar}" />
+		<fileset file="${xerces.jar}" />
+		<fileset file="${pullparser.jar}" />
+		<fileset file="${sanselan.jar}" />
+		<fileset file="${script-api.jar}" />-->
+		<!--<fileset file="${ui-core.jar}" />-->
+		<fileset file="${struts.jar}" />
+		<fileset file="${log4j.jar}" />
+		<fileset file="${org.springframework.asm.jar}" />
+		<fileset file="${org.springframework.beans.jar}" />
+		<fileset file="${org.springframework.context.jar}" />
+		<fileset file="${org.springframework.context.support.jar}" />
+		<fileset file="${org.springframework.core.jar}" />
+		<fileset file="${org.springframework.expression.jar}" />
+		<fileset file="${org.springframework.web.jar}" />
+		<fileset file="${org.springframework.web.servlet.jar}" />		
+		<fileset file="${hibernate.jar}" />
+		<fileset file="${commons-logging.jar}"/>
+		<fileset file="${commons-beanutils.jar}"/>
+		<fileset file="${commons-fileupload.jar}"/>
+		<fileset file="${commons-io.jar}"/>
+
+		<!--<fileset file="${dom4j.jar}" />
+		<fileset file="${javassist.jar}" />
+		<fileset file="${slf4j-api.jar}" />
+		<fileset file="${slf4j-log4j.jar}" />
+		<fileset file="${cobertura.jar}" />-->
+	</path>
+
+	<path id="dependpath.ref">
+		<!--<fileset file="${ui-core.jar}" />-->
+	</path>
+
+	<!-- init -->
+	<target name="init">
+		<antcall target="build.init" />
+		<echo message="" />
+		<echo message="   bea.jdk.dir = ${bea.jdk.dir}" />
+		<echo message="" />
+	</target>
+
+	<!-- clean -->
+	<target name="clean" depends="init" description="Clean build">
+		<antcall target="build.clean" />
+	</target>
+
+	<!-- resourcegen -->
+	<target name="resourcegen" depends="init" description="Generate resource bundles">
+			
+	<antcall target="build.resourcegen">
+			<param name="param.resourcegen.package" value="com.scalar.freequent.l10n" />
+			<!--<param name="param.resourcegen.package" value="com.scalar.freequent.l10n,
+				          com.scalar.freequent.l10n.module" />-->
+		</antcall>
+   
+	</target>
+
+	<!-- checkascii -->
+	<target name="checkascii" depends="resourcegen" description="CheckAscii on files">
+		<parallel failonany="true">
+			<antcall target="build.checkascii-resource">
+				<param name="param.source.dir" value="${resource.dir}" />
+			</antcall>
+
+			<antcall target="build.checkascii-java">
+				<param name="param.source.dir" value="${source.dir}" />
+			</antcall>
+
+			<antcall target="build.checkascii-java">
+				<param name="param.source.dir" value="${gen.source.dir}" />
+			</antcall>
+		</parallel>
+	</target>
+
+	<!-- docs -->
+	<target name="docs" depends="checkascii" description="DocCheck and Javadoc on source">
+		<!-- todo: need to fix build.docs-->
+		<!--<antcall target="build.docs" />-->
+	</target>
+
+	<!-- compile -->
+	<target name="compile" depends="docs" description="Compile classes">
+		<!-- source -->
+		<antcall target="build.compile">
+			<param name="param.source.dir" value="${source.dir}" />
+		</antcall>
+	</target>
+
+	<!-- jar -->
+	<target name="jar" depends="compile, testprops" description="Build jars">
+		<mkdir dir="${jars.dir}" />
+
+		<jar destfile="${scalar-freequent.jar}" duplicate="fail">
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+			</manifest>
+			<fileset dir="${classes.dir}">
+				<exclude name="com/scalar/freequent/config/**/*" />
+				<exclude name="com/scalar/freequent/web/**/*" />
+			</fileset>
+		</jar>
+
+		<jar destfile="${scalar-freequent-msgs.jar}" duplicate="fail">
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+			</manifest>
+			<fileset dir="${source.dir}">
+				<include name="**/*Resource.properties" />
+			</fileset>
+		</jar>
+
+		<jar destfile="${scalar-freequent-web.jar}" duplicate="fail">
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+			</manifest>
+			<metainf dir="${jar.meta-inf.dir}" />
+			<fileset dir="${classes.dir}">
+				<exclude name="com/scalar/freequent/config/**/*" />
+				<include name="com/scalar/freequent/web/**/*" />
+			</fileset>
+		</jar>
+
+		<jar destfile="${scalar-freequent-config.jar}" duplicate="fail">
+			<fileset dir="${classes.dir}">
+				<include name="com/scalar/freequent/config/**/*" />
+			</fileset>
+		</jar>
+	</target>
+
+	<!-- resources -->
+	<target name="resources" depends="init" description="Build resources">
+		<copy todir="${resources.dir}" includeEmptyDirs="false">
+			<fileset dir="${war.resource.dir}">
+				<exclude name="script/**/*" />
+			</fileset>
+		</copy>
+
+		<antcall target="build.version.properties">
+			<param name="param.properties.dir" value="${properties.dir}" />
+			<param name="param.prefix" value="scalar-freequent" />
+			<param name="param.major" value="${version.major}" />
+			<param name="param.minor" value="${version.minor}" />
+			<param name="param.revision" value="${version.revision}" />
+			<param name="param.patchlevel" value="${version.patchlevel}" />
+		</antcall>
+	</target>
+
+	<!-- jslint -->
+	<target name="jslint" depends="init" description="JSLint on JS files">
+		<parallel failonany="true">
+			<!-- lint -->
+			<antcall target="build.jslint">
+				<param name="param.script.dir" value="${war.script.dir}" />
+				<param name="param.name" value="ui" />
+			</antcall>
+		</parallel>
+	</target>
+
+	<!-- scripts -->
+	<target name="scripts" depends="jslint" description="Build scripts">
+		<!-- vcm-vext -->
+		<!--<antcall target="build.scripts.concat">
+			<param name="param.src.dir" value="${war.script.dir}" />
+			<param name="param.dst.dir" value="${scripts.dir}/vcm/ui" />
+			<param name="param.src.name" value="vext" />
+			<param name="param.root.name" value="vui.vcm.vext" />
+			<param name="param.file.name" value="vcm-vext" />
+		</antcall>-->
+
+		<!-- ui -->
+		<!--<antcall target="build.scripts.concat">
+			<param name="param.src.dir" value="${war.script.dir}/ui" />
+			<param name="param.dst.dir" value="${scripts.dir}/vcm/ui" />
+			<param name="param.src.name" value="ui" />
+			<param name="param.root.name" value="vui.vcm.ui" />
+			<param name="param.file.name" value="vcm-ui" />
+		</antcall>-->
+
+		<!-- root js -->
+		<copy todir="${scripts.dir}" includeEmptyDirs="false">
+			<fileset dir="${war.script.dir}">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<!-- rangy -->
+		<!--<copy todir="${thirdparty.scripts.dir}/rangy" includeEmptyDirs="false">
+			<fileset dir="${lib.dir}/ship/rangy" />
+		</copy>-->
+	</target>
+
+	<!-- exploded war -->
+	<target name="exploded.war" depends="jar, resources, scripts" description="Build exploded war">
+		<mkdir dir="${exploded.war}" />
+
+		<!-- jars -->
+		<copy todir="${exploded.war}/WEB-INF/lib" flatten="true" includeEmptyDirs="false">
+			<path refid="jstl.jars.ref" />
+			<fileset file="${scalar-freequent-web.jar}" />
+			<fileset file="${scalar-freequent.jar}" />
+			<fileset file="${scalar-freequent-config.jar}" />
+			<fileset file="${struts.jar}" />
+			<fileset file="${xerces.jar}" />
+			<fileset file="${org.springframework.asm.jar}" />
+			<fileset file="${org.springframework.beans.jar}" />
+			<fileset file="${org.springframework.context.jar}" />
+			<fileset file="${org.springframework.context.support.jar}" />
+			<fileset file="${org.springframework.core.jar}" />
+			<fileset file="${org.springframework.expression.jar}" />
+			<fileset file="${org.springframework.web.jar}" />
+			<fileset file="${org.springframework.web.servlet.jar}" />
+			<fileset file="${hibernate.jar}" />
+			<fileset file="${log4j.jar}"/>
+			<fileset file="${commons-logging.jar}"/>
+			<fileset file="${commons-beanutils.jar}"/>
+			<fileset file="${commons-fileupload.jar}"/>
+			<fileset file="${commons-io.jar}"/>
+		</copy>
+
+		<!-- root config -->
+		<copy todir="${exploded.war}/WEB-INF/classes" includeEmptyDirs="false">
+			<fileset dir="${source.dir}">
+				<include name="com/scalar/freequent/config/*" />
+			</fileset>
+		</copy>
+
+		<!-- copy scalar resources -->
+		<copy todir="${exploded.war}" includeEmptyDirs="false">
+			<fileset dir="${resources.dir}">
+				<exclude name="properties/**/*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${exploded.war}" includeEmptyDirs="false" overwrite="true">
+			<fileset dir="${resources.dir}">
+				<include name="properties/**/*" />
+			</fileset>
+		</copy>
+		
+	</target>
+
+	<!-- war -->
+	<target name="war" depends="exploded.war" description="Build war">
+		<mkdir dir="${wars.dir}" />
+		<jar destfile="${scalar-freequent.war}" duplicate="fail">
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+			</manifest>
+			<fileset dir="${exploded.war}" />
+		</jar>
+	</target>
+
+	<!-- copy exploded wars -->
+	<basename file="${exploded.war}" property="exploded.war.filename" />
+
+	<!-- testprops -->
+	<target name="testprops" if="ui.debug.mode">
+		<propgen srcdir="${source.dir}" destdir="${classes.dir}">
+			<include name="com/scalar/**/*Resource.properties" />
+		</propgen>
+	</target>
+
+	<!-- tests -->
+	<target name="get-jvm">
+		<echo message= "${ant.java.version}"/>
+		<condition property="jvm.ok">
+			<not>
+				<or>
+					<equals arg1="${ant.java.version}" arg2="${test.compile.jvmlevel}"/>
+				</or>
+			</not>
+		</condition>
+	</target>
+
+	<target name="check-jvm" depends="get-jvm" unless="jvm.ok">
+		<fail message="Wrong JVM - ${ant.java.version} -- is required to run these tests"/>
+	</target>
+
+	<!-- nightly build target -->
+	<target name="nightly_build" depends="all" />
+
+	<!-- all -->
+	<target name="all" depends="war" description="Build all: war" />
+
+	<path id="deployer.classpath">
+		<fileset dir="${scalar.tomcat.deployer.dir}/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	<target name="deploy" depends="init" description="deploy web app">
+		<antcall target="build.deploy" />
+	</target>
+
+	<target name="undeploy" depends="init" description="undeploy web app">
+		<antcall target="build.undeploy" />
+	</target>
+
+	<target name="reload" depends="init" description="reload web app">
+		<antcall target="build.reload" />
+	</target>
+
+	<target name="stop" depends="init" description="stop web app">
+		<antcall target="build.stop" />
+	</target>
+
+	<target name="start" depends="init" description="start web app">
+		<antcall target="build.start" />
+	</target>
+
+
+	<!-- Configure the custom Ant tasks for the Manager application -->
+	<taskdef resource="org/apache/catalina/ant/catalina.tasks" classpathref="deployer.classpath"/>
+	<target name="build.deploy" description="Deploy web application">
+		<deploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}"
+				path="${context.path}" war="${webapp.path}" update="true"/>
+	</target>
+
+	<target name="build.undeploy" description="Undeploy web application">
+		<undeploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}"
+				  path="${context.path}"/>
+	</target>
+
+	<!-- Webapp lifecycle control -->
+	<target name="build.start" description="Start web application">
+		<start url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}"
+			   path="${context.path}"/>
+	</target>
+	<target name="build.reload" description="Reload web application">
+		<reload url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}"
+				path="${context.path}"/>
+	</target>
+	<target name="build.stop" description="Stop web application">
+		<stop url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}"
+			  path="${context.path}"/>
+	</target>
+
+	<target name="autoclean" depends="clean, undeploy" description="clean, undeploy"/>
+	<target name="autodeploy" depends="war, deploy" description="war and deploy"/>
+</project>
