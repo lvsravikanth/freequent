@@ -127,8 +127,6 @@
 
 	<!-- taskdefs -->
 	<taskdef name="checkascii" classpath="${checkascii.classes}" classname="com.vignette.tools.CheckAscii" />
-	<taskdef name="jslint" classpath="${jslint-tasks.jar}" classname="com.vignette.jslint.build.JSLint" />
-	<taskdef name="jsdoctoolkit" classpath="${jsdoc-tasks.jar};${rhino.jar}" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit" />
 	<taskdef name="propgen" classpath="${vgnpropgen.jar}" classname="com.vignette.tools.propgen.PropGenTask" />
 	<!--<taskdef resource="tasks.properties" />-->
 
@@ -187,16 +185,16 @@
 	<!-- jslint task -->
 	<target name="build.jslint">
 		<mkdir dir="${jslint-cache.dir}/${param.name}" />
-		<jslint srcdir="${param.script.dir}/${param.name}" rhinojar="${custom_rhino.jar}" jslint="${jslint.js}" options="${jslint-options.js}" cache="${jslint-cache.dir}/${param.name}">
+		<!--<jslint srcdir="${param.script.dir}/${param.name}" rhinojar="${custom_rhino.jar}" jslint="${jslint.js}" options="${jslint-options.js}" cache="${jslint-cache.dir}/${param.name}">
 			<include name="**/*.js" />
-		</jslint>
+		</jslint>-->
 	</target>
 
 	<!-- jsdoc task -->
 	<target name="build.jsdoc">
 		<echo message="Running jsdoc..." />
-		<jsdoctoolkit jsdochome="${jsdoc.dir}" template="${jsdoc.template}" outputdir="${jsdocs.dir}" inputdir="${param.script.dir}">
-		</jsdoctoolkit>
+		<!--<jsdoctoolkit jsdochome="${jsdoc.dir}" template="${jsdoc.template}" outputdir="${jsdocs.dir}" inputdir="${param.script.dir}">
+		</jsdoctoolkit>-->
 		<echo message="...success!" />
 	</target>
 
