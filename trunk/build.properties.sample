@@ -1,5 +1,5 @@
 # REQUIRED: point this to your local fileset (cs) directory. must be absolute path for unit tests.
-fileset.dir=/data/work/vui/fileset
+fileset.dir=E:/Dev/freequent/fileset
 
 # version numbering
 #version.major=8
@@ -11,79 +11,26 @@ fileset.dir=/data/work/vui/fileset
 #jsp.precompile.disable=true
 
 # turns on debug mode. THIS MUST BE ENABLED FOR THE FOLLOWING PROPERTIES TO BE HONORED.
-#debug.mode=true
+debug.mode=true
 
 # ear explode mode. IF YOU SET THIS YOU MUST SET api.exploded.war property.
-#ear.explode.mode=true
+ear.explode.mode=true
 
-# core
-# point this to local bits, e.g. /data/work/vui/core/temp/jars/vui.jar
-#core.jar=/data/work/vui/core/temp/jars/vui.jar
+tomcat.dir=E:/Dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26
 
-# point this to local bits, e.g. /data/work/vui/core/temp/jars/vui-config.jar
-#core-config.jar=/data/work/vui/core/temp/jars/vui-config.jar
+tomcat.deployer.dir=E:/Dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26-deployer
 
-# point this to local bits, e.g. /data/work/vui/core/temp/jars/vui-common-tests.jar
-#core-tests.jar=/data/work/vui/core/temp/jars/vui-common-tests.jar
+tomcat.manager.url=http://localhost:8080/manager/text
 
-# point this to local bits, e.g. /data/work/vui/core/temp/resource
-#core.resource.dir=/data/work/vui/core/temp/resource
+tomcat.username=tomcat
 
-# point this to local bits, e.g. /data/work/vui/core/temp/jars/vui-web.jar
-#web.jar=/data/work/vui/core/temp/jars/vui-web.jar
+tomcat.password=tomcat
 
-# api
-# point this to local bits, e.g. /data/work/vui/api/temp/jars/vcm-api.jar
-#api.jar=/data/work/vui/api/temp/jars/vcm-api.jar
+context.path=/freequent
 
-# point this to local bits, e.g. /data/work/vui/api/temp/jars/vcm-api-config.jar
-#api-config.jar=/data/work/vui/api/temp/jars/vcm-api-config.jar
+webapp.path=E:/Dev/freequent/freequent/temp/wars/scalar-freequent.war
 
-# point this to local bits, e.g. /data/work/vui/api/temp/wars/vcm-api.war
-#api.war=/data/work/vui/api/temp/wars/vcm-api.war
-
-# point this to local bits, e.g. /data/work/vui/api/temp/vcm-api.war
-#api.exploded.war=/data/work/vui/api/temp/vcm-api.war
-
-# cma
-# point this to local bits, e.g. /data/work/appsvcs-ui/ptree/jars/vgn-appsvcs-cma.jar
-#cma.jar=/data/work/appsvcs-ui/ptree/jars/vgn-appsvcs-cma.jar
-
-# cce
-# point this to local bits, e.g. /data/work/appsvcs-ui/ptree/jars/vgn-appsvcs-cce.jar
-#cce.jar=/data/work/appsvcs-ui/ptree/jars/vgn-appsvcs-cce.jar
-
-# preferences jar
-# point this to local bits, e.g. /data/work/contentsvcs/ptree/jars/vgn-preferences.jar
-#vgn-preferences.jar=/data/work/contentsvcs/ptree/jars/vgn-preferences.jar
-
-# ssl
-# point this to local bits e.g. /data/work/common/ptree/lib/vgnssl.jar
-#ssl.jar=/data/work/common/ptree/lib/vgnssl.jar
-
-# cache framework
-# point this to local bits e.g. /dev/work/vui/vcm/lib/buildship/cache-framework/vgn-shared-cache-1.0.jar
-#vgn-shared-cache.jar=/dev/work/vui/vcm/lib/buildship/cache-framework/vgn-shared-cache-1.0.jar
-
-# logging
-# point this to local bits e.g. /dev/work/logging/ptree/jars/vgn-shared-logging.jar
-#shared-logging.jar=/dev/work/logging/ptree/jars/vgn-shared-logging.jar
-
-# hpd-api
-# point this to local bits e.g. /dev/p4client/main/itree/ptrees/appsvcs/shared/hpd/ptree/lib/vgnhpdapi-8.0.jar
-#hpd-api.jar=/dev/p4client/main/itree/ptrees/appsvcs/shared/hpd/ptree/lib/vgnhpdapi-8.0.jar
-
-# timeline
-# point this to local bits, e.g. /data/work/vui/components/timeline/temp/flash/timeline.swf
-#timeline.swf=/data/work/vui/components/timeline/temp/flash/timeline.swf
-
-# webuploader
-# point this to local bits, e.g. /data/work/vui/components/webuploader/temp/flash/webuploader.swf
-#webuploader.swf=/data/work/vui/components/webuploader/temp/flash/webuploader.swf
-
-# image editor
-# point this to local bits, e.g. /data/work/vui/components/webimageeditor/temp/flash/webimageeditor.swf
-#imageeditor.swf=/data/work/vui/components/webimageeditor/temp/flash/webimageeditor.swf
+jsp.precompile.disable=true
 
 # propgen.jar
 # point this to local bits, e.g. /data/work/common/ptree/lib/vgnpropgen.jar
@@ -97,28 +44,3 @@ fileset.dir=/data/work/vui/fileset
 #propgen.zh_TW=\u5468--
 #propgen.fr=<hello world>
 #propgen.bg=++postfix's
-
-# Data Import Properties
-#tests.resources.dir=${basedir}/tests/resources
-#packages.Auto_V8Relators=${tests.resources.dir}/dataImport/packages/Auto_V8Relators.zip
-#packages.Auto_VCM_Site=${tests.resources.dir}/dataImport/packages/Auto_VCM_Site.zip
-#packages.Auto_VCM_Folder=${tests.resources.dir}/dataImport/packages/Auto_VCM_Folder.zip
-#packages.Auto_VCM_CTDProj=${tests.resources.dir}/dataImport/packages/Auto_VCM_CTDProject.zip
-#packages.Auto_Sample_WFDFolder=${tests.resources.dir}/dataImport/packages/Auto_Sample_WFDFolder.zip
-#packages.Auto_Cloning_Site=${tests.resources.dir}/dataImport/packages/Auto_Cloning_Site.zip
-#packages.Auto_TestWidgets_CTD=${tests.resources.dir}/dataImport/packages/Auto_TestWidgets_CTD.zip
-#packages.Auto_TestRelatorWidgets_CTDProj=${tests.resources.dir}/dataImport/packages/Auto_TestRelatorWidgets_CTDProject.zip
-#packages.Auto_TestWorkFlow_CTD=${tests.resources.dir}/dataImport/packages/Auto_TestWorkFlow_CTD.zip
-#packages.DSM80Site=${tests.resources.dir}/dataImport/packages/purple/DSM80Site.zip
-#packages.DSMBasicSite=${tests.resources.dir}/dataImport/packages/purple/DSMBasicSite.zip
-#packages.DSM80SiteTemplatesClone=${tests.resources.dir}/dataImport/packages/purple/DSM80SiteTemplatesClone.zip
-#packages.DSM80SiteCIsClone=${tests.resources.dir}/dataImport/packages/purple/DSM80SiteCIsClone.zip
-#packages.SmartListSite=${tests.resources.dir}/dataImport/packages/purple/SmartListSite.zip
-#VCMUItests.tables.tmpl.xml=${tests.resources.dir}/tables/customtables_tmpl.xml
-
-#-------------------------------------------------------------------------------
-# Cobertura Properties for instrumentation
-#-------------------------------------------------------------------------------
-#cobertura.enabled=true
-#cobertura.coverage.dir=/dev/coverage/cobertura/vui-vcm
-#cobertura.out.metadatafile=vui-vcm-ext.ser

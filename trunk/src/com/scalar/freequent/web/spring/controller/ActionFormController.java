@@ -33,20 +33,7 @@ import com.scalar.freequent.web.spring.propertyeditor.CustomPrimitiveNumberEdito
 @SuppressWarnings("deprecation")
 public abstract class ActionFormController extends SimpleFormController {
 	protected final Log logger = LogFactory.getLog(getClass());
-	private final Map<String, String> viewMap = new HashMap<String, String>();
 	private MethodNameResolver methodNameResolver = new UrlMethodNameResolver();
-
-	/*public Map<String,String> getViewMap()
-		 {
-			 return this.viewMap;
-		 }*/
-	public void setViewMap(Map<? extends String, ? extends String> viewMap) {
-		this.viewMap.putAll(viewMap);
-	}
-
-	public String getView(String viewKey) {
-		return viewMap.get(viewKey);
-	}
 
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
 		super.initBinder(request, binder);
@@ -73,7 +60,9 @@ public abstract class ActionFormController extends SimpleFormController {
 		} else {
 			try {
 				String methodName = this.methodNameResolver.getHandlerMethodName(request);
-				System.out.println("================METHOD NAME=" + methodName);
+                if (logger.isDebugEnabled()) {
+				    logger.debug("================METHOD NAME=" + methodName);
+                }
 				return invokeNamedMethod(methodName, request, response, command, errors);
 			}
 			catch (NoSuchRequestHandlingMethodException ex) {
@@ -83,7 +72,7 @@ public abstract class ActionFormController extends SimpleFormController {
 	}
 
 	protected ModelAndView handleNoSuchRequestHandlingMethod(NoSuchRequestHandlingMethodException ex, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.warn(ex.getMessage());
+		logger.warn(ex);
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		return null;
 	}
