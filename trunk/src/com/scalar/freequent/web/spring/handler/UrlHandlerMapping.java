@@ -44,6 +44,9 @@ public class UrlHandlerMapping extends AbstractHandlerMapping {
         }
         int startIdx = urlPath.indexOf("/");
         int lastIdx = urlPath.lastIndexOf("/");
+        if (lastIdx == startIdx) {
+            lastIdx = urlPath.length()-1;
+        }
         String handlerPath = urlPath.substring(startIdx + 1, lastIdx);
         if (logger.isDebugEnabled()) {
             logger.debug("Looking up handler for handlerPath [" + handlerPath + "]");
