@@ -48,7 +48,7 @@ public class ErrorInfoUtil {
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> getErrors(HttpServletRequest request) {
 		Object obj = request.getAttribute(RequestParameters.ATTRIBUTE_ERROR_MESSAGES);
-		if (obj instanceof Map) {
+		if (obj == null || (obj instanceof Map)) {
 			return (Map<String, Object>) obj;
 		}
 
@@ -58,7 +58,7 @@ public class ErrorInfoUtil {
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> getInfos(HttpServletRequest request) {
 		Object obj = request.getAttribute(RequestParameters.ATTRIBUTE_INFO_MESSAGES);
-		if (obj instanceof Map) {
+		if (obj == null || (obj instanceof Map)) {
 			return (Map<String, Object>) obj;
 		}
 

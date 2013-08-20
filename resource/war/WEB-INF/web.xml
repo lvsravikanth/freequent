@@ -51,7 +51,8 @@
         <param-name>contextConfigLocation</param-name>
 		<param-value>
 			/WEB-INF/applicationContext-service.xml,
-			/WEB-INF/applicationContext-data.xml
+            /WEB-INF/applicationContext-data.xml,
+            /WEB-INF/freequent-actions.xml
         </param-value>
 	</context-param>
 

@@ -27,7 +27,7 @@
 		<property name="password" value="${datasource.password}"/>
 	</bean>
 
-	<util:properties id="hibernateProperties" location="classpath:com/scalar/freequent/config/hibernate.properties"/>
+	<!--<util:properties id="hibernateProperties" location="classpath:com/scalar/freequent/config/hibernate.properties"/>
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="hibernateProperties">
@@ -35,7 +35,7 @@
 		</property>
 		<property name="mappingDirectoryLocations">
 			<list>
-				<!-- provide the hbm folder in which .hbm are present-->
+				--><!-- provide the hbm folder in which .hbm are present--><!--
 				<value>classpath:/com/scalar/freequent/config/hbm</value>
 			</list>
 		</property>
@@ -43,7 +43,9 @@
 
 	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
 	</bean>
-
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>

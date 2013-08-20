@@ -31,9 +31,9 @@ import com.scalar.freequent.web.spring.propertyeditor.CustomPrimitiveNumberEdito
  * Time: 3:42:46 PM
  */
 @SuppressWarnings("deprecation")
-public abstract class ActionFormController extends SimpleFormController {
+public abstract class AbstractActionFormController extends SimpleFormController implements FreequentController {
 	protected final Log logger = LogFactory.getLog(getClass());
-	private MethodNameResolver methodNameResolver = new UrlMethodNameResolver();
+	private MethodNameResolver methodNameResolver = AbstractControllerUtil.getMethodNameResolver();
 
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
 		super.initBinder(request, binder);

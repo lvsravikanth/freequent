@@ -249,6 +249,7 @@
 				<include name="**/*.xml" />
 				<include name="**/*.xsd" />
 				<include name="**/*.xsl" />
+				<include name="**/*.hbm" />
 			</fileset>
 		</copy>
 	</target>
