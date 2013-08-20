@@ -1,19 +1,21 @@
 
 package com.scalar.freequent.web.lifecycle;
 
+import org.springframework.web.context.ContextLoaderListener;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 /**
- * The <code>BasicServletContextListener</code> class is the implementation of the <code>ServletContextListener</code>
- * interface and provides startup and shutdown services for the framework.
+ * The <code>BasicServletContextListener</code> class is the implementation of the springs <code>ContextLoaderListener</code>
+ * and provides startup and shutdown services for the framework.
  *
  * @author .sujan.
  * @version $Revision: #1 $ $Date: 2011/11/08 $
  */
-public class BasicServletContextListener implements ServletContextListener, HttpSessionListener {
+public class BasicServletContextListener extends ContextLoaderListener implements HttpSessionListener {
 	/**
 	 * Constructs a new <code>BasicServletContextListener</code>. This is the default constructor.
 	 */
@@ -26,12 +28,7 @@ public class BasicServletContextListener implements ServletContextListener, Http
 	 * @param servletContextEvent the <code>ServletContextEvent</code>
 	 */
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		try {
-			//do it
-		} catch ( Throwable t ) {
-			// Catching just throwable on purpose
-			outputError("Failed to initialize context", t);
-		}
+		super.contextInitialized(servletContextEvent);
 	}
 
 	/**
@@ -40,13 +37,7 @@ public class BasicServletContextListener implements ServletContextListener, Http
 	 * @param servletContextEvent the <code>ServletContextEvent</code>
 	 */
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-
-		try {
-			//do it
-		} catch ( Throwable t ) {
-			// Catching just throwable on purpose
-			outputError("Failed to destroy context", t);
-		}
+		super.contextDestroyed(servletContextEvent);
 	}
 
 

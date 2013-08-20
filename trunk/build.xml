@@ -82,6 +82,11 @@
 	<property name="org.springframework.expression.jar" value="${thirdparty.dir}/spring/org.springframework.expression-3.0.4.RELEASE.jar" />
 	<property name="org.springframework.web.jar" value="${thirdparty.dir}/spring/org.springframework.web-3.0.4.RELEASE.jar" />
 	<property name="org.springframework.web.servlet.jar" value="${thirdparty.dir}/spring/org.springframework.web.servlet-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.transaction.jar" value="${thirdparty.dir}/spring/org.springframework.transaction-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.jdbc.jar" value="${thirdparty.dir}/spring/org.springframework.jdbc-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.orm.jar" value="${thirdparty.dir}/spring/org.springframework.orm-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.aop.jar" value="${thirdparty.dir}/spring/org.springframework.aop-3.0.4.RELEASE.jar" />
+	<property name="aopalliance.jar" value="${thirdparty.dir}/aopalliance/aopalliance-1.0.jar" />
 	<property name="hibernate.jar" value="${thirdparty.dir}/hibernate/hibernate.jar" />
 	<property name="oracle.jar" value="${thirdparty.dir}/oracle/lib/ojdbc5.jar"/>
 	<property name="vgnjdbc.jar" value="${thirdparty.dir}/DataDirect/ConnectForJDBC/vgnjdbc.jar"/>
@@ -95,6 +100,8 @@
 	<property name="slf4j-log4j.jar" value="${thirdparty.dir}/hibernate/slf4j-log4j.jar" />
 	<property name="xmlunit.jar" value="${lib.dir}/build/tests/xmlunit.jar" />
 	<property name="elib-api.jar" value="${thirdparty.dir}/opentext/els/lib/elib_api.jar"/>
+	<property name="mysql-connector.jar" value="${thirdparty.dir}/mysql/connector/MySQL Connector J/mysql-connector-java-5.1.26-bin.jar"/>
+	<property name="jta.jar" value="${thirdparty.dir}/jta/jta-1_1-classes.jar"/>
 
 	<path id="axis.jars.ref">
 		<fileset dir="${thirdparty.dir}/apache-axis/lib">
@@ -134,11 +141,21 @@
 		<fileset file="${org.springframework.expression.jar}" />
 		<fileset file="${org.springframework.web.jar}" />
 		<fileset file="${org.springframework.web.servlet.jar}" />		
+		<fileset file="${org.springframework.transaction.jar}" />
+		<fileset file="${org.springframework.jdbc.jar}" />
+		<fileset file="${org.springframework.orm.jar}" />
+		<fileset file="${org.springframework.aop.jar}" />
+		<fileset file="${aopalliance.jar}" />
 		<fileset file="${hibernate.jar}" />
 		<fileset file="${commons-logging.jar}"/>
 		<fileset file="${commons-beanutils.jar}"/>
 		<fileset file="${commons-fileupload.jar}"/>
 		<fileset file="${commons-io.jar}"/>
+		<fileset file="${mysql-connector.jar}"/>
+		<fileset file="${jta.jar}"/>
+        <fileset file="${dom4j.jar}"/>
+        <fileset file="${slf4j-api.jar}" />
+		<fileset file="${slf4j-log4j.jar}" />
 
 		<!--<fileset file="${dom4j.jar}" />
 		<fileset file="${javassist.jar}" />
@@ -329,12 +346,22 @@
 			<fileset file="${org.springframework.expression.jar}" />
 			<fileset file="${org.springframework.web.jar}" />
 			<fileset file="${org.springframework.web.servlet.jar}" />
+			<fileset file="${org.springframework.transaction.jar}" />
+			<fileset file="${org.springframework.jdbc.jar}" />
+			<fileset file="${org.springframework.orm.jar}" />
+			<fileset file="${org.springframework.aop.jar}" />
+			<fileset file="${aopalliance.jar}" />
 			<fileset file="${hibernate.jar}" />
 			<fileset file="${log4j.jar}"/>
 			<fileset file="${commons-logging.jar}"/>
 			<fileset file="${commons-beanutils.jar}"/>
 			<fileset file="${commons-fileupload.jar}"/>
 			<fileset file="${commons-io.jar}"/>
+			<fileset file="${mysql-connector.jar}"/>
+			<fileset file="${jta.jar}"/>
+			<fileset file="${dom4j.jar}"/>
+            <fileset file="${slf4j-api.jar}" />
+		    <fileset file="${slf4j-log4j.jar}" />
 		</copy>
 
 		<!-- root config -->

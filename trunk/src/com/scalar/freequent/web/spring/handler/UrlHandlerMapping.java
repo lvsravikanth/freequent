@@ -4,6 +4,7 @@ import org.springframework.web.servlet.handler.AbstractHandlerMapping;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Arrays;
+
+import com.scalar.freequent.web.spring.controller.FreequentController;
 
 /**
  * User: Sujan Kumar Suppala
@@ -45,7 +48,7 @@ public class UrlHandlerMapping extends AbstractHandlerMapping {
         int startIdx = urlPath.indexOf("/");
         int lastIdx = urlPath.lastIndexOf("/");
         if (lastIdx == startIdx) {
-            lastIdx = urlPath.length()-1;
+            lastIdx = urlPath.length();
         }
         String handlerPath = urlPath.substring(startIdx + 1, lastIdx);
         if (logger.isDebugEnabled()) {
@@ -58,8 +61,15 @@ public class UrlHandlerMapping extends AbstractHandlerMapping {
         if (logger.isDebugEnabled()) {
             logger.debug("Looking for mappings in application context: " + getApplicationContext());
         }
-        String[] beanNames = getApplicationContext().getBeanNamesForType(Controller.class);
+        String[] beanNames = getApplicationContext().getBeanNamesForType(FreequentController.class);
         handlerMappings.addAll(Arrays.asList(beanNames));
+
+        //check the parent context
+        ApplicationContext parentContext = getApplicationContext().getParent();
+        if (parentContext != null) {
+            beanNames = parentContext.getBeanNamesForType(FreequentController.class);
+            handlerMappings.addAll(Arrays.asList(beanNames));
+        }
     }
 
     /**
