@@ -44,5 +44,3 @@ jsp.precompile.disable=true
 #propgen.zh_TW=\u5468--
 #propgen.fr=<hello world>
 #propgen.bg=++postfix's
-
-# datasource properties to be placed in future

@@ -482,6 +482,7 @@
 			  path="${context.path}"/>
 	</target>
 
-	<target name="autoclean" depends="clean, undeploy" description="clean, undeploy"/>
+	<target name="autoclean" depends="clean, drop_tables" description="clean, undeploy"/>
 	<target name="autodeploy" depends="war, deploy" description="war and deploy"/>
+	<target name="autoconfig" depends="all, war, create_tables" />
 </project>

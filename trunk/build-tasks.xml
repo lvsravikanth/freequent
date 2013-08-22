@@ -18,7 +18,7 @@
 
 	<!-- tools -->
 	<property name="build.tools.dir" value="./tools" />
-
+	
 	<property name="ui-tools.jar" value="${build.tools.dir}/vui/vui-tools.jar" />
 	<property name="checkascii.classes" value="${build.tools.dir}/CheckAscii/classes" />
 	<property name="doccheck.jar" value="${build.tools.dir}/doccheck/doccheck.jar" />
@@ -33,6 +33,8 @@
 	<property name="junit.jar" value="${build.tools.dir}/junit/junit.jar"/>
 
 	<property name="thirdparty.dir" value="${fileset.dir}/thirdparty" />
+	<property name="vgn-tableinstaller.jar" location="${thirdparty.dir}/tableinstaller/2.4/vgn-tableinstaller.jar" />
+	<property name="tables.xml" value="${basedir}/resource/tableinstaller/tables.xml" />
 
 	<!-- properties -->
 	<loadfile property="copyright" srcFile="${basedir}/file/java/copyright.txt" />
@@ -429,5 +431,52 @@
 		</cobertura-instrument>
 	</target>
 
+	<!--Table Installer Macro -->
+	<macrodef name="run_tableinstaller">
+		<attribute name="driver" default="${datasource.driverClassName}" />
+		<attribute name="jdbc-url" default="${datasource.url}" />
+		<attribute name="user" default="${datasource.username}" />
+		<attribute name="password" default="${datasource.password}" />
+		<attribute name="action" default="create" />
+		<attribute name="tablesxml" default="${tables.xml}" />
+		<attribute name="noprompt" default="" />
+		<attribute name="upgradeoptions" default="" />
+		<attribute name="failonerror" default="false" />
+		<element implicit="true" optional="true" name="innerelements" description="Inner elements to ant java call" />
+		<sequential>
+			<java classname="com.vignette.tableinstaller.tools.TableInstaller" taskname="tableinstaller" failonerror="@{failonerror}" fork="true">
+				<classpath>
+					
+					<pathelement location="${vgn-tableinstaller.jar}"/>
+					<!--   pathelement location="${tableinstaller.home}/xml-xerces.jar" / -->
+					<pathelement location="${mysql-connector.jar}"/>
+
+				</classpath>
+				<arg value="--driver=@{driver}" />
+				<arg value="--jdbc-url=@{jdbc-url}" />
+				<arg value="--user=@{user}" />
+				<arg value="--password=@{password}" />
+				<arg value="@{action}" />
+				<arg value="@{tablesxml}" />
+				<arg value="@{noprompt}" />
+				<arg value="@{upgradeoptions}" />
+				<innerelements />
+			</java>
+		</sequential>
+	</macrodef>
 	
+	<target name="upgrade_tables" depends="init">
+		<run_tableinstaller action="upgrade" upgradeoptions="--keepColumnsOnUpgrade=yes"/>
+	</target>
+	<target name="create_tables" depends="init" >
+		<run_tableinstaller action="create"/>
+	</target>
+
+
+	<target name="drop_tables">
+		<run_tableinstaller action="drop" noprompt="noprompt"/>
+	</target>
+
+
+
 </project>

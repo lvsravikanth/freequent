@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<!DOCTYPE schema PUBLIC "http://www.epicentric.com/dtd/sql-schema-2-4.dtd" "./sql-schema-2-4.dtd">
+<schema version-table="Freequent_Version" version="1.0">
+	<tablegroup name="FreequentTables">
+		<table name="Freequent_Version" >
+			  <comment>
+			   This table stores the Freequent Application Builder version ID and
+			   last update time stamp.
+			  </comment>
+			  <column name="version_id" type="varchar" size="20" no-nulls="true" />
+			  <column name="last_update" type="timestamp" />
+			  <index name="PK_Freequent_Version" columns="version_id" primary-key="true"/>
+		 </table>
+
+		<table name="TestTable">
+			<column name="ID" no-nulls="true" size="40" type="integer"  autoincrement="false"/>
+			<column name="USERNAME" no-nulls="true" size="100" type="varchar" />
+			<column name="PASSWORD" no-nulls="true" size="100" type="varchar" />
+			<index name="UNIQUEID_PK" columns="ID" primary-key="true" />
+		</table>
+
+		<rowset table="TestTable">
+			<row>
+				<item column="ID" value="1"/>
+				<item column="USERNAME" value="admin"/>
+				<item column="PASSWORD" value="admin"/>
+			</row>
+		</rowset>
+
+	</tablegroup>
+
+</schema>
