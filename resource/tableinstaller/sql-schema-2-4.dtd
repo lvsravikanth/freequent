@@ -1,0 +1,92 @@
+<!ELEMENT schema (source-config?, comment?, storage-directive*, tablegroup*) >
+<!ELEMENT storage-directive (property-set+)>
+<!ELEMENT property-set (property+)>
+<!ELEMENT property EMPTY>
+<!ELEMENT tablegroup (comment*, (table|rowset)+)>
+<!ELEMENT table (comment?, column*, index*, key-ref*) >
+<!ELEMENT column (comment?) >
+<!ELEMENT index (comment?) >
+<!ELEMENT key-ref (comment?) >
+<!ELEMENT rowset (row+) >
+<!ELEMENT row (item*) >
+<!ELEMENT item EMPTY >
+<!ELEMENT comment (#PCDATA) >
+
+<!ATTLIST schema
+   portable (true|false) #IMPLIED
+   version CDATA #REQUIRED
+   version-table CDATA #IMPLIED
+   archive-dir CDATA #IMPLIED
+   conversions-file CDATA #IMPLIED
+>
+
+<!ATTLIST storage-directive
+   name CDATA #REQUIRED
+   comment CDATA #IMPLIED
+>
+
+<!ATTLIST property-set
+   database CDATA #IMPLIED
+   comment CDATA #IMPLIED
+>
+
+<!ATTLIST property
+   name CDATA #REQUIRED
+   value CDATA #REQUIRED
+   comment CDATA #IMPLIED
+>
+
+<!ATTLIST tablegroup
+   name CDATA #REQUIRED
+   comment CDATA #IMPLIED
+>
+
+<!ATTLIST table
+   name CDATA #REQUIRED
+   storage CDATA #IMPLIED
+   comment CDATA #IMPLIED
+>
+
+<!ATTLIST column
+   name CDATA #REQUIRED
+   type CDATA #REQUIRED
+   size CDATA #IMPLIED
+   no-nulls (true|false) "false"
+   default CDATA #IMPLIED
+   autoincrement (true|false) "false"
+   decimal-places CDATA #IMPLIED
+   multibyte (true|false) "false"
+   collation CDATA #IMPLIED
+>
+
+<!ATTLIST index
+   name CDATA #IMPLIED
+   unique (true|false) #IMPLIED
+   primary-key (true|false) "false"
+   clustered (true|false) "false"
+   columns CDATA #REQUIRED
+>
+
+<!ATTLIST key-ref
+   name CDATA #IMPLIED
+   columns CDATA #REQUIRED
+   table CDATA #REQUIRED
+   references CDATA #REQUIRED
+   rule (restricted|cascade) "restricted"
+>
+
+<!ATTLIST rowset
+   table CDATA #REQUIRED
+   create (true|false) "true"
+   upgrade (true|false) "true"
+>
+
+<!ATTLIST row
+   create (true|false) "true"
+   upgrade (true|false) "true"
+>
+
+<!ATTLIST item
+   column CDATA #REQUIRED
+   value CDATA #REQUIRED
+>
