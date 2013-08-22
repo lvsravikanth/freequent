@@ -224,7 +224,7 @@
 	</target>
 
 	<!-- jar -->
-	<target name="jar" depends="compile, testprops" description="Build jars">
+	<target name="jar" depends="compile, testprops, replace-datasource-properties" description="Build jars">
 		<mkdir dir="${jars.dir}" />
 
 		<jar destfile="${scalar-freequent.jar}" duplicate="fail">
