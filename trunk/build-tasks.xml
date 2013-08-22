@@ -127,6 +127,8 @@
 	<property name="build.version.timepattern" value="version.timepattern" />
 	<property name="build.time.pattern" value="yyyy-MM-dd HH:mm:ss z" />
 
+    <property name="target.datasource.properties.file" value="${classes.dir}/com/scalar/freequent/config/datasource.properties"/>
+
 	<!-- taskdefs -->
 	<taskdef name="checkascii" classpath="${checkascii.classes}" classname="com.vignette.tools.CheckAscii" />
 	<taskdef name="propgen" classpath="${vgnpropgen.jar}" classname="com.vignette.tools.propgen.PropGenTask" />
@@ -478,5 +480,15 @@
 	</target>
 
 
+    <target name="replace-datasource-properties">
+        <echo message="Replacing datasource properties from build.properties to ${target.datasource.properties.file}"/>
+        <replace file="${target.datasource.properties.file}">
+          <replacefilter token="@datasource.url@" value="${datasource.url}"/>
+          <replacefilter token="@datasource.driverClassName@" value="${datasource.driverClassName}"/>
+          <replacefilter token="@datasource.username@" value="${datasource.username}"/>
+          <replacefilter token="@datasource.password@" value="${datasource.password}"/>
+          <replacefilter token="@connectionProperty.socketFactory@" value="${connectionProperty.socketFactory}"/>
+        </replace>
+    </target>
 
 </project>
