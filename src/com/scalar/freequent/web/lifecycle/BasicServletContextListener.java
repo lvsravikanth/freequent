@@ -2,11 +2,14 @@
 package com.scalar.freequent.web.lifecycle;
 
 import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+
+import com.scalar.core.ContextUtil;
 
 /**
  * The <code>BasicServletContextListener</code> class is the implementation of the springs <code>ContextLoaderListener</code>
@@ -29,6 +32,9 @@ public class BasicServletContextListener extends ContextLoaderListener implement
 	 */
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
+        ApplicationContext applicationContext = getCurrentWebApplicationContext();
+        ContextUtil.init (applicationContext);
+        
 	}
 
 	/**

@@ -1,51 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:tx="http://www.springframework.org/schema/tx"
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xmlns:util="http://www.springframework.org/schema/util"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>classpath:com/scalar/freequent/config/datasource.properties</value>
-				<value>classpath:com/scalar/freequent/config/hibernate.properties</value>
-			</list>
-		</property>
-	</bean>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:com/scalar/freequent/config/datasource.properties</value>
+                <value>classpath:com/scalar/freequent/config/hibernate.properties</value>
+            </list>
+        </property>
+    </bean>
 
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="url" value="${datasource.url}"/>
-		<property name="driverClassName" value="${datasource.driverClassName}"/>
-		<property name="username" value="${datasource.username}"/>
-		<property name="password" value="${datasource.password}"/>
-	</bean>
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="url" value="${datasource.url}"/>
+        <property name="driverClassName" value="${datasource.driverClassName}"/>
+        <property name="username" value="${datasource.username}"/>
+        <property name="password" value="${datasource.password}"/>
+    </bean>
 
-	<!--<util:properties id="hibernateProperties" location="classpath:com/scalar/freequent/config/hibernate.properties"/>
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource"/>
-		<property name="hibernateProperties">
-			<ref local="hibernateProperties"/>
-		</property>
-		<property name="mappingDirectoryLocations">
-			<list>
-				--><!-- provide the hbm folder in which .hbm are present--><!--
-				<value>classpath:/com/scalar/freequent/config/hbm</value>
-			</list>
-		</property>
-	</bean>
-
-	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>-->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
-	<tx:annotation-driven transaction-manager="transactionManager"/>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>

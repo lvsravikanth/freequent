@@ -92,8 +92,9 @@
 	<property name="vgnjdbc.jar" value="${thirdparty.dir}/DataDirect/ConnectForJDBC/vgnjdbc.jar"/>
 	<property name="ldapjdk.jar" value="${thirdparty.dir}/ldapsdk/lib/ldapjdk.jar"/>
 	<property name="commons-lang.jar" value="${thirdparty.dir}/jakarta-commons/commons-lang/2.3/commons-lang.jar"/>
-	<property name="commons-collections.jar" value="${thirdparty.dir}/jakarta-commons/collections/3.2.1/common-collections.jar"/>
+	<property name="commons-collections.jar" value="${thirdparty.dir}/jakarta-commons/collections/3.2.1/commons-collections.jar"/>
 	<property name="commons-logging.jar" value="${thirdparty.dir}/jakarta-commons/logging/1.0.4/commons-logging.jar"/>
+	<property name="commons-pool.jar" value="${thirdparty.dir}/jakarta-commons/pool/commons-pool.jar"/>
 	<property name="dom4j.jar" value="${thirdparty.dir}/dom4j/dom4j.jar"/>
 	<property name="javassist.jar" value="${thirdparty.dir}/hibernate/javassist.jar"/>
 	<property name="slf4j-api.jar" value="${thirdparty.dir}/hibernate/slf4j-api.jar" />
@@ -156,6 +157,9 @@
         <fileset file="${dom4j.jar}"/>
         <fileset file="${slf4j-api.jar}" />
 		<fileset file="${slf4j-log4j.jar}" />
+        <fileset file="${commons-dbcp.jar}" />
+        <fileset file="${commons-pool.jar}" />
+        <fileset file="${commons-collections.jar}" />
 
 		<!--<fileset file="${dom4j.jar}" />
 		<fileset file="${javassist.jar}" />
@@ -362,14 +366,17 @@
 			<fileset file="${dom4j.jar}"/>
             <fileset file="${slf4j-api.jar}" />
 		    <fileset file="${slf4j-log4j.jar}" />
+            <fileset file="${commons-dbcp.jar}" />
+            <fileset file="${commons-pool.jar}" />
+            <fileset file="${commons-collections.jar}" />
 		</copy>
 
 		<!-- root config -->
-		<copy todir="${exploded.war}/WEB-INF/classes" includeEmptyDirs="false">
-			<fileset dir="${source.dir}">
+		<!--<copy todir="${exploded.war}/WEB-INF/classes" includeEmptyDirs="false">
+			<fileset dir="${classes.dir}">
 				<include name="com/scalar/freequent/config/*" />
 			</fileset>
-		</copy>
+		</copy>-->
 
 		<!-- copy scalar resources -->
 		<copy todir="${exploded.war}" includeEmptyDirs="false">
