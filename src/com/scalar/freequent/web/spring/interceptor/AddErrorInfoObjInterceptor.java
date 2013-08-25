@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 
 import com.scalar.freequent.web.request.RequestParameters;
 import com.scalar.freequent.web.util.ErrorInfoUtil;
+import com.scalar.core.request.BasicRequest;
+import com.scalar.core.request.Request;
 
 /**
  * User: ssuppala
@@ -19,8 +21,10 @@ public class AddErrorInfoObjInterceptor extends HandlerInterceptorAdapter {
 	//protected final Log logger = LogFactory.getLog(getClass());
 	public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
 		//logger.info ( "Checking Errors, Info Objects in Request" );
-		Map<String, Object> errors = ErrorInfoUtil.getErrors(httpServletRequest);
-		Map<String, Object> info = ErrorInfoUtil.getInfos(httpServletRequest);
+        Request request = new BasicRequest();
+        request.setWrappedObject(httpServletRequest);
+		Map<String, Object> errors = ErrorInfoUtil.getErrors(request);
+		Map<String, Object> info = ErrorInfoUtil.getInfos(request);
 		if (errors == null) {
 			//logger.info ( "Adding Errors object to the Request" );
 			httpServletRequest.setAttribute(RequestParameters.ATTRIBUTE_ERROR_MESSAGES, new LinkedHashMap<String, Object>());

@@ -34,7 +34,7 @@ public interface Request extends Serializable {
     /**
      * Constant used to identify the <code>Request</code> attribute.
      */
-    public static final String REQUEST_ATTRIBUTE = "com.vignette.ui.core.request.Request";
+    public static final String REQUEST_ATTRIBUTE = "com.scalar.freequent.core.request.Request";
 
     /**
      * Constant used to identify the request content attribute.
