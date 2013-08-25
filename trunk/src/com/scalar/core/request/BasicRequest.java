@@ -3,6 +3,7 @@ package com.scalar.core.request;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -152,10 +153,10 @@ public class BasicRequest implements Request {
     }
 
     public Locale getLocale() {
-        return null;  //todo
+        return ((HttpServletRequest)getWrappedObject()).getLocale();
     }
 
     public TimeZone getTimeZone() {
-        return null; //todo
+        return TimeZone.getDefault();
     }
 }

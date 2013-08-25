@@ -5,10 +5,13 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.context.support.AbstractMessageSource;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequest;
 import java.util.Map;
 
 import com.scalar.freequent.web.request.RequestParameters;
+import com.scalar.freequent.util.ResourceUtil;
 import com.scalar.core.ScalarRuntimeException;
+import com.scalar.core.request.Request;
 
 /**
  * User: sujan
@@ -19,35 +22,31 @@ public class ErrorInfoUtil {
 	private ErrorInfoUtil() {
 	}
 
-	public static void addError(HttpServletRequest request, String errorCode, String args[]) {
+	public static void addError(Request request, String resourceName, String key, String params[]) {
 		Map<String, Object> errors = getErrors(request);
-		WebApplicationContext wac = RequestContextUtils.getWebApplicationContext(request);
-		AbstractMessageSource msgSource = (AbstractMessageSource) (wac.getBean("messageSource"));
-		String msg = msgSource.getMessage(errorCode, args, null);
+        String msg = ResourceUtil.getMessage(resourceName, request.getLocale(), key, params);
 		errors.put(msg, null);
 	}
 
-	public static void addInfo(HttpServletRequest request, String infoCode, String args[]) {
+	public static void addInfo(Request request, String resourceName, String key, String params[]) {
 		Map<String, Object> info = getInfos(request);
-		WebApplicationContext wac = RequestContextUtils.getWebApplicationContext(request);
-		AbstractMessageSource msgSource = (AbstractMessageSource) (wac.getBean("messageSource"));
-		String msg = msgSource.getMessage(infoCode, args, null);
+		String msg = ResourceUtil.getMessage(resourceName, request.getLocale(), key, params);
 		info.put(msg, null);
 	}
 
-	public static void addErrorMsg(HttpServletRequest request, String errorMsgKey, String errorMsgValue) {
+	public static void addErrorMsg(Request request, String errorMsgKey, String errorMsgValue) {
 		Map<String, Object> errors = getErrors(request);
 		errors.put(errorMsgKey, errorMsgValue);
 	}
 
-	public static void addInfoMsg(HttpServletRequest request, String infoMsgKey, String infoMsgValue) {
+	public static void addInfoMsg(Request request, String infoMsgKey, String infoMsgValue) {
 		Map<String, Object> info = getInfos(request);
 		info.put(infoMsgKey, infoMsgValue);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Map<String, Object> getErrors(HttpServletRequest request) {
-		Object obj = request.getAttribute(RequestParameters.ATTRIBUTE_ERROR_MESSAGES);
+	public static Map<String, Object> getErrors(Request request) {
+		Object obj = ((HttpServletRequest) request.getWrappedObject()).getAttribute(RequestParameters.ATTRIBUTE_ERROR_MESSAGES);
 		if (obj == null || (obj instanceof Map)) {
 			return (Map<String, Object>) obj;
 		}
@@ -56,8 +55,8 @@ public class ErrorInfoUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Map<String, Object> getInfos(HttpServletRequest request) {
-		Object obj = request.getAttribute(RequestParameters.ATTRIBUTE_INFO_MESSAGES);
+	public static Map<String, Object> getInfos(Request request) {
+		Object obj = ((HttpServletRequest) request.getWrappedObject()).getAttribute(RequestParameters.ATTRIBUTE_INFO_MESSAGES);
 		if (obj == null || (obj instanceof Map)) {
 			return (Map<String, Object>) obj;
 		}

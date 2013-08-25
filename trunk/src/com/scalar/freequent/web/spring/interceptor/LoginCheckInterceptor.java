@@ -29,7 +29,7 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 			String url = httpServletRequest.getServletPath();
 			System.out.println("================URL:" + url);
 			String query = httpServletRequest.getQueryString();
-			ErrorInfoUtil.addError(httpServletRequest, "session.expired", null); //todo: property key should be fetched form resouce class
+			//ErrorInfoUtil.addError(httpServletRequest, "session.expired", null); //todo: property key should be fetched form resouce class
 			ModelAndView modelAndView = new ModelAndView("loginPageController");
 
 			if (query != null) {
