@@ -24,6 +24,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
 import com.scalar.freequent.web.spring.propertyeditor.CustomPrimitiveNumberEditor;
+import com.scalar.core.request.Request;
+import com.scalar.core.request.BasicRequest;
+import com.scalar.core.response.Response;
+import com.scalar.core.response.BasicResponse;
 
 /**
  * User: .sujan.
@@ -42,34 +46,35 @@ public abstract class AbstractActionFormController extends SimpleFormController 
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
 	}
 
-	public abstract ModelAndView defaultProcess(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors) throws Exception;
+	public abstract ModelAndView defaultProcess(Request request, Response response, Object command, BindException errors) throws Exception;
 
-	public ModelAndView processException(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors, Throwable exception) throws Exception {
-		ReflectionUtils.rethrowException(exception);
-		return showForm(request, response, errors); //no use return...above line will throw the exception
-	}
-
-
-	protected final ModelAndView processFormSubmission(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors) throws Exception {
+	protected final ModelAndView processFormSubmission(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object command, BindException errors) throws Exception {
 		//return super.processFormSubmission(request, response, command, errors);    //To change body of overridden methods use File | Settings | File Templates.
-		if (errors.hasErrors() || isFormChangeRequest(request)) {
+		if (errors.hasErrors() || isFormChangeRequest(httpServletRequest)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Data binding errors: " + errors.getErrorCount());
 			}
-			return showForm(request, response, errors);
+			return showForm(httpServletRequest, httpServletResponse, errors);
 		} else {
 			try {
-				String methodName = this.methodNameResolver.getHandlerMethodName(request);
+				String methodName = this.methodNameResolver.getHandlerMethodName(httpServletRequest);
                 if (logger.isDebugEnabled()) {
 				    logger.debug("================METHOD NAME=" + methodName);
                 }
-				return invokeNamedMethod(methodName, request, response, command, errors);
+                Request request = new BasicRequest();
+                request.setWrappedObject(httpServletRequest);
+                request.setMethod(methodName);
+
+                Response response = new BasicResponse();
+                response.setWrappedObject(httpServletResponse);
+				return AbstractControllerUtil.getInstance().invokeNamedMethod(this, methodName, request, response, command, errors);
 			}
 			catch (NoSuchRequestHandlingMethodException ex) {
-				return handleNoSuchRequestHandlingMethod(ex, request, response);
+				return handleNoSuchRequestHandlingMethod(ex, httpServletRequest, httpServletResponse);
 			}
 		}
 	}
+
 
 	protected ModelAndView handleNoSuchRequestHandlingMethod(NoSuchRequestHandlingMethodException ex, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.warn(ex);
@@ -77,26 +82,5 @@ public abstract class AbstractActionFormController extends SimpleFormController 
 		return null;
 	}
 
-	private ModelAndView invokeNamedMethod(String methodName, HttpServletRequest request, HttpServletResponse response, Object command, BindException errors) throws Exception {
-		ModelAndView modelAndView = null;
-		Method method = this.getClass().getMethod(methodName, new Class[]{HttpServletRequest.class,
-				HttpServletResponse.class,
-				Object.class,
-				BindException.class});
-		if (method == null) {
-			throw new NoSuchRequestHandlingMethodException(methodName, getClass());
-		}
-		List<Object> params = new ArrayList<Object>(4);
-		params.add(request);
-		params.add(response);
-		params.add(command);
-		params.add(errors);
-		try {
-			modelAndView = (ModelAndView) method.invoke(this, params.toArray(new Object[params.size()]));
-		}
-		catch (InvocationTargetException ex) {
-			processException(request, response, command, errors, ex.getTargetException());
-		}
-		return modelAndView;
-	}
+
 }
