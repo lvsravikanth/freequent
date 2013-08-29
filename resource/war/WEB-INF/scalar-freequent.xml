@@ -88,7 +88,7 @@
     </bean>
 
     <bean class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
-        <property name="basename" value="com/scalar.freequent/config/spring-views"/>
+        <property name="basename" value="com/scalar/freequent/config/spring-views"/>
         <property name="order" value="1"/>
     </bean>
 
