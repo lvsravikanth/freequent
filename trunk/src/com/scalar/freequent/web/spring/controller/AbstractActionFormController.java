@@ -32,6 +32,9 @@ import com.scalar.core.request.Request;
 import com.scalar.core.request.BasicRequest;
 import com.scalar.core.response.Response;
 import com.scalar.core.response.BasicResponse;
+import com.scalar.core.util.MsgObject;
+import com.scalar.core.util.MsgObjectUtil;
+import com.scalar.core.ScalarActionException;
 
 /**
  * User: .sujan.
@@ -50,7 +53,7 @@ public abstract class AbstractActionFormController extends SimpleFormController 
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
 	}
 
-	public abstract ModelAndView defaultProcess(Request request, Response response, Object command, BindException errors) throws Exception;
+	public abstract ModelAndView defaultProcess(Request request, Response response, Object command, BindException errors) throws ScalarActionException;
 
 	protected final ModelAndView processFormSubmission(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object command, BindException errors) throws Exception {
 		//return super.processFormSubmission(request, response, command, errors);    //To change body of overridden methods use File | Settings | File Templates.
@@ -80,12 +83,14 @@ public abstract class AbstractActionFormController extends SimpleFormController 
                         boolean authorized = getAuthorized(request);
                         if (!authorized) {
                             // forward to a not authorized page
-                            ErrorInfoUtil.addError(request, MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED, null);
+							MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED);
+							ErrorInfoUtil.addError(request, msgObject);
                             return new ModelAndView ("auth/notauthorized");
                         }
                     } else {
                         // forward to login page as the request is not authenticated.
-                        ErrorInfoUtil.addError(request, MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED, null);
+						MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED);
+						ErrorInfoUtil.addError(request, msgObject);
                         return new ModelAndView ("auth/login");
                     }
                 }

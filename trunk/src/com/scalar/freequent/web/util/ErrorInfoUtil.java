@@ -11,6 +11,8 @@ import java.util.Map;
 import com.scalar.freequent.web.request.RequestParameters;
 import com.scalar.freequent.util.ResourceUtil;
 import com.scalar.core.ScalarRuntimeException;
+import com.scalar.core.util.MsgObject;
+import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.request.Request;
 
 /**
@@ -22,26 +24,14 @@ public class ErrorInfoUtil {
 	private ErrorInfoUtil() {
 	}
 
-	public static void addError(Request request, String resourceName, String key, String params[]) {
+	public static void addError(Request request, MsgObject msgObject) {
 		Map<String, Object> errors = getErrors(request);
-        String msg = ResourceUtil.getMessage(resourceName, request.getLocale(), key, params);
-		errors.put(msg, null);
+		errors.put(msgObject.localize(request.getLocale()), null);
 	}
 
-	public static void addInfo(Request request, String resourceName, String key, String params[]) {
+	public static void addInfo(Request request, MsgObject msgObject) {
 		Map<String, Object> info = getInfos(request);
-		String msg = ResourceUtil.getMessage(resourceName, request.getLocale(), key, params);
-		info.put(msg, null);
-	}
-
-	public static void addErrorMsg(Request request, String errorMsgKey, String errorMsgValue) {
-		Map<String, Object> errors = getErrors(request);
-		errors.put(errorMsgKey, errorMsgValue);
-	}
-
-	public static void addInfoMsg(Request request, String infoMsgKey, String infoMsgValue) {
-		Map<String, Object> info = getInfos(request);
-		info.put(infoMsgKey, infoMsgValue);
+		info.put(msgObject.localize(request.getLocale()), null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -51,7 +41,7 @@ public class ErrorInfoUtil {
 			return (Map<String, Object>) obj;
 		}
 
-		throw ScalarRuntimeException.create("",null,"invalid type",null);//todo need to define from resource
+		throw ScalarRuntimeException.create(MsgObjectUtil.getMsgObject("invalid type"), null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -61,6 +51,6 @@ public class ErrorInfoUtil {
 			return (Map<String, Object>) obj;
 		}
 
-		throw ScalarRuntimeException.create("",null,"invalid type",null);//todo need to define from resource
+		throw ScalarRuntimeException.create(MsgObjectUtil.getMsgObject("invalid type"), null);
 	}
 }

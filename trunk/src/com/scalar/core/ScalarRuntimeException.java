@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.ResourceUtil;
+import com.scalar.core.util.MsgObject;
 
 /**
  * Signals that an exception has occurred in the UI. This class is the general class of exceptions produced by failed UI
@@ -74,86 +75,21 @@ public class ScalarRuntimeException extends RuntimeException {
 	/**
 	 * Constructs a new <code>ScalarRuntimeException</code> with a localized message.
 	 *
-	 * @param baseName the base name for use with <code>ResourceUtil.getMessage</code>
 	 * @param locale the current <code>Locale</code> for use with <code>ResourceUtil.getMessage</code>
-	 * @param key the key for use with <code>ResourceUtil.getMessage</code>
-	 * @param throwable the parent cause of this exception. (A <code>null</code> value is permitted, and indicates
-	 *            that the cause is nonexistent or unknown.)
-	 * @return a new <code>ScalarRuntimeException</code>
-	 * @see com.scalar.freequent.util.ResourceUtil#getMessage(String, java.util.Locale , String)
-	 */
-	public static ScalarRuntimeException create(String baseName, Locale locale, String key, Throwable throwable) {
-		return create(baseName, locale, key, null, throwable);
-	}
-
-	/**
-	 * Constructs a new <code>ScalarRuntimeException</code> with a localized message.
-	 *
-	 * @param baseName the base name for use with <code>ResourceUtil.getMessage</code>
-	 * @param locale the current <code>Locale</code> for use with <code>ResourceUtil.getMessage</code>
-	 * @param key the key for use with <code>ResourceUtil.getMessage</code>
-	 * @param param the message parameter for use with <code>ResourceUtil.getMessage</code>
-	 * @param throwable the parent cause of this exception. (A <code>null</code> value is permitted, and indicates
-	 *            that the cause is nonexistent or unknown.)
-	 * @return a new <code>ScalarRuntimeException</code>
-	 * @see com.scalar.freequent.util.ResourceUtil#getMessage(String, Locale, String, Object)
-	 */
-	public static ScalarRuntimeException create(String baseName, Locale locale, String key, Object param, Throwable throwable) {
-		return new ScalarRuntimeException(baseName, locale, key, param, throwable);
-	}
-
-	/**
-	 * Constructs a new <code>ScalarRuntimeException</code> with a localized message.
-	 *
-	 * @param baseName the base name for use with <code>ResourceUtil.getMessage</code>
-	 * @param locale the current <code>Locale</code> for use with <code>ResourceUtil.getMessage</code>
-	 * @param key the key for use with <code>ResourceUtil.getMessage</code>
-	 * @param params the message parameters for use with <code>ResourceUtil.getMessage</code>
-	 * @param throwable the parent cause of this exception. (A <code>null</code> value is permitted, and indicates
-	 *            that the cause is nonexistent or unknown.)
-	 * @return a new <code>ScalarRuntimeException</code>
-	 * @see ResourceUtil#getMessage(String, Locale, String, Object[])
-	 */
-	public static ScalarRuntimeException create(String baseName, Locale locale, String key, Object[] params, Throwable throwable) {
-		return new ScalarRuntimeException(baseName, locale, key, params, throwable);
-	}
-
-	/**
-	 * Constructs a new <code>ScalarRuntimeException</code> with a localized message.
-	 *
-	 * @param baseName the base name for use with <code>ResourceUtil.getMessage</code>
-	 * @param locale the current <code>Locale</code> for use with <code>ResourceUtil.getMessage</code>
-	 * @param key the key for use with <code>ResourceUtil.getMessage</code>
-	 * @param param the message parameter for use with <code>ResourceUtil.getMessage</code>
-	 * @param throwable the parent cause of this exception. (A <code>null</code> value is permitted, and indicates
-	 *            that the cause is nonexistent or unknown.)
-	 * @see com.scalar.freequent.util.ResourceUtil#getMessage(String, Locale, String, Object)
-	 */
-	protected ScalarRuntimeException(String baseName, Locale locale, String key, Object param, Throwable throwable) {
-		super(throwable);
-
-		// Get it from the resource
-		message = StringUtil.htmlUnescape(ResourceUtil.getMessage(baseName, locale, key, param));
-	}
-
-	/**
-	 * Constructs a new <code>ScalarRuntimeException</code> with a localized message.
-	 *
-	 * @param baseName the base name for use with <code>ResourceUtil.getMessage</code>
-	 * @param locale the current <code>Locale</code> for use with <code>ResourceUtil.getMessage</code>
-	 * @param key the key for use with <code>ResourceUtil.getMessage</code>
-	 * @param params the message parameters for use with <code>ResourceUtil.getMessage</code>
 	 * @param throwable the parent cause of this exception. (A <code>null</code> value is permitted, and indicates
 	 *            that the cause is nonexistent or unknown.)
 	 * @see com.scalar.freequent.util.ResourceUtil#getMessage(String, Locale, String, Object[])
 	 */
-	protected ScalarRuntimeException(String baseName, Locale locale, String key, Object[] params, Throwable throwable) {
+	protected ScalarRuntimeException(MsgObject msgObject, Locale locale, Throwable throwable) {
 		super(throwable);
 
 		// Get it from the resource
-		message = StringUtil.htmlUnescape(ResourceUtil.getMessage(baseName, locale, key, params));
+		message = msgObject.localize(locale);
 	}
 
+	public static ScalarRuntimeException create (MsgObject msgObject, Throwable throwable) {
+		return new ScalarRuntimeException(msgObject, null, throwable);
+	}
 	/**
 	 * Returns the localized message <code>String</code>for this exception.
 	 *
