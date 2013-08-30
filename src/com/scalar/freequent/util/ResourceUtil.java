@@ -74,6 +74,9 @@ public final class ResourceUtil {
 		return getMessage(baseName, locale, key, params, -1);
 	}
 
+	public static String getMessage(String baseName, Locale locale, String key, Object[] params, int maxLength ) {
+		return getMessage(baseName, locale, key, params, maxLength, null);
+	}
 	/**
 	 * Returns a localized and formatted, HTML-escaped message for the given
 	 * resource base name, <code>Locale</code>, message key and message
@@ -86,7 +89,7 @@ public final class ResourceUtil {
 	 * @param maxLength the maximum length of the message. -1 means no limit
 	 * @return the localized and formatted message
 	 */
-	public static String getMessage(String baseName, Locale locale, String key, Object[] params, int maxLength) {
+	public static String getMessage(String baseName, Locale locale, String key, Object[] params, int maxLength, ClassLoader loader) {
 		String message = null;
 
 		// Make sure we have a locale
@@ -95,8 +98,9 @@ public final class ResourceUtil {
 		}
 
 		try {
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale, loader);
+			ResourceBundle bundle = loader == null ?
+					ResourceBundle.getBundle(baseName, locale) :
+					ResourceBundle.getBundle(baseName, locale, loader);
 			if ( null != bundle ) {
 				message = bundle.getString(key);
 			}

@@ -16,6 +16,9 @@ import com.scalar.core.request.Request;
 import com.scalar.core.request.BasicRequest;
 import com.scalar.core.response.Response;
 import com.scalar.core.response.BasicResponse;
+import com.scalar.core.util.MsgObjectUtil;
+import com.scalar.core.util.MsgObject;
+import com.scalar.core.ScalarActionException;
 import com.scalar.freequent.web.session.SessionParameters;
 import com.scalar.freequent.web.util.ErrorInfoUtil;
 import com.scalar.freequent.l10n.MessageResource;
@@ -29,7 +32,7 @@ public abstract class AbstractActionController extends AbstractController implem
     protected static final Log logger = LogFactory.getLog(AbstractActionController.class);
     private MethodNameResolver methodNameResolver = AbstractControllerUtil.getMethodNameResolver();
 
-    public abstract ModelAndView defaultProcess(Request request, Response response, Object command, BindException errors) throws Exception;
+    public abstract ModelAndView defaultProcess(Request request, Response response, Object command, BindException errors) throws ScalarActionException;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         try {
@@ -53,12 +56,14 @@ public abstract class AbstractActionController extends AbstractController implem
                     boolean authorized = getAuthorized(request);
                     if (!authorized) {
                         // forward to a not authorized page
-                        ErrorInfoUtil.addError(request, MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED, null);
+						MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED);
+						ErrorInfoUtil.addError(request, msgObject);
                         return new ModelAndView ("auth/notauthorized");
                     }
                 } else {
                     // forward to login page as the request is not authenticated.
-                    ErrorInfoUtil.addError(request, MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED, null);
+					MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED);
+					ErrorInfoUtil.addError(request, msgObject);
                     return new ModelAndView ("auth/login");
                 }
             }
@@ -102,7 +107,7 @@ public abstract class AbstractActionController extends AbstractController implem
         if (session == null) {
             return false;
         }
-        return session.getAttribute(SessionParameters.ATTRIBUTE_USER) != null;
+		return session.getAttribute(SessionParameters.ATTRIBUTE_USER) != null;
     }
 
     /**
