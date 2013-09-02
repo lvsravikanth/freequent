@@ -4,16 +4,23 @@ import com.scalar.core.request.Request;
 import com.scalar.core.response.Response;
 import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.ScalarActionException;
+import com.scalar.core.ScalarServiceException;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.util.MsgObject;
 import com.scalar.freequent.auth.service.AuthService;
 import com.scalar.freequent.web.spring.controller.AbstractActionController;
 import com.scalar.freequent.web.util.ErrorInfoUtil;
+import com.scalar.freequent.web.session.SessionParameters;
 import com.scalar.freequent.l10n.MessageResource;
+import com.scalar.freequent.l10n.ServiceResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -26,16 +33,13 @@ public class AuthAction extends AbstractActionController {
 	private static final String METHOD_LOGOUT = "logout";
 	private static final String METHOD_AUTHENTICATE = "authenticate";
 
-	public ModelAndView defaultProcess(Request request, Response response, Object command, BindException errors) throws ScalarActionException {
-        ModelAndView modelAndView = new ModelAndView("auth/login");
-        AuthService authService = ServiceFactory.getService(AuthService.class, request);
-		try {
-			authService.dbTransactionTest();
-        	authService.noDbTransactionTest();
-		} catch (Exception e) {
-			throw ScalarActionException.create (MsgObjectUtil.getMsgObject("Exception in defaultProcess"), null);
-		}
-		return modelAndView;
+	public void defaultProcess(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
+        ModelAndView modelAndView;
+        if (isAuthenticated(request)) {
+            data.put(Response.TEMPLATE_ATTRIBUTE, "common/home");
+        } else {
+            data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
+        }
     }
 
 	protected boolean getAuthenticationRequired(Request request) {
@@ -48,22 +52,34 @@ public class AuthAction extends AbstractActionController {
 		return super.getAuthenticationRequired(request);
 	}
 
-	public ModelAndView login (Request request, Response response, Object command, BindException errors) throws ScalarActionException {
-		if (authenticate(request)) {
+	public void login (Request request,Object command, Map<String, Object> data) throws ScalarActionException {
+		if (isAuthenticated(request)) {
 			// if authenticated show the home page
-			return new ModelAndView ("common/home"); 
+			data.put(Response.TEMPLATE_ATTRIBUTE, "common/home");
 		}
-		return new ModelAndView("auth/login");
+		data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
 	}
 
-	public ModelAndView authenticate (Request request, Response response, Object command, BindException errors) throws ScalarActionException {
-		if (authenticate(request)) {
-			// if authenticated successfully show the home page
-			return new ModelAndView ("common/home");
-		} else {
-			MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.INVALID_CREDENTIALS);
-			ErrorInfoUtil.addError(request, msgObject);
-			return new ModelAndView("auth/login");
-		}
+	public void authenticate (Request request,Object command, Map<String, Object> data) throws ScalarActionException {
+        String uname = request.getParameter ("username");
+        String pwd = request.getParameter ("password");
+
+        AuthService authService = ServiceFactory.getService(AuthService.class, request);
+        try {
+            boolean isValid = authService.checkCredentials(uname, pwd);
+
+            if (isValid) {
+                // if authenticated successfully show the home page
+                ((HttpServletRequest)request.getWrappedObject()).getSession(true).setAttribute(SessionParameters.ATTRIBUTE_USER, "todo");
+                data.put(Response.TEMPLATE_ATTRIBUTE, "common/home");
+            } else {
+                MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.INVALID_CREDENTIALS);
+                ErrorInfoUtil.addError(request, msgObject);
+                data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
+            }
+        } catch (ScalarServiceException e) {
+            MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.CHECK_CREDENTIALS_FAILED);
+            throw ScalarActionException.create(msgObject, e);
+        }
 	}
 }

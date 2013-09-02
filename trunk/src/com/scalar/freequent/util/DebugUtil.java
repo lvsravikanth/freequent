@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -63,6 +64,28 @@ public class DebugUtil {
 		if (!transactionActive()) {
 			// No, throw an exception
 			throw new IllegalStateException("Transaction required but not active [" + message + "]");
+		}
+	}
+
+    /**
+	 * Logs the data in the <code>Map</code>.
+	 *
+	 * @param log the log for output
+	 * @param data the data to log
+	 * @param message the message to log prior to the data. Can be <code>null</code>.
+	 */
+	public static void logMap(Log log, Map<?, ?> data, String message) {
+		if ( null != message ) {
+			log.debug(message);
+		}
+
+		if ( null == data ) {
+			return;
+		}
+
+		for ( Object name : data.entrySet() ) {
+			Map.Entry<?, ?> entry = (Map.Entry<?, ?>)name;
+			log.debug(entry.getKey() + " : " + entry.getValue());
 		}
 	}
 

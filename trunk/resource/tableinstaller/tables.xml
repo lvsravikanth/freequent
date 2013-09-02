@@ -12,12 +12,31 @@
 			  <index name="PK_Freequent_Version" columns="version_id" primary-key="true"/>
 		 </table>
 
+        <table name="FTUSERS">
+			<column name="USER_ID" no-nulls="true" size="40" type="varchar"  autoincrement="false"/>
+			<column name="FIRST_NAME" no-nulls="true" size="80" type="varchar" />
+			<column name="MIDDLE_NAME" no-nulls="false" size="80" type="varchar" />
+			<column name="LAST_NAME" no-nulls="false" size="80" type="varchar" />
+			<column name="PASSWORD" no-nulls="true" size="40" type="varchar" />
+			<index name="USER_ID_PK" columns="USER_ID" primary-key="true" />
+		</table>
+
 		<table name="TestTable">
 			<column name="ID" no-nulls="true" size="40" type="integer"  autoincrement="false"/>
 			<column name="USERNAME" no-nulls="true" size="100" type="varchar" />
 			<column name="PASSWORD" no-nulls="true" size="100" type="varchar" />
 			<index name="UNIQUEID_PK" columns="ID" primary-key="true" />
 		</table>
+
+        <!-- master data -->
+        <rowset table="FTUSERS">
+			<row>
+				<item column="USER_ID" value="admin"/>
+				<item column="FIRST_NAME" value="admin"/>
+				<item column="LAST_NAME" value="admin"/>
+				<item column="PASSWORD" value="admin"/>
+			</row>
+		</rowset>
 
 		<rowset table="TestTable">
 			<row>

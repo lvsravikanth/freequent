@@ -11,6 +11,10 @@ import org.springframework.beans.BeansException;
 import javax.sql.DataSource;
 
 import com.scalar.freequent.util.DebugUtil;
+import com.scalar.freequent.dao.UserDataDAO;
+import com.scalar.core.ScalarServiceException;
+import com.scalar.core.service.AbstractService;
+import com.scalar.core.jdbc.DAOFactory;
 
 import java.sql.Connection;
 
@@ -19,7 +23,7 @@ import java.sql.Connection;
  * Date: Aug 24, 2013
  * Time: 10:46:14 AM
  */
-public class AuthServiceImpl implements ApplicationContextAware, AuthService {
+public class AuthServiceImpl extends AbstractService implements ApplicationContextAware, AuthService {
     protected static final Log logger = LogFactory.getLog(AuthServiceImpl.class);
     private ApplicationContext applicationContext = null;
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -48,5 +52,10 @@ public class AuthServiceImpl implements ApplicationContextAware, AuthService {
         } finally {
             DataSourceUtils.releaseConnection(conn, datasource);
         }
+    }
+
+    public boolean checkCredentials(String username, String password) throws ScalarServiceException {
+        UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
+        return userDataDAO.checkUserCredentials(username, password);
     }
 }

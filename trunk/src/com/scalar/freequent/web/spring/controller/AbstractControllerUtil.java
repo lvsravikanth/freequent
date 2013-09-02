@@ -5,10 +5,15 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.mvc.multiaction.MethodNameResolver;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UrlPathHelper;
 import org.springframework.validation.BindException;
 import org.springframework.util.ReflectionUtils;
 import com.scalar.core.request.Request;
 import com.scalar.core.response.Response;
+import com.scalar.core.ScalarActionException;
+import com.scalar.core.util.MsgObject;
+import com.scalar.core.util.MsgObjectUtil;
+import com.scalar.freequent.l10n.MessageResource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +21,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -25,9 +31,14 @@ import java.util.ArrayList;
 public final class AbstractControllerUtil {
     protected static final Log logger = LogFactory.getLog(AbstractControllerUtil.class);
     private static MethodNameResolver methodNameResolver = new UrlMethodNameResolver();
+    private static UrlPathHelper urlPathHelper = new UrlPathHelper();
 
     public static MethodNameResolver getMethodNameResolver() {
         return methodNameResolver;
+    }
+
+    public static UrlPathHelper getUrlPathHelper() {
+        return urlPathHelper;
     }
 
     private AbstractControllerUtil() {
@@ -43,31 +54,88 @@ public final class AbstractControllerUtil {
         return abstractControllerUtil;
     }
 
-    public ModelAndView invokeNamedMethod(Object tthis, String methodName, Request request, Response response, Object command, BindException errors) throws Exception {
+    public void invokeNamedMethod(Object tthis, String methodName, Request request, Object command, Map<String, Object> data) throws Exception {
 		ModelAndView modelAndView = null;
 		Method method = tthis.getClass().getMethod(methodName, new Class[]{Request.class,
-				Response.class,
 				Object.class,
-				BindException.class});
+				Map.class});
 		if (method == null) {
 			throw new NoSuchRequestHandlingMethodException(methodName, getClass());
 		}
 		List<Object> params = new ArrayList<Object>(4);
 		params.add(request);
-		params.add(response);
 		params.add(command);
-		params.add(errors);
+		params.add(data);
 		try {
 			modelAndView = (ModelAndView) method.invoke(tthis, params.toArray(new Object[params.size()]));
 		}
 		catch (InvocationTargetException ex) {
-			processException(request, response, command, errors, ex.getTargetException());
+			processException(request, command, data, ex.getTargetException());
 		}
-		return modelAndView;
 	}
 
-     public ModelAndView processException(Request request, Response response, Object command, BindException errors, Throwable exception) throws Exception {
+     public ModelAndView processException(Request request, Object command, Map<String, Object> data, Throwable exception) throws Exception {
         ReflectionUtils.rethrowException(exception);
         return null; //no use return...above line will throw the exception
     }
+
+    /**
+	 * Returns a <code>ModelAndView</code> that is properly setup for a response view.
+	 *
+	 * @param response the <code>Response</code>
+	 * @return a <code>ModelAndView</code>
+	 */
+	public static ModelAndView createResponseModelAndView(Response response) {
+		if ( logger.isDebugEnabled() ) {
+			logger.debug("Creating response ModelAndView");
+		}
+
+		ModelAndView mav = new ModelAndView(response.getViewName());
+		mav.addObject(Response.RESPONSE_ATTRIBUTE, response);
+
+		return mav;
+	}
+
+    /**
+	 * Returns a <code>ModelAndView</code> that is properly setup for a response view.
+	 *
+	 * @param response the <code>Response</code>
+	 * @return a <code>ModelAndView</code>
+	 */
+	public static ModelAndView createResponseModelAndView(Response response, Throwable th) {
+		if ( logger.isDebugEnabled() ) {
+			logger.debug("Creating response ModelAndView");
+		}
+        //todo need to consider the json, xml response types
+		ModelAndView mav = new ModelAndView();
+		mav.addObject (Response.RESPONSE_ATTRIBUTE, response);
+        mav.addObject (Response.EXCEPTIOIN_ATTRIBUTE, th);
+        if (ScalarActionException.class.isInstance(th)) {
+            // check if authentication failed
+            ScalarActionException sae = ScalarActionException.class.cast(th);
+            MsgObject msgObject = sae.getMsgObject();
+            MsgObject authenticationMsg = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED);
+            MsgObject authorizationMsg = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED);
+            if (msgObject.localize().equals(authenticationMsg.localize())) {
+                //todo set the error msg
+                mav.setViewName("auth/login");
+            } else if (msgObject.localize().equals (authorizationMsg.localize())) {
+                //todo set the error msg
+                mav.setViewName("auth/notauthorized");
+            } else {
+                //todo set the error msg
+                // some unexpected exception has occcured
+                mav.setViewName("auth/exception");
+            }
+        } else if (NoSuchRequestHandlingMethodException.class.isInstance(th)) {
+            //todo set the error msg
+            mav.setViewName("auth/exception");
+        } else {
+            //todo set the error msg
+            // some unexpected exception has occcured
+            mav.setViewName("auth/exception");
+        }
+
+		return mav;
+	}
 }

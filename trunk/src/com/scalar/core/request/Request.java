@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.Enumeration;
 
 /**
  * User: Sujan Kumar Suppala
@@ -196,4 +197,32 @@ public interface Request extends Serializable {
      * @see #setMethod(String)
      */
     public String getMethod();
+
+    /**
+	 * Returns a <code>Map</code> of parameter names and values.
+	 *
+	 * @return a <code>Map</code> of parameter names and values.
+	 */
+    public Map<String, String[]> getParameterMap();
+
+    /**
+	 * Returns an <code>Enumeration</code> of parameter names.
+	 *
+	 * @return a <code>Enumeration</code> of parameter names.
+	 */
+	public Enumeration<String> getParameterNames();
+
+    public String getParameter(String name);
+
+    public String[] getParameterValues(String name);
+
+    public void setAttribute(String name, Object value);
+
+    public Object getAttribute(String name);
+
+    public void removeAttribute(String name);
+
+    public Enumeration<String> getAttributeNames();
+
+    public String getResponseDataFormat();
 }

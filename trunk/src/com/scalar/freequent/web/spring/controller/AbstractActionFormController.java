@@ -30,8 +30,10 @@ import com.scalar.freequent.web.util.ErrorInfoUtil;
 import com.scalar.freequent.l10n.MessageResource;
 import com.scalar.core.request.Request;
 import com.scalar.core.request.BasicRequest;
+import com.scalar.core.request.RequestUtil;
 import com.scalar.core.response.Response;
 import com.scalar.core.response.BasicResponse;
+import com.scalar.core.response.ResponseFactory;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.ScalarActionException;
@@ -43,39 +45,33 @@ import com.scalar.core.ScalarActionException;
  */
 @SuppressWarnings("deprecation")
 public abstract class AbstractActionFormController extends SimpleFormController implements FreequentController {
-	protected final Log logger = LogFactory.getLog(getClass());
-	private MethodNameResolver methodNameResolver = AbstractControllerUtil.getMethodNameResolver();
+    protected final Log logger = LogFactory.getLog(getClass());
+    private MethodNameResolver methodNameResolver = AbstractControllerUtil.getMethodNameResolver();
 
-	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
-		super.initBinder(request, binder);
-		binder.registerCustomEditor(java.lang.Integer.TYPE, new CustomPrimitiveNumberEditor(java.lang.Integer.class, null, null));
-		DateFormat df = new SimpleDateFormat();
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
-	}
+    protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
+        super.initBinder(request, binder);
+        binder.registerCustomEditor(java.lang.Integer.TYPE, new CustomPrimitiveNumberEditor(java.lang.Integer.class, null, null));
+        DateFormat df = new SimpleDateFormat();
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
+    }
 
-	public abstract ModelAndView defaultProcess(Request request, Response response, Object command, BindException errors) throws ScalarActionException;
+    public abstract void defaultProcess(Request request, Object command, Map<String, Object> data) throws ScalarActionException;
 
-	protected final ModelAndView processFormSubmission(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object command, BindException errors) throws Exception {
-		//return super.processFormSubmission(request, response, command, errors);    //To change body of overridden methods use File | Settings | File Templates.
-		if (errors.hasErrors() || isFormChangeRequest(httpServletRequest)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Data binding errors: " + errors.getErrorCount());
-			}
-			return showForm(httpServletRequest, httpServletResponse, errors);
-		} else {
-			try {
-				String methodName = this.methodNameResolver.getHandlerMethodName(httpServletRequest);
-                if (logger.isDebugEnabled()) {
-				    logger.debug("================METHOD NAME=" + methodName);
-                }
-                Request request = new BasicRequest();
-                request.setWrappedObject(httpServletRequest);
-                request.setMethod(methodName);
-                httpServletRequest.setAttribute(Request.REQUEST_ATTRIBUTE, request);
+    protected final ModelAndView processFormSubmission(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object command, BindException errors) throws Exception {
+        //return super.processFormSubmission(request, response, command, errors);    //To change body of overridden methods use File | Settings | File Templates.
+        if (errors.hasErrors() || isFormChangeRequest(httpServletRequest)) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Data binding errors: " + errors.getErrorCount());
+            }
+            return showForm(httpServletRequest, httpServletResponse, errors);
+        } else {
 
-                Response response = new BasicResponse();
-                response.setWrappedObject(httpServletResponse);
-
+            Request request = RequestUtil.prepareRequest(httpServletRequest);
+            HashMap<String, Object> data = new HashMap<String, Object>();
+            if (logger.isDebugEnabled()) {
+                logger.debug("================METHOD NAME=" + request.getMethod());
+            }
+            try {
                 boolean authenticateRequired = getAuthenticationRequired(request);
                 if (authenticateRequired) {
                     boolean authenticated = authenticate(request);
@@ -83,39 +79,47 @@ public abstract class AbstractActionFormController extends SimpleFormController 
                         boolean authorized = getAuthorized(request);
                         if (!authorized) {
                             // forward to a not authorized page
-							MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED);
-							ErrorInfoUtil.addError(request, msgObject);
-                            return new ModelAndView ("auth/notauthorized");
+                            MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED);
+                            throw ScalarActionException.create(msgObject, null);
+                            //ErrorInfoUtil.addError(request, msgObject);
+                            //return new ModelAndView ("auth/notauthorized");
                         }
                     } else {
                         // forward to login page as the request is not authenticated.
-						MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED);
-						ErrorInfoUtil.addError(request, msgObject);
-                        return new ModelAndView ("auth/login");
+                        MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED);
+                        throw ScalarActionException.create(msgObject, null);
+                        //ErrorInfoUtil.addError(request, msgObject);
+                        //return new ModelAndView ("auth/login");
                     }
                 }
-				return AbstractControllerUtil.getInstance().invokeNamedMethod(this, methodName, request, response, command, errors);
-			}
-			catch (NoSuchRequestHandlingMethodException ex) {
-				return handleNoSuchRequestHandlingMethod(ex, httpServletRequest, httpServletResponse);
-			}
-		}
-	}
+                // delegate to action method
+                AbstractControllerUtil.getInstance().invokeNamedMethod(this, request.getMethod(), request, null, data);
+                Response response = ResponseFactory.createResponse(request.getResponseDataFormat(), request, data);
+                response.setWrappedObject(httpServletResponse);
+                response.load(data);
+                return AbstractControllerUtil.createResponseModelAndView(response);
+            }
+            catch (Exception ee) {
+                // something bad happened
+                Response response = ResponseFactory.createResponse(request.getResponseDataFormat(), request, data);
+                response.setWrappedObject(httpServletResponse);
+                return AbstractControllerUtil.createResponseModelAndView(response, ee);
+            }
+        }
+    }
 
 
-	protected ModelAndView handleNoSuchRequestHandlingMethod(NoSuchRequestHandlingMethodException ex, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.warn(ex);
-		response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		return null;
-	}
+    protected ModelAndView handleNoSuchRequestHandlingMethod(NoSuchRequestHandlingMethodException ex, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.warn(ex);
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        return null;
+    }
 
     /**
      * Determine whether authentication is required for this request.at
      *
      * @param request <code>Request</code> to be determined for authenticated.
-     *
      * @return true - if authentication is requried for this request otherwise false.
-     *
      * @see #getAuthorized(com.scalar.core.request.Request)
      */
     protected boolean getAuthenticationRequired(Request request) {
@@ -127,12 +131,11 @@ public abstract class AbstractActionFormController extends SimpleFormController 
      *
      * @param request request to be authenticated.
      * @return true - if request is authenticated successfully otherwise false.
-     *
      * @see #getAuthenticationRequired(com.scalar.core.request.Request)
      * @see #getAuthorized(com.scalar.core.request.Request)
      */
-    protected boolean authenticate (Request request) {
-        HttpSession session = ((HttpServletRequest)request.getWrappedObject()).getSession();
+    protected boolean authenticate(Request request) {
+        HttpSession session = ((HttpServletRequest) request.getWrappedObject()).getSession();
         if (session == null) {
             return false;
         }
@@ -145,9 +148,7 @@ public abstract class AbstractActionFormController extends SimpleFormController 
      * The implementors should override this method to check for the capabilities for the respective Action.
      *
      * @param request Request to be check for isAuthorized.
-     *
      * @return true - if the request is authorized otherwise false.
-     *
      * @see #getAuthenticationRequired(com.scalar.core.request.Request)
      */
     protected boolean getAuthorized(Request request) {

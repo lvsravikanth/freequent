@@ -39,46 +39,6 @@
 		</property>
 	</bean>
 
-	<!--<bean id="publicHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="order" value="1"/>
-        <property name="interceptors">
-            <list>
-                <ref bean="addErrorInfoObjInterceptor"/>
-            </list>
-        </property>
-        <property name="mappings">
-            <props>
-                --><!--<prop key="/login">loginController</prop>
-                <prop key="/logout.htm">logoutController</prop>
-                <prop key="/notfound.htm">errorsController</prop>--><!--
-            </props>
-        </property>
-    </bean>
-
---><!-- ========================= DEFINITIONS OF PROTECTED CONTROLLERS ========================= --><!--
-	<bean id="loginCheckInterceptor" class="com.scalar.freequent.web.spring.interceptor.LoginCheckInterceptor"/>
-
-	<bean id="secureHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="order" value="2"/>
-        <property name="interceptors">
-			<list>
-                <ref bean="addErrorInfoObjInterceptor"/>
-                <ref bean="loginCheckInterceptor"/>
-            </list>
-		</property>
-        <property name="mappings">
-            <props>
-                --><!--<prop key="/index.htm">urlFilenameViewController</prop>--><!--
-                --><!--<prop key="/**/*.view">urlFilenameViewController</prop>
-                <prop key="/invDataEntry.htm">invDataEntryController</prop>--><!--
-            </props>
-        </property>
-    </bean>-->
-
-	<!-- Handler mappings -->
-
-
-
 	<!-- View resolver -->
     <bean class="org.springframework.web.servlet.view.XmlViewResolver">
         <property name="location">

@@ -1,5 +1,7 @@
 package com.scalar.freequent.auth.service;
 
+import com.scalar.core.ScalarServiceException;
+
 /**
  * User: Sujan Kumar Suppala
  * Date: Aug 24, 2013
@@ -8,4 +10,6 @@ package com.scalar.freequent.auth.service;
 public interface AuthService {
     public void dbTransactionTest() throws Exception;
     public void noDbTransactionTest() throws Exception;
+
+    public boolean checkCredentials (String username, String password) throws ScalarServiceException;
 }
