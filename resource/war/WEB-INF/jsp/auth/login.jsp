@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/theme/corporate/style/freequent.css"/>
+		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/theme/corporate/style/content.css"/>
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/script/jquery/css/start/jquery-ui-1.10.3.custom.css"/>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/script/jquery/js/jquery-1.9.1.js" ></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/script/jquery/js/jquery-ui-1.10.3.custom.js" ></script>
@@ -32,20 +32,20 @@
 									<div class="site_signin_row">
 										<span class="site_signin_cell">
 											<label for="site_signin_username_input site_signin_label_cell">
-												<strong>Username  :</strong>
+												<strong>Username </strong>
 											</label>
 										</span>
-										<span class="site_signin_cell site_signin_cell_padding">
+										<span class="site_signin_cell">
 											<input id="site_signin_username_input" size="24" style="padding-bottom: 10px;" type="text" name="username"/>
 										</span>
 									</div>
 									<div class="site_signin_row">
-											<span class="site_signin_cell site_signin_label_cell">
+											<span class="site_signin_cell">
 												<label for="site_signin_password_input">
-													<strong>Password :</strong>
+													<strong>Password </strong>
 												</label>
 											</span>
-											<span class="site_signin_cell site_signin_cell_padding">
+											<span class="site_signin_cell">
 												<input id="site_signin_password_input" type="text" size="24" style="padding-bottom: 10px;" name="password"/>
 											</span>
 									</div>
