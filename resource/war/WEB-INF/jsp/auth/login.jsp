@@ -36,7 +36,7 @@
 											</label>
 										</span>
 										<span class="site_signin_cell site_signin_cell_padding">
-											<input id="site_signin_username_input" size="24" style="padding-bottom: 10px;" type="text" name="site_signin_username_input"/>
+											<input id="site_signin_username_input" size="24" style="padding-bottom: 10px;" type="text" name="username"/>
 										</span>
 									</div>
 									<div class="site_signin_row">
@@ -46,7 +46,7 @@
 												</label>
 											</span>
 											<span class="site_signin_cell site_signin_cell_padding">
-												<input id="site_signin_password_input" type="text" size="24" style="padding-bottom: 10px;" name="site_signin_password_input"/>
+												<input id="site_signin_password_input" type="text" size="24" style="padding-bottom: 10px;" name="password"/>
 											</span>
 									</div>
 									<div class="site_signin_row site_signin_align">

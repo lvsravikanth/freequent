@@ -4,10 +4,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
+
+import com.scalar.freequent.util.CollectionsUtil;
+import com.scalar.freequent.util.StringUtil;
+import com.scalar.core.response.Response;
 
 /**
  * User: Sujan Kumar Suppala
@@ -158,5 +159,70 @@ public class BasicRequest implements Request {
 
     public TimeZone getTimeZone() {
         return TimeZone.getDefault();
+    }
+
+    /**
+	 * Returns a <code>Map</code> of parameter names and values.
+	 *
+	 * @return a <code>Map</code> of parameter names and values.
+	 */
+	public Map<String, String[]> getParameterMap() {
+		return CollectionsUtil.uncheckedConvert((Map<?, ?>)((HttpServletRequest)wrappedObject).getParameterMap());
+	}
+
+	/**
+	 * Returns an <code>Enumeration</code> of parameter names.
+	 *
+	 * @return a <code>Enumeration</code> of parameter names.
+	 */
+	public Enumeration<String> getParameterNames() {
+		return CollectionsUtil.uncheckedConvert((Enumeration<?>)((HttpServletRequest)wrappedObject).getParameterNames());
+	}
+
+	public String getParameter(String name) {
+		return ((HttpServletRequest)wrappedObject).getParameter(name);
+	}
+
+    public String[] getParameterValues(String name) {
+		return ((HttpServletRequest)wrappedObject).getParameterValues(name);
+	}
+
+	public void setAttribute(String name, Object value) {
+		((HttpServletRequest)wrappedObject).setAttribute(name, value);
+	}
+
+	public Object getAttribute(String name) {
+		return ((HttpServletRequest)wrappedObject).getAttribute(name);
+	}
+
+	public void removeAttribute(String name) {
+		((HttpServletRequest)wrappedObject).removeAttribute(name);
+	}
+
+	/**
+	 * Returns the attribute names.
+	 *
+	 * @return an <code>Enumeration</code> of the attribute names
+	 */
+	public Enumeration<String> getAttributeNames() {
+		return CollectionsUtil.uncheckedConvert((Enumeration<?>)((HttpServletRequest)wrappedObject).getAttributeNames());
+	}
+
+    /**
+	 * Sets the response data format.
+	 *
+	 * @param format the format
+	 * @see #getResponseDataFormat()
+	 */
+	public void setResponseDataFormat(String format) {
+		this.responseFormat = format;
+	}
+    
+    public String getResponseDataFormat() {
+        if ( (null == responseFormat) || ( responseFormat.length() == 0) ) {
+			responseFormat = Response.DEFAULT_FORMAT;
+		}
+
+		return responseFormat;
     }
 }

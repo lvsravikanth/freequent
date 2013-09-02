@@ -31,6 +31,8 @@ public class ScalarException extends Exception {
 	 */
 	private String message = null;
 
+    private MsgObject msgObj = null;
+
 	/**
 	 * Returns the first available localized message from the throwable stack. If there are none, then returns
 	 * empty <code>String</code>.
@@ -83,6 +85,7 @@ public class ScalarException extends Exception {
 	protected ScalarException(MsgObject msgObject, Locale locale,Throwable throwable) {
 		super(throwable);
 
+        this.msgObj = msgObject;
 		// Get it from the resource
 		message = msgObject.localize(locale);
 	}
@@ -96,5 +99,9 @@ public class ScalarException extends Exception {
 	public String getMessage() {
 		return message;
 	}
+
+    public MsgObject getMsgObject () {
+        return msgObj;
+    }
 }
 

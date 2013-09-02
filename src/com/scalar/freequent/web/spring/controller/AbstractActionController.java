@@ -14,14 +14,19 @@ import javax.servlet.http.HttpSession;
 
 import com.scalar.core.request.Request;
 import com.scalar.core.request.BasicRequest;
+import com.scalar.core.request.RequestUtil;
 import com.scalar.core.response.Response;
 import com.scalar.core.response.BasicResponse;
+import com.scalar.core.response.ResponseFactory;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.ScalarActionException;
 import com.scalar.freequent.web.session.SessionParameters;
 import com.scalar.freequent.web.util.ErrorInfoUtil;
 import com.scalar.freequent.l10n.MessageResource;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -32,45 +37,50 @@ public abstract class AbstractActionController extends AbstractController implem
     protected static final Log logger = LogFactory.getLog(AbstractActionController.class);
     private MethodNameResolver methodNameResolver = AbstractControllerUtil.getMethodNameResolver();
 
-    public abstract ModelAndView defaultProcess(Request request, Response response, Object command, BindException errors) throws ScalarActionException;
+    public abstract void defaultProcess(Request request, Object command, Map<String, Object> data) throws ScalarActionException;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+        Request request = RequestUtil.prepareRequest(httpServletRequest);
+        HashMap<String, Object> data = new HashMap<String, Object>();
+        if (logger.isDebugEnabled()) {
+            logger.debug("================METHOD NAME=" + request.getMethod());
+        }
+
         try {
-            String methodName = this.methodNameResolver.getHandlerMethodName(httpServletRequest);
-            if (logger.isDebugEnabled()) {
-                logger.debug("================METHOD NAME=" + methodName);
-            }
-
-            Request request = new BasicRequest();
-            request.setWrappedObject(httpServletRequest);
-            request.setMethod(methodName);
-            httpServletRequest.setAttribute(Request.REQUEST_ATTRIBUTE, request);
-
-            Response response = new BasicResponse();
-            response.setWrappedObject(httpServletResponse);
-
             boolean authenticateRequired = getAuthenticationRequired(request);
             if (authenticateRequired) {
-                boolean authenticated = authenticate(request);
+                boolean authenticated = isAuthenticated(request);
                 if (authenticated) {
                     boolean authorized = getAuthorized(request);
                     if (!authorized) {
                         // forward to a not authorized page
-						MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED);
-						ErrorInfoUtil.addError(request, msgObject);
-                        return new ModelAndView ("auth/notauthorized");
+                        MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED);
+                        throw ScalarActionException.create (msgObject, null);
+                        //ErrorInfoUtil.addError(request, msgObject);
+                        //return new ModelAndView("auth/notauthorized");
                     }
                 } else {
                     // forward to login page as the request is not authenticated.
-					MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED);
-					ErrorInfoUtil.addError(request, msgObject);
-                    return new ModelAndView ("auth/login");
+                    MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED);
+                    throw ScalarActionException.create (msgObject, null);
+                    //ErrorInfoUtil.addError(request, msgObject);
+                    //return new ModelAndView("auth/login");
                 }
             }
-            return AbstractControllerUtil.getInstance().invokeNamedMethod(this, methodName, request, response, null, null);
-        }
-        catch (NoSuchRequestHandlingMethodException ex) {
-            return handleNoSuchRequestHandlingMethod(ex, httpServletRequest, httpServletResponse);
+
+            // delegate to action method
+            AbstractControllerUtil.getInstance().invokeNamedMethod(this, request.getMethod(), request, null, data);
+            Response response = ResponseFactory.createResponse(request.getResponseDataFormat(), request, data);
+            response.setWrappedObject(httpServletResponse);
+            response.load(data);
+
+            return AbstractControllerUtil.createResponseModelAndView(response);
+
+        } catch (Exception ee) {
+            // something bad happened
+            Response response = ResponseFactory.createResponse(request.getResponseDataFormat(), request, data);
+            response.setWrappedObject(httpServletResponse);
+            return AbstractControllerUtil.createResponseModelAndView(response, ee);
         }
     }
 
@@ -84,9 +94,7 @@ public abstract class AbstractActionController extends AbstractController implem
      * Determine whether authentication is required for this request.at
      *
      * @param request <code>Request</code> to be determined for authenticated.
-     *
      * @return true - if authentication is requried for this request otherwise false.
-     *
      * @see #getAuthorized(com.scalar.core.request.Request)
      */
     protected boolean getAuthenticationRequired(Request request) {
@@ -98,16 +106,15 @@ public abstract class AbstractActionController extends AbstractController implem
      *
      * @param request request to be authenticated.
      * @return true - if request is authenticated successfully otherwise false.
-     *
      * @see #getAuthenticationRequired(com.scalar.core.request.Request)
      * @see #getAuthorized(com.scalar.core.request.Request)
      */
-    protected boolean authenticate (Request request) {
-        HttpSession session = ((HttpServletRequest)request.getWrappedObject()).getSession();
+    protected boolean isAuthenticated(Request request) {
+        HttpSession session = ((HttpServletRequest) request.getWrappedObject()).getSession();
         if (session == null) {
             return false;
         }
-		return session.getAttribute(SessionParameters.ATTRIBUTE_USER) != null;
+        return session.getAttribute(SessionParameters.ATTRIBUTE_USER) != null;
     }
 
     /**
@@ -116,9 +123,7 @@ public abstract class AbstractActionController extends AbstractController implem
      * The implementors should override this method to check for the capabilities for the respective Action.
      *
      * @param request Request to be check for isAuthorized.
-     *
      * @return true - if the request is authorized otherwise false.
-     *
      * @see #getAuthenticationRequired(com.scalar.core.request.Request)
      */
     protected boolean getAuthorized(Request request) {
