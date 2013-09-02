@@ -1,0 +1,67 @@
+#body {
+}
+.frq_main_container {
+    max-height: 290px;
+    max-width: 290px;
+    min-height: 100px;
+    min-width: 100px;
+}
+.frq_main_content{
+	margin: 0 auto;
+	padding : 0;
+}
+
+
+#site_signin_container .ui-widget-overlay {
+	position : relative;
+	border-left: 1px solid #EEEEEE;
+	border-right : 1px solid #EEEEEE;
+	border-top: 1px solid #CCCCCC;
+	border-bottom : 1px solid #CCCCCC;
+	box-shadow: 0 2px 5px #BBBBBB;
+	opacity : 1;
+	background : none repeat scroll 0 0 transparent;
+	width : 290px;
+	height :290px;
+	top: 100px;
+}
+
+.frq_signin_contaier .ui-widget-overlay {
+    background-color: #0078A2;
+    background-image: none;
+    color: #FFFFFF;
+    height: 350px;
+    opacity: 0.7;
+    position: absolute;
+    width: 300px;
+}
+
+
+.frq_signin_container_box.ui-widget-shadow {
+    background: none repeat scroll 0 0 transparent;
+    display: block;
+    margin:  6px 5px 0;
+    opacity: 1;
+	padding: 5px;
+}
+
+.site_signin_table {
+	display: table;
+    line-height: 3;
+    text-indent: 5px;
+}
+
+.site_signin_row {
+	display: table-row;
+	width: 100%
+}
+
+.site_signin_cell {
+	display: table-cell;
+	padding-right : 5px;
+
+}
+.site_signin_align {
+	line-height: 5;
+	text-align: end;
+}
