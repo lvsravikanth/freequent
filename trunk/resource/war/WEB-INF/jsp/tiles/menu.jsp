@@ -40,23 +40,22 @@ body, input{
 }
 </STYLE>
 <ul id="accordion">
-	<li>Sports</li>
+	<li>Admin</li>
 	<ul>
-		<li><a href="#">Golf</a></li>
-		<li><a href="#">Cricket</a></li>
-		<li><a href="#">Football</a></li>
+		<li><a href="#">Manage Users</a></li>
+		<li><a href="#">Manage Items</a></li>
+		<li><a href="#">System Setup</a></li>
 	</ul>
-	<li>Technology</li>
+	<li>Entry</li>
 	<ul>
-		<li><a href="#">iPhone</a></li>
-		<li><a href="#">Facebook</a></li>
-		<li><a href="#">Twitter</a></li>
+		<li><a href="#">New Bill</a></li>
+		<li><a href="#">Manage Bills</a></li>
 	</ul>
-	<li>Latest</li>
+	<li>Reports</li>
 	<ul>
-		<li><a href="#">Obama</a></li>
-		<li><a href="#">Iran Election</a></li>
-		<li><a href="#">Health Care</a></li>
+		<li><a href="#">User Report</a></li>
+		<li><a href="#">Item Report</a></li>
+		<li><a href="#">Bills Report</a></li>
 	</ul>
 </ul>
 <SCRIPT>
@@ -68,6 +67,6 @@ $("#accordion > li").click(function(){
 	$(this).next().slideToggle(300);
 });
 
-$('#accordion > ul:eq(0)').show();
+$('#accordion > ul:eq(1)').show();
 
 </SCRIPT>
