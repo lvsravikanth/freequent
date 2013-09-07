@@ -14,6 +14,8 @@ import com.scalar.core.ScalarActionException;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.freequent.l10n.MessageResource;
+import com.scalar.freequent.l10n.FrameworkResource;
+import com.scalar.freequent.web.util.ErrorInfoUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,7 +62,8 @@ public final class AbstractControllerUtil {
 				Object.class,
 				Map.class});
 		if (method == null) {
-			throw new NoSuchRequestHandlingMethodException(methodName, getClass());
+            MsgObject authenticationMsg = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.NO_SUCH_METHOD_EXCEPTION, methodName);
+			throw ScalarActionException.create(authenticationMsg, new NoSuchRequestHandlingMethodException(methodName, getClass()));
 		}
 		List<Object> params = new ArrayList<Object>(4);
 		params.add(request);
@@ -114,26 +117,17 @@ public final class AbstractControllerUtil {
             // check if authentication failed
             ScalarActionException sae = ScalarActionException.class.cast(th);
             MsgObject msgObject = sae.getMsgObject();
-            MsgObject authenticationMsg = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED);
-            MsgObject authorizationMsg = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED);
+            MsgObject authenticationMsg = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.AUTHENTICATION_REQUIRED);
             if (msgObject.localize().equals(authenticationMsg.localize())) {
-                //todo set the error msg
+                ErrorInfoUtil.addError(response.getRequest(), sae.getMsgObject());
                 mav.setViewName("auth/login");
-            } else if (msgObject.localize().equals (authorizationMsg.localize())) {
-                //todo set the error msg
-                mav.setViewName("auth/notauthorized");
-            } else {
-                //todo set the error msg
-                // some unexpected exception has occcured
-                mav.setViewName("auth/exception");
+            } else{
+                mav.setViewName("common/actionexception");
             }
-        } else if (NoSuchRequestHandlingMethodException.class.isInstance(th)) {
-            //todo set the error msg
-            mav.setViewName("auth/exception");
         } else {
             //todo set the error msg
             // some unexpected exception has occcured
-            mav.setViewName("auth/exception");
+            mav.setViewName("common/unknownexception");
         }
 
 		return mav;

@@ -1,5 +1,7 @@
 package com.scalar.core.request;
 
+import com.scalar.freequent.auth.User;
+
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
@@ -225,4 +227,6 @@ public interface Request extends Serializable {
     public Enumeration<String> getAttributeNames();
 
     public String getResponseDataFormat();
+
+    public User getActiveUser();
 }

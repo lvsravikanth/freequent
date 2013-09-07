@@ -5,8 +5,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.scalar.freequent.web.spring.controller.AbstractControllerUtil;
+import com.scalar.freequent.web.session.SessionParameters;
+import com.scalar.freequent.auth.User;
 import com.scalar.core.response.Response;
 
 /**
@@ -24,7 +27,7 @@ public class RequestUtil {
         httpRequest.setAttribute(Request.REQUEST_ATTRIBUTE, request);
         String urlPath = AbstractControllerUtil.getUrlPathHelper().getLookupPathForRequest(httpRequest);
         request.setResponseDataFormat(getResponseDataFormat(urlPath));
-
+        request.setActiveUser(getUser(httpRequest));
         return request;
     }
 
@@ -42,5 +45,21 @@ public class RequestUtil {
         }
 
         return Response.DEFAULT_FORMAT;
+    }
+
+    public static Request getRequest (HttpServletRequest httpRequest) {
+        return (Request)httpRequest.getAttribute(Request.REQUEST_ATTRIBUTE);
+    }
+
+    public static Throwable getException (HttpServletRequest httpRequest) {
+        return (Throwable)httpRequest.getAttribute(Response.EXCEPTIOIN_ATTRIBUTE);
+    }
+
+    private static User getUser (HttpServletRequest httpServletRequest) {
+         HttpSession session = httpServletRequest.getSession();
+        if (session == null) {
+            return null;
+        }
+        return (User)session.getAttribute(SessionParameters.ATTRIBUTE_USER);
     }
 }

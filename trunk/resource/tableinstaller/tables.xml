@@ -17,7 +17,7 @@
 			<column name="FIRST_NAME" no-nulls="true" size="80" type="varchar" />
 			<column name="MIDDLE_NAME" no-nulls="false" size="80" type="varchar" />
 			<column name="LAST_NAME" no-nulls="false" size="80" type="varchar" />
-			<column name="PASSWORD" no-nulls="true" size="40" type="varchar" />
+			<column name="PASSWORD" no-nulls="true" size="80" type="varchar" />
 			<index name="USER_ID_PK" columns="USER_ID" primary-key="true" />
 		</table>
 
@@ -34,7 +34,7 @@
 				<item column="USER_ID" value="admin"/>
 				<item column="FIRST_NAME" value="admin"/>
 				<item column="LAST_NAME" value="admin"/>
-				<item column="PASSWORD" value="admin"/>
+				<item column="PASSWORD" value="55,107,-47,13,47,97,113,-69,-3,10,-78,-88,19,-25,-80,29,"/>
 			</row>
 		</rowset>
 

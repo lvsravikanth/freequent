@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.samskritiInfo.com"
+    xmlns="http://www.samskritiInfo.com"
+    elementFormDefault="qualified">
+
+    <xsd:element name="menus" type="menusType"/>
+    <xsd:complexType name="menusType">
+        <xsd:sequence>
+            <xsd:element name="menu" type="menuType" maxOccurs="10"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="menuType">
+        <xsd:sequence>
+            <xsd:element name="link" type="xsd:string"/>
+            <xsd:element name="enabled" type="xsd:boolean"/>
+            <xsd:element name="display" type="xsd:boolean"/>
+            <xsd:element name="capability" type="capabilityType"/>
+            <xsd:element name="menuItems" type="menuItemsType" maxOccurs="1" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="menuItemsType">
+        <xsd:complexContent>
+            <xsd:extension base="menusType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="capabilityType">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="type" use="required">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:enumeration value="read"/>
+                        <xsd:enumeration value="write"/>
+                        <xsd:enumeration value="delete"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+
+</xsd:schema>

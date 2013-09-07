@@ -15,6 +15,10 @@ public class Global {
 	 */
 	private static Global global = new Global();
 
+    public static final String MENU_XML = "menu.xml";
+    public static final String ADMIN_USER_ID = "admin.user.id";
+    public static final String MESSAGE_DIGEST_KEY_FILE = "message.digest.key.file";
+
 	/**
 	 * Returns the global object.
 	 *
@@ -83,4 +87,12 @@ public class Global {
 
 		return def;
 	}
+
+    public static String getAdminUserId () {
+        return getString (ADMIN_USER_ID);
+    }
+
+    public static String getMessageDigestSecretKeyFile () {
+        return getString (MESSAGE_DIGEST_KEY_FILE);
+    }
 }

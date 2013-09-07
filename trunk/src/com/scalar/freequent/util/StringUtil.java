@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.springframework.web.util.HtmlUtils;
+import com.scalar.core.ScalarException;
 
 /**
  * The <code>StringUtil</code> class provides utility functions for working with strings.
@@ -559,4 +560,29 @@ public final class StringUtil {
 		}
 		return false;
 	}
+
+    public static String concatBytes(byte[] byteArr, String delim) {
+        if ((byteArr == null) || (delim == null)) {
+            return null;
+        }
+
+        if (byteArr.length == 0) {
+            return "";
+        }
+
+        if (delim == null) {
+            delim = ";";
+        }
+
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < byteArr.length; i++) {
+            buf.append(byteArr[i] + delim);
+        }
+
+        return buf.toString();
+    }
+
+    public static String encrypt (String string) throws ScalarException {
+         return StringUtil.concatBytes( MessageDigestUtils.getMAC (string), "," );
+    }
 }
