@@ -4,10 +4,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 import com.scalar.freequent.util.CollectionsUtil;
 import com.scalar.freequent.util.StringUtil;
+import com.scalar.freequent.auth.User;
+import com.scalar.freequent.web.session.SessionParameters;
 import com.scalar.core.response.Response;
 
 /**
@@ -15,7 +18,7 @@ import com.scalar.core.response.Response;
  * Date: Aug 24, 2013
  * Time: 4:56:53 PM
  */
-public class BasicRequest implements Request {
+public class BasicRequest extends AbstractRequest implements Request {
     protected static final Log logger = LogFactory.getLog(BasicRequest.class);
     /**
      * Serialization UID.

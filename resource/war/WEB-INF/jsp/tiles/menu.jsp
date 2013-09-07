@@ -1,3 +1,7 @@
+<%@ page import="com.scalar.core.menu.Menu" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.scalar.core.menu.MenuFactory" %>
+<%@ page import="com.scalar.core.request.RequestUtil" %>
 <script type="text/javascript" src="<%=request.getContextPath()%>/script/jquery/js/jquery-1.9.1.js" ></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/script/jquery/js/jquery-ui-1.10.3.custom.js" ></script>
 <STYLE>
@@ -40,24 +44,26 @@ body, input{
 }
 </STYLE>
 <ul id="accordion">
-	<li>Admin</li>
-	<ul>
-		<li><a href="#">Manage Users</a></li>
-		<li><a href="#">Manage Items</a></li>
-		<li><a href="#">System Setup</a></li>
+    <%
+    List<Menu> menuList = MenuFactory.getMenu(RequestUtil.getRequest(request));
+    for (Menu menu: menuList) {
+%>
+	<li><%=menu.getName()%></li>
+    <ul>
+    <%
+        List<Menu> menuItems = menu.getMenuItems();
+        for (Menu menuItem: menuItems) {
+    %>
+
+		<li><a href="#"><%=menuItem.getName()%></a></li>
+     <%}%>
+
 	</ul>
-	<li>Entry</li>
-	<ul>
-		<li><a href="#">New Bill</a></li>
-		<li><a href="#">Manage Bills</a></li>
-	</ul>
-	<li>Reports</li>
-	<ul>
-		<li><a href="#">User Report</a></li>
-		<li><a href="#">Item Report</a></li>
-		<li><a href="#">Bills Report</a></li>
-	</ul>
+    <%
+        }
+    %>
 </ul>
+
 <SCRIPT>
 $("#accordion > li").click(function(){
 

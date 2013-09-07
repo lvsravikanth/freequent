@@ -29,4 +29,8 @@ public class ScalarLoggedException extends ScalarException {
 	public String getMessage() {
 		return super.getMessage();
 	}
+
+    public static ScalarLoggedException create (MsgObject msg, Throwable throwable) {
+        return new ScalarLoggedException (msg, null, throwable);
+    }
 }

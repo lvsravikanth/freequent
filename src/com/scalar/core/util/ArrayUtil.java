@@ -1,6 +1,7 @@
 package com.scalar.core.util;
 
 import com.scalar.freequent.l10n.MessageResource;
+import com.scalar.freequent.l10n.FrameworkResource;
 
 import java.lang.reflect.Array;
 
@@ -70,7 +71,7 @@ public final class ArrayUtil
 
 		int length = (array == null ? 0 : Array.getLength(array));
 		if ( index < 0 || index > length ) {
-			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.INDEX_OUT_OF_BOUNDS,
+			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.INDEX_OUT_OF_BOUNDS,
 																		String.valueOf( index ), String.valueOf( length )).localize() );
 		}
 
@@ -150,7 +151,7 @@ public final class ArrayUtil
 
 		int length = (array == null ? 0 : Array.getLength(array));
 		if ( index < 0 || index >= length ) {
-			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.INDEX_OUT_OF_BOUNDS,
+			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.INDEX_OUT_OF_BOUNDS,
 																		String.valueOf( index ), String.valueOf( length )).localize() );
 		}
 
@@ -226,7 +227,7 @@ public final class ArrayUtil
 	{
 		int length = (array == null ? 0 : array.length);
 		if ( index < 0 || index > length ) {
-			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.INDEX_OUT_OF_BOUNDS,
+			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.INDEX_OUT_OF_BOUNDS,
 																		String.valueOf( index ), String.valueOf( length )).localize() );
 		}
 
@@ -314,7 +315,7 @@ public final class ArrayUtil
 	{
 		int length = (array == null ? 0 : array.length);
 		if ( index < 0 || index > length ) {
-			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.INDEX_OUT_OF_BOUNDS,
+			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.INDEX_OUT_OF_BOUNDS,
 																		String.valueOf( index ), String.valueOf( length )).localize() );
 		}
 
@@ -432,7 +433,7 @@ public final class ArrayUtil
 	{
 		int length = (array == null ? 0 : array.length);
 		if ( index < 0 || index > length ) {
-			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.INDEX_OUT_OF_BOUNDS,
+			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.INDEX_OUT_OF_BOUNDS,
 																		String.valueOf( index ), String.valueOf( length )).localize() );
 		}
 
@@ -550,7 +551,7 @@ public final class ArrayUtil
 	{
 		int length = (array == null ? 0 : array.length);
 		if ( index < 0 || index > length ) {
-			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.INDEX_OUT_OF_BOUNDS,
+			throw new ArrayIndexOutOfBoundsException( MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.INDEX_OUT_OF_BOUNDS,
 																		String.valueOf( index ), String.valueOf( length )).localize() );
 		}
 

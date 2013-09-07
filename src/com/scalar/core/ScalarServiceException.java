@@ -18,7 +18,7 @@ public class ScalarServiceException extends ScalarLoggedException {
         super(msgObject, locale, throwable);
     }
 
-    public static ScalarActionException create (MsgObject msgObject, Throwable throwable) {
-		return new ScalarActionException (msgObject, throwable);
+    public static ScalarServiceException create (MsgObject msgObject, Throwable throwable) {
+		return new ScalarServiceException (msgObject, null, throwable);
 	}
 }

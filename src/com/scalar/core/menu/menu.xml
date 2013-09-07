@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menus xmlns="http://www.samskritiInfo.com"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.samskritiInfo.com menu.xsd">
+    <menu name="Admin" id="1">
+        <link>jsp/admin/admin.view</link>
+        <enabled>true</enabled>
+        <display>true</display>
+        <capability type="read"><name>Admin Page</name></capability>
+        <menuItems>
+            <menu name="User Setup" id="1.1">
+                <link>userSetup.htm</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>User Setup</name></capability>
+            </menu>
+            <menu name="Login Details" id="1.2">
+                <link>userSetup.htm</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>User Setup</name></capability>
+            </menu>
+            <menu name="Accounts Setup" id="1.3">
+                <link>accountsSetupSearch.htm</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>Accounts Setup</name></capability>
+            </menu>
+            <menu name="Reports" id="1.4">
+                <link>adminReports.htm</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>User Setup</name></capability>
+                <menuItems>
+                    <menu name="User Report" id="1.4.1">
+                        <link>userReport.htm</link>
+                        <enabled>true</enabled>
+                        <display>true</display>
+                        <capability type="read"><name>User Report</name></capability>
+                    </menu>
+                    <menu name="User Login Report" id="1.4.2">
+                        <link>userLoginReport.htm</link>
+                        <enabled>true</enabled>
+                        <display>true</display>
+                        <capability type="read"><name>User Login Report</name></capability>
+                    </menu>
+                </menuItems>
+            </menu>
+        </menuItems>
+    </menu>
+    <menu name="Operations" id="2">
+        <link>jsp/operations/operations.read</link>
+        <enabled>true</enabled>
+        <display>true</display>
+        <capability type="read"><name></name></capability>
+        <menuItems>
+            <menu name="Inventory Data Entry" id="2.1">
+                <link>invDataEntry.htm</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>Inventory Data Entry</name></capability>
+            </menu>
+            <menu name="Product Report" id="2.2">
+                <link>userSetup.htm</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>User Setup</name></capability>
+            </menu>
+        </menuItems>
+    </menu>
+    <menu name="Finance" id="3">
+        <link>jsp/finance/finance.read</link>
+        <enabled>true</enabled>
+        <display>true</display>
+        <capability type="read"><name></name></capability>
+        <menuItems>
+            <menu name="Cash Receipts" id="3.1">
+                <link>cashTransactionSearch.htm?mode=receipts</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>Cash Receipts Entry</name></capability>
+            </menu>
+            <menu name="Cash Payments" id="3.2">
+                <link>cashTransactionSearch.htm?mode=payments</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>Cash Payments Entry</name></capability>
+            </menu>
+        </menuItems>
+    </menu>
+</menus>

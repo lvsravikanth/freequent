@@ -11,8 +11,15 @@ import org.springframework.beans.BeansException;
 import javax.sql.DataSource;
 
 import com.scalar.freequent.util.DebugUtil;
+import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.dao.UserDataDAO;
+import com.scalar.freequent.dao.UserDataRow;
+import com.scalar.freequent.auth.User;
+import com.scalar.freequent.l10n.ServiceResource;
 import com.scalar.core.ScalarServiceException;
+import com.scalar.core.ScalarException;
+import com.scalar.core.util.MsgObject;
+import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.service.AbstractService;
 import com.scalar.core.jdbc.DAOFactory;
 
@@ -56,6 +63,19 @@ public class AuthServiceImpl extends AbstractService implements ApplicationConte
 
     public boolean checkCredentials(String username, String password) throws ScalarServiceException {
         UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
-        return userDataDAO.checkUserCredentials(username, password);
+        try {
+        return userDataDAO.checkUserCredentials(username, StringUtil.encrypt(password));
+        } catch (ScalarException e) {
+            MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.CHECK_CREDENTIALS_FAILED);
+            throw ScalarServiceException.create(msgObject, e);
+        }
+    }
+
+    public User getUser(String username) throws ScalarServiceException {
+        UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
+        UserDataRow row = userDataDAO.findByPrimaryKey(username);
+        User user = UserDataDAO.rowToData(row);
+
+        return user;
     }
 }

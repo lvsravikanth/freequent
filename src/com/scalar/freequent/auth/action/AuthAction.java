@@ -1,18 +1,23 @@
 package com.scalar.freequent.auth.action;
 
 import com.scalar.core.request.Request;
+import com.scalar.core.request.AbstractRequest;
 import com.scalar.core.response.Response;
 import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.ScalarServiceException;
+import com.scalar.core.ScalarException;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.util.MsgObject;
 import com.scalar.freequent.auth.service.AuthService;
+import com.scalar.freequent.auth.User;
 import com.scalar.freequent.web.spring.controller.AbstractActionController;
 import com.scalar.freequent.web.util.ErrorInfoUtil;
 import com.scalar.freequent.web.session.SessionParameters;
 import com.scalar.freequent.l10n.MessageResource;
 import com.scalar.freequent.l10n.ServiceResource;
+import com.scalar.freequent.l10n.FrameworkResource;
+import com.scalar.freequent.util.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindException;
@@ -60,7 +65,7 @@ public class AuthAction extends AbstractActionController {
 		data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
 	}
 
-	public void authenticate (Request request,Object command, Map<String, Object> data) throws ScalarActionException {
+	public void authenticate (Request request,Object command, Map<String, Object> data) throws ScalarActionException, Exception {
         String uname = request.getParameter ("username");
         String pwd = request.getParameter ("password");
 
@@ -70,10 +75,12 @@ public class AuthAction extends AbstractActionController {
 
             if (isValid) {
                 // if authenticated successfully show the home page
-                ((HttpServletRequest)request.getWrappedObject()).getSession(true).setAttribute(SessionParameters.ATTRIBUTE_USER, "todo");
+                User user = authService.getUser(uname);
+                ((HttpServletRequest)request.getWrappedObject()).getSession(true).setAttribute(SessionParameters.ATTRIBUTE_USER, user);
+                ((AbstractRequest)request).setActiveUser(user);
                 data.put(Response.TEMPLATE_ATTRIBUTE, "common/home");
             } else {
-                MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.INVALID_CREDENTIALS);
+                MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.INVALID_CREDENTIALS);
                 ErrorInfoUtil.addError(request, msgObject);
                 data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
             }

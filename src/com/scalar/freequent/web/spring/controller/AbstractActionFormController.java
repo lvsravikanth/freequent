@@ -28,6 +28,7 @@ import com.scalar.freequent.web.spring.propertyeditor.CustomPrimitiveNumberEdito
 import com.scalar.freequent.web.session.SessionParameters;
 import com.scalar.freequent.web.util.ErrorInfoUtil;
 import com.scalar.freequent.l10n.MessageResource;
+import com.scalar.freequent.l10n.FrameworkResource;
 import com.scalar.core.request.Request;
 import com.scalar.core.request.BasicRequest;
 import com.scalar.core.request.RequestUtil;
@@ -37,6 +38,7 @@ import com.scalar.core.response.ResponseFactory;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.ScalarActionException;
+import com.scalar.core.ScalarLoggedException;
 
 /**
  * User: .sujan.
@@ -79,14 +81,14 @@ public abstract class AbstractActionFormController extends SimpleFormController 
                         boolean authorized = getAuthorized(request);
                         if (!authorized) {
                             // forward to a not authorized page
-                            MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.NOT_AUTHORIZED);
+                            MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.NOT_AUTHORIZED);
                             throw ScalarActionException.create(msgObject, null);
                             //ErrorInfoUtil.addError(request, msgObject);
                             //return new ModelAndView ("auth/notauthorized");
                         }
                     } else {
                         // forward to login page as the request is not authenticated.
-                        MsgObject msgObject = MsgObjectUtil.getMsgObject(MessageResource.BASE_NAME, MessageResource.AUTHENTICATION_REQUIRED);
+                        MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.AUTHENTICATION_REQUIRED);
                         throw ScalarActionException.create(msgObject, null);
                         //ErrorInfoUtil.addError(request, msgObject);
                         //return new ModelAndView ("auth/login");
@@ -101,6 +103,9 @@ public abstract class AbstractActionFormController extends SimpleFormController 
             }
             catch (Exception ee) {
                 // something bad happened
+                if (! (ee instanceof ScalarLoggedException)) {
+                    logger.error("Exception while processing the action", ee);
+                }
                 Response response = ResponseFactory.createResponse(request.getResponseDataFormat(), request, data);
                 response.setWrappedObject(httpServletResponse);
                 return AbstractControllerUtil.createResponseModelAndView(response, ee);

@@ -3,6 +3,16 @@
 	<!-- environment  -->
 	<property environment="env" />
 
+    <!-- build properties -->
+	<property file="${basedir}/build.properties" />
+
+	<!-- use the default fileset directory if not set in build.properties -->
+	<condition property="fileset.dir" value="/dev/main/fileset">
+		<not>
+			<isset property="fileset.dir" />
+		</not>
+	</condition>
+
 	<!-- debug mode -->
 	<condition property="ui.debug.set" value="true" else="false">
 		<isset property="debug.mode" />
@@ -129,11 +139,152 @@
 
     <property name="target.datasource.properties.file" value="${classes.dir}/com/scalar/freequent/config/datasource.properties"/>
 
+    <!-- thirdparty jars -->
+	<property name="castor.jar" value="${thirdparty.dir}/castor/dist/castor.jar" />
+	<property name="castor-xml.jar" value="${thirdparty.dir}/castor/dist/castor-xml.jar" />
+	<property name="commons-io.jar" value="${thirdparty.dir}/jakarta-commons/io/commons-io.jar" />
+	<property name="commons-fileupload.jar" value="${thirdparty.dir}/jakarta-commons/fileupload/commons-fileupload.jar" />
+	<property name="commons-codec.jar" value="${thirdparty.dir}/jakarta-commons/commons-codec/commons-codec.jar" />
+	<property name="commons-httpclient.jar" value="${thirdparty.dir}/jakarta-commons/commons-httpclient/commons-httpclient.jar" />
+	<property name="commons-dbcp.jar" value="${thirdparty.dir}/jakarta-commons/dbcp/commons-dbcp.jar" />
+	<property name="concurrentlinkedhashmap.jar" value="${thirdparty.dir}/concurrentlinkedhashmap/concurrentlinkedhashmap-lru-1.2.jar" />
+	<property name="j2ee.jar" value="${thirdparty.dir}/sun-java/j2sdk/j2ee.jar" />
+	<property name="jericho-html.jar" value="${thirdparty.dir}/jericho-html/jericho-html.jar" />
+	<property name="json.jar" value="${thirdparty.dir}/json/json.jar" />
+	<property name="jstl.jar" value="${thirdparty.dir}/jakarta-taglibs/standard/lib/jstl.jar" />
+	<property name="log4j.jar" value="${thirdparty.dir}/apache-log4j/dist/lib/log4j.jar" />
+	<property name="pullparser.jar" value="${thirdparty.dir}/PullParser/lib/pullparser.jar" />
+	<property name="sanselan.jar" value="${thirdparty.dir}/apache-sanselan/sanselan-0.97.jar" />
+	<property name="script-api.jar" value="${thirdparty.dir}/jsr223/reference-implementation/script-api.jar" />
+	<property name="standard.jar" value="${thirdparty.dir}/jakarta-taglibs/standard/lib/standard.jar" />
+	<property name="commons-beanutils.jar" value="${thirdparty.dir}/jakarta-commons/commons-beanutils/1.7.0/commons-beanutils.jar" />
+	<property name="struts.jar" value="${thirdparty.dir}/apache-struts/release/lib/struts.jar" />
+	<property name="xerces.jar" value="${thirdparty.dir}/xml-xerces/xerces.jar" />
+	<property name="org.springframework.asm.jar" value="${thirdparty.dir}/spring/org.springframework.asm-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.beans.jar" value="${thirdparty.dir}/spring/org.springframework.beans-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.context.jar" value="${thirdparty.dir}/spring/org.springframework.context-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.context.support.jar" value="${thirdparty.dir}/spring/org.springframework.context.support-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.core.jar" value="${thirdparty.dir}/spring/org.springframework.core-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.expression.jar" value="${thirdparty.dir}/spring/org.springframework.expression-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.web.jar" value="${thirdparty.dir}/spring/org.springframework.web-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.web.servlet.jar" value="${thirdparty.dir}/spring/org.springframework.web.servlet-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.transaction.jar" value="${thirdparty.dir}/spring/org.springframework.transaction-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.jdbc.jar" value="${thirdparty.dir}/spring/org.springframework.jdbc-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.orm.jar" value="${thirdparty.dir}/spring/org.springframework.orm-3.0.4.RELEASE.jar" />
+	<property name="org.springframework.aop.jar" value="${thirdparty.dir}/spring/org.springframework.aop-3.0.4.RELEASE.jar" />
+	<property name="aopalliance.jar" value="${thirdparty.dir}/aopalliance/aopalliance-1.0.jar" />
+	<property name="hibernate.jar" value="${thirdparty.dir}/hibernate/hibernate.jar" />
+	<property name="oracle.jar" value="${thirdparty.dir}/oracle/lib/ojdbc5.jar"/>
+	<property name="vgnjdbc.jar" value="${thirdparty.dir}/DataDirect/ConnectForJDBC/vgnjdbc.jar"/>
+	<property name="ldapjdk.jar" value="${thirdparty.dir}/ldapsdk/lib/ldapjdk.jar"/>
+	<property name="commons-lang.jar" value="${thirdparty.dir}/jakarta-commons/commons-lang/2.3/commons-lang.jar"/>
+	<property name="commons-collections.jar" value="${thirdparty.dir}/jakarta-commons/collections/3.2.1/commons-collections.jar"/>
+	<property name="commons-logging.jar" value="${thirdparty.dir}/jakarta-commons/logging/1.0.4/commons-logging.jar"/>
+	<property name="commons-pool.jar" value="${thirdparty.dir}/jakarta-commons/pool/commons-pool.jar"/>
+	<property name="commons-digester.jar" value="${thirdparty.dir}/jakarta-commons/commons-digester/1.7/commons-digester.jar"/>
+	<property name="dom4j.jar" value="${thirdparty.dir}/dom4j/dom4j.jar"/>
+	<property name="javassist.jar" value="${thirdparty.dir}/hibernate/javassist.jar"/>
+	<property name="slf4j-api.jar" value="${thirdparty.dir}/hibernate/slf4j-api.jar" />
+	<property name="slf4j-log4j.jar" value="${thirdparty.dir}/hibernate/slf4j-log4j.jar" />
+	<property name="xmlunit.jar" value="${lib.dir}/build/tests/xmlunit.jar" />
+	<property name="elib-api.jar" value="${thirdparty.dir}/opentext/els/lib/elib_api.jar"/>
+	<property name="mysql-connector.jar" value="${thirdparty.dir}/mysql/connector/MySQL Connector J/mysql-connector-java-5.1.26-bin.jar"/>
+	<property name="jta.jar" value="${thirdparty.dir}/jta/jta-1_1-classes.jar"/>
+	<property name="tiles-core.jar" value="${thirdparty.dir}/tiles/tiles-2.2.2/tiles-core-2.2.2.jar"/>
+	<property name="tiles-api.jar" value="${thirdparty.dir}/tiles/tiles-2.2.2/tiles-api-2.2.2.jar"/>
+	<property name="tiles-servlet.jar" value="${thirdparty.dir}/tiles/tiles-2.2.2/tiles-servlet-2.2.2.jar"/>
+	<property name="tiles-jsp.jar" value="${thirdparty.dir}/tiles/tiles-2.2.2/tiles-jsp-2.2.2.jar"/>
+	<property name="tiles-template.jar" value="${thirdparty.dir}/tiles/tiles-2.2.2/tiles-template-2.2.2.jar"/>
+	<property name="jaxb-api.jar" value="${thirdparty.dir}/jaxb-ri/2.0.5/jaxb-api.jar"/>
+	<property name="jaxb-impl.jar" value="${thirdparty.dir}/jaxb-ri/2.0.5/jaxb-impl.jar"/>
+	<property name="jaxb-xjc.jar" value="${thirdparty.dir}/jaxb-ri/2.0.5/jaxb-xjc.jar"/>
+
+	<path id="axis.jars.ref">
+		<fileset dir="${thirdparty.dir}/apache-axis/lib">
+			<exclude name="axis-ant.jar" />
+		</fileset>
+	</path>
+	<path id="jstl.jars.ref">
+		<fileset dir="${thirdparty.dir}/jakarta-taglibs/standard/lib"/>
+	</path>
+
+	<!-- paths -->
+	<path id="classpath.ref">
+		<fileset dir="${lib.dir}">
+			<include name="**/*" />
+			<exclude name="buildship/vui/**/*" />
+			<exclude name="ship/**/*" />
+		</fileset>
+		<!--<fileset file="${jericho-html.jar}" />
+		<fileset file="${json.jar}" />
+		<fileset file="${castor.jar}" />
+		<fileset file="${commons-io.jar}" />
+		<fileset file="${commons-fileupload.jar}" />
+		<fileset file="${commons-beanutils.jar}" />
+		<fileset file="${commons-dbcp.jar}" />
+		<fileset file="${xerces.jar}" />
+		<fileset file="${pullparser.jar}" />
+		<fileset file="${sanselan.jar}" />
+		<fileset file="${script-api.jar}" />-->
+		<!--<fileset file="${ui-core.jar}" />-->
+		<fileset file="${struts.jar}" />
+		<fileset file="${log4j.jar}" />
+		<fileset file="${org.springframework.asm.jar}" />
+		<fileset file="${org.springframework.beans.jar}" />
+		<fileset file="${org.springframework.context.jar}" />
+		<fileset file="${org.springframework.context.support.jar}" />
+		<fileset file="${org.springframework.core.jar}" />
+		<fileset file="${org.springframework.expression.jar}" />
+		<fileset file="${org.springframework.web.jar}" />
+		<fileset file="${org.springframework.web.servlet.jar}" />
+		<fileset file="${org.springframework.transaction.jar}" />
+		<fileset file="${org.springframework.jdbc.jar}" />
+		<fileset file="${org.springframework.orm.jar}" />
+		<fileset file="${org.springframework.aop.jar}" />
+		<fileset file="${aopalliance.jar}" />
+		<fileset file="${hibernate.jar}" />
+		<fileset file="${commons-logging.jar}"/>
+		<fileset file="${commons-beanutils.jar}"/>
+		<fileset file="${commons-fileupload.jar}"/>
+		<fileset file="${commons-io.jar}"/>
+		<fileset file="${mysql-connector.jar}"/>
+		<fileset file="${jta.jar}"/>
+        <fileset file="${dom4j.jar}"/>
+        <fileset file="${slf4j-api.jar}" />
+		<fileset file="${slf4j-log4j.jar}" />
+        <fileset file="${commons-dbcp.jar}" />
+        <fileset file="${commons-pool.jar}" />
+        <fileset file="${commons-collections.jar}" />
+        <fileset file="${commons-digester.jar}" />
+        <fileset file="${tiles-api.jar}" />
+        <fileset file="${tiles-core.jar}" />
+        <fileset file="${tiles-jsp.jar}" />
+        <fileset file="${tiles-servlet.jar}" />
+        <fileset file="${tiles-template.jar}" />
+        <fileset file="${jaxb-api.jar}" />
+        <fileset file="${jaxb-impl.jar}" />
+        <fileset file="${jaxb-xjc.jar}" />
+
+		<!--<fileset file="${dom4j.jar}" />
+		<fileset file="${javassist.jar}" />
+		<fileset file="${slf4j-api.jar}" />
+		<fileset file="${slf4j-log4j.jar}" />
+		<fileset file="${cobertura.jar}" />-->
+	</path>
+
+	<path id="dependpath.ref">
+		<!--<fileset file="${ui-core.jar}" />-->
+	</path>
+
 	<!-- taskdefs -->
 	<taskdef name="checkascii" classpath="${checkascii.classes}" classname="com.vignette.tools.CheckAscii" />
 	<taskdef name="propgen" classpath="${vgnpropgen.jar}" classname="com.vignette.tools.propgen.PropGenTask" />
 	<!--<taskdef resource="tasks.properties" />-->
+    <!-- to generate JAXB classes from xsd -->
+   <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpath="${jaxb-xjc.jar}">
+       </taskdef>
 
+   
 	<tstamp>
 		<format property="build.time" pattern="${build.time.pattern}" />
 	</tstamp>
@@ -238,6 +389,11 @@
 			<classpath refid="dependpath.ref" />
 		</depend>
 
+        <xjc target="${gen.source.dir}" removeOldOutput="yes" package="com.scalar.core.menu">
+          <schema dir="${param.source.dir}/com/scalar/core/menu" includes="*.xsd" />
+          <produces dir="${gen.source.dir}/com/scalar/core/menu" includes="**/*" />
+        </xjc>
+
 		<javac destdir="${classes.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryInitialSize="${compiler.initial.memory}" memoryMaximumSize="${compiler.max.memory}" executable="${jdk.javac}" includeAntRuntime="no" fork="true">
 			<compilerarg line="${compiler.args}" />
 			<classpath refid="classpath.ref" />
@@ -254,6 +410,7 @@
 				<include name="**/*.xsd" />
 				<include name="**/*.xsl" />
 				<include name="**/*.hbm" />
+				<include name="**/*.key" />
 			</fileset>
 		</copy>
 	</target>
@@ -490,5 +647,7 @@
           <replacefilter token="@connectionProperty.socketFactory@" value="${connectionProperty.socketFactory}"/>
         </replace>
     </target>
+
+
 
 </project>
