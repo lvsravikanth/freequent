@@ -11,6 +11,8 @@ import org.springframework.util.ReflectionUtils;
 import com.scalar.core.request.Request;
 import com.scalar.core.response.Response;
 import com.scalar.core.ScalarActionException;
+import com.scalar.core.ScalarAuthException;
+import com.scalar.core.ScalarException;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.freequent.l10n.MessageResource;
@@ -113,16 +115,17 @@ public final class AbstractControllerUtil {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject (Response.RESPONSE_ATTRIBUTE, response);
         mav.addObject (Response.EXCEPTIOIN_ATTRIBUTE, th);
-        if (ScalarActionException.class.isInstance(th)) {
-            // check if authentication failed
-            ScalarActionException sae = ScalarActionException.class.cast(th);
-            MsgObject msgObject = sae.getMsgObject();
-            MsgObject authenticationMsg = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.AUTHENTICATION_REQUIRED);
-            if (msgObject.localize().equals(authenticationMsg.localize())) {
-                ErrorInfoUtil.addError(response.getRequest(), sae.getMsgObject());
-                mav.setViewName("auth/login");
-            } else{
-                mav.setViewName("common/actionexception");
+        if (ScalarException.class.isInstance(th)) {
+            mav.setViewName("common/actionexception");
+            if (ScalarAuthException.class.isInstance(th)) {
+                // check if authentication failed
+                ScalarAuthException sae = ScalarAuthException.class.cast(th);
+                MsgObject msgObject = sae.getMsgObject();
+                MsgObject authenticationMsg = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.AUTHENTICATION_REQUIRED);
+                if (msgObject.localize().equals(authenticationMsg.localize())) {
+                    ErrorInfoUtil.addError(response.getRequest(), sae.getMsgObject());
+                    mav.setViewName("auth/login");
+                }
             }
         } else {
             //todo set the error msg

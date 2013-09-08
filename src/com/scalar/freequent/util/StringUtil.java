@@ -2,10 +2,7 @@
 package com.scalar.freequent.util;
 
 import java.text.Bidi;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.springframework.web.util.HtmlUtils;
@@ -284,7 +281,9 @@ public final class StringUtil {
 			return (((String)obj).length() == 0);
 		} else if(obj instanceof byte[]) {
 			return ( ((byte[])obj).length == 0);
-		} else {
+		} else if(obj instanceof Collection) {
+            return (((Collection)obj).size() == 0);
+        } else {
 			return (obj.toString().length() == 0);
 		}
 	}

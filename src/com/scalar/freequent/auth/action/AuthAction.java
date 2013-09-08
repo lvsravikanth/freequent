@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -47,7 +48,7 @@ public class AuthAction extends AbstractActionController {
         }
     }
 
-	protected boolean getAuthenticationRequired(Request request) {
+	public boolean getAuthenticationRequired(Request request) {
 		String method = request.getMethod();
 		if (METHOD_LOGIN.equals (method) ||
 				METHOD_LOGOUT.equals (method) ||
@@ -65,28 +66,57 @@ public class AuthAction extends AbstractActionController {
 		data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
 	}
 
-	public void authenticate (Request request,Object command, Map<String, Object> data) throws ScalarActionException, Exception {
+    public void logout (Request request, Object command, Map<String, Object> data) throws ScalarActionException {
+        HttpSession session = ((HttpServletRequest)request.getWrappedObject()).getSession();
+        if (session != null) {
+            session.invalidate();
+        }
+        User.unset();
+        data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
+    }
+
+	public void authenticate (Request request,Object command, Map<String, Object> data) throws ScalarActionException {
         String uname = request.getParameter ("username");
         String pwd = request.getParameter ("password");
 
-        AuthService authService = ServiceFactory.getService(AuthService.class, request);
-        try {
-            boolean isValid = authService.checkCredentials(uname, pwd);
+        if (validate(uname, pwd, request)) {
+            AuthService authService = ServiceFactory.getService(AuthService.class, request);
+            try {
+                boolean isValid = authService.checkCredentials(uname, pwd);
 
-            if (isValid) {
-                // if authenticated successfully show the home page
-                User user = authService.getUser(uname);
-                ((HttpServletRequest)request.getWrappedObject()).getSession(true).setAttribute(SessionParameters.ATTRIBUTE_USER, user);
-                ((AbstractRequest)request).setActiveUser(user);
-                data.put(Response.TEMPLATE_ATTRIBUTE, "common/home");
-            } else {
-                MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.INVALID_CREDENTIALS);
-                ErrorInfoUtil.addError(request, msgObject);
-                data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
+                if (isValid) {
+                    // if authenticated successfully show the home page
+                    User user = authService.getUser(uname);
+                    ((HttpServletRequest)request.getWrappedObject()).getSession(true).setAttribute(SessionParameters.ATTRIBUTE_USER, user);
+                    ((AbstractRequest)request).setActiveUser(user);
+                    data.put(Response.TEMPLATE_ATTRIBUTE, "common/home");
+                } else {
+                    MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.INVALID_CREDENTIALS);
+                    ErrorInfoUtil.addError(request, msgObject);
+                    data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
+                }
+            } catch (ScalarServiceException e) {
+                MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.CHECK_CREDENTIALS_FAILED);
+                throw ScalarActionException.create(msgObject, e);
             }
-        } catch (ScalarServiceException e) {
-            MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.CHECK_CREDENTIALS_FAILED);
-            throw ScalarActionException.create(msgObject, e);
+        } else {
+            data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
         }
 	}
+
+    private boolean validate (String uname, String pwd, Request request) {
+        boolean success = true;
+        if (StringUtil.isEmpty(uname)) {
+            MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.USER_NAME_REQUIRED);
+            ErrorInfoUtil.addError(request, msgObject);
+            success = false;
+        }
+        if (StringUtil.isEmpty(pwd)) {
+            MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.PASSWORD_REQURIED);
+            ErrorInfoUtil.addError(request, msgObject);
+            success = false;
+        }
+
+        return success;
+    }
 }

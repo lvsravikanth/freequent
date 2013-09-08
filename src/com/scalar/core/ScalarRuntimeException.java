@@ -90,6 +90,11 @@ public class ScalarRuntimeException extends RuntimeException {
 	public static ScalarRuntimeException create (MsgObject msgObject, Throwable throwable) {
 		return new ScalarRuntimeException(msgObject, null, throwable);
 	}
+
+    public static ScalarRuntimeException create (MsgObject msgObject) {
+		return new ScalarRuntimeException(msgObject, null, null);
+	}
+
 	/**
 	 * Returns the localized message <code>String</code>for this exception.
 	 *

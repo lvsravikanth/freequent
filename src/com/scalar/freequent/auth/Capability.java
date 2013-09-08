@@ -6,6 +6,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
+import com.scalar.core.util.GUID;
+
 /**
  * User: Sujan Kumar Suppala
  * Date: Sep 5, 2013
@@ -14,23 +16,26 @@ import java.util.Map;
 public class Capability {
     protected static final Log logger = LogFactory.getLog(Capability.class);
     private String name = null;
-    private boolean read;
-    private boolean write;
-    private boolean delete;
+    private boolean supportsRead;
+    private boolean supportsWrite;
+    private boolean supportsDelete;
 
     public static final String READ_TYPE = "read";
     public static final String WRITE_TYPE = "write";
     public static final String DELETE_TYPE = "delete";
 
+    public Capability() {
+    }
+
     public Capability(String name) {
         this.name = name;
     }
 
-    public Capability(String name, boolean read, boolean write, boolean delete) {
+    public Capability(String name, boolean supportsRead, boolean supportsWrite, boolean supportsDelete) {
         this.name = name;
-        this.read = read;
-        this.write = write;
-        this.delete = delete;
+        this.supportsRead = supportsRead;
+        this.supportsWrite = supportsWrite;
+        this.supportsDelete = supportsDelete;
     }
 
     public String getName() {
@@ -41,27 +46,27 @@ public class Capability {
         this.name = name;
     }
 
-    public boolean isRead() {
-        return read;
+    public boolean isSupportsRead() {
+        return supportsRead;
     }
 
-    public void setRead(boolean read) {
-        this.read = read;
+    public void setSupportsRead(boolean supportsRead) {
+        this.supportsRead = supportsRead;
     }
 
-    public boolean isWrite() {
-        return write;
+    public boolean isSupportsWrite() {
+        return supportsWrite;
     }
 
-    public void setWrite(boolean write) {
-        this.write = write;
+    public void setSupportsWrite(boolean supportsWrite) {
+        this.supportsWrite = supportsWrite;
     }
 
-    public boolean isDelete() {
-        return delete;
+    public boolean isSupportsDelete() {
+        return supportsDelete;
     }
 
-    public void setDelete(boolean delete) {
-        this.delete = delete;
+    public void setSupportsDelete(boolean supportsDelete) {
+        this.supportsDelete = supportsDelete;
     }
 }

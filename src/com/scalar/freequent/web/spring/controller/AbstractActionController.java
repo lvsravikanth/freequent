@@ -22,10 +22,14 @@ import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.ScalarLoggedException;
+import com.scalar.core.ScalarAuthException;
 import com.scalar.freequent.web.session.SessionParameters;
 import com.scalar.freequent.web.util.ErrorInfoUtil;
 import com.scalar.freequent.l10n.MessageResource;
 import com.scalar.freequent.l10n.FrameworkResource;
+import com.scalar.freequent.auth.Capability;
+import com.scalar.freequent.auth.User;
+import com.scalar.freequent.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,22 +55,19 @@ public abstract class AbstractActionController extends AbstractController implem
         try {
             boolean authenticateRequired = getAuthenticationRequired(request);
             if (authenticateRequired) {
-                boolean authenticated =  request.getActiveUser()!=null;// isAuthenticated(request);
+                boolean authenticated = isAuthenticated(request);
                 if (authenticated) {
-                    boolean authorized = getAuthorized(request);
-                    if (!authorized) {
+                    try {
+                        getAuthorized(request);
+                    } catch (ScalarAuthException e) {
                         // forward to a not authorized page
                         MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.NOT_AUTHORIZED);
-                        throw ScalarActionException.create (msgObject, null);
-                        //ErrorInfoUtil.addError(request, msgObject);
-                        //return new ModelAndView("auth/notauthorized");
+                        throw ScalarActionException.create (msgObject, e);
                     }
                 } else {
                     // forward to login page as the request is not authenticated.
                     MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.AUTHENTICATION_REQUIRED);
-                    throw ScalarActionException.create (msgObject, null);
-                    //ErrorInfoUtil.addError(request, msgObject);
-                    //return new ModelAndView("auth/login");
+                    throw ScalarAuthException.create (msgObject, null);
                 }
             }
 
@@ -95,44 +96,27 @@ public abstract class AbstractActionController extends AbstractController implem
         return null;
     }
 
-    /**
-     * Determine whether authentication is required for this request.at
-     *
-     * @param request <code>Request</code> to be determined for authenticated.
-     * @return true - if authentication is requried for this request otherwise false.
-     * @see #getAuthorized(com.scalar.core.request.Request)
-     */
-    protected boolean getAuthenticationRequired(Request request) {
+    public boolean getAuthenticationRequired(Request request) {
         return true;
     }
 
-    /**
-     * Check whether the request is authenticated.
-     *
-     * @param request request to be authenticated.
-     * @return true - if request is authenticated successfully otherwise false.
-     * @see #getAuthenticationRequired(com.scalar.core.request.Request)
-     * @see #getAuthorized(com.scalar.core.request.Request)
-     */
-    protected boolean isAuthenticated(Request request) {
-        HttpSession session = ((HttpServletRequest) request.getWrappedObject()).getSession();
-        if (session == null) {
-            return false;
+    public boolean isAuthenticated(Request request) {
+        return request.getActiveUser()!=null;
+    }
+
+    public void getAuthorized(Request request) throws ScalarAuthException {
+        Capability[] capabilities = getRequiredCapabilities(request);
+        if (StringUtil.isEmpty(capabilities)) {
+            // there are no capabilities to check for, so authorized by default
+            return;
+        } else {
+            User user = request.getActiveUser();
+            user.checkCapabilities(getRequiredCapabilities(request));
         }
-        return session.getAttribute(SessionParameters.ATTRIBUTE_USER) != null;
     }
 
-    /**
-     * Method to check for the capability to execute the given request. This method will be executed only if the request is
-     * marked for the authenticate required.
-     * The implementors should override this method to check for the capabilities for the respective Action.
-     *
-     * @param request Request to be check for isAuthorized.
-     * @return true - if the request is authorized otherwise false.
-     * @see #getAuthenticationRequired(com.scalar.core.request.Request)
-     */
-    protected boolean getAuthorized(Request request) {
-        return true;
+    public Capability[] getRequiredCapabilities(Request request) {
+        return new Capability[0];
     }
 }
 

@@ -21,12 +21,26 @@
 			<index name="USER_ID_PK" columns="USER_ID" primary-key="true" />
 		</table>
 
-		<table name="TestTable">
-			<column name="ID" no-nulls="true" size="40" type="integer"  autoincrement="false"/>
-			<column name="USERNAME" no-nulls="true" size="100" type="varchar" />
-			<column name="PASSWORD" no-nulls="true" size="100" type="varchar" />
-			<index name="UNIQUEID_PK" columns="ID" primary-key="true" />
-		</table>
+        <table name="ftCapabilityInfo">
+            <column name="name" type="varchar" size="80" no-nulls="true"/>
+            <column name="supportsRead" type="bit" default="true" no-nulls="true"/>
+            <column name="supportsWrite" type="bit" default="false" no-nulls="true"/>
+            <column name="supportsDelete" type="bit" default="false" no-nulls="true"/>
+            <index name="PK_ftCapabilityInfo_name" columns="name" primary-key="true"/>
+        </table>
+
+        <table name="ftUserCapabilityInfo">
+            <column name="capabilityName" type="varchar" size="80" no-nulls="true"/>
+            <column name="hasRead" type="bit" default="false" no-nulls="true"/>
+            <column name="hasWrite" type="bit" default="false" no-nulls="true"/>
+            <column name="hasDelete" type="bit" default="false" no-nulls="true"/>
+            <column name="userId" type="varchar" size="40" no-nulls="true"/>
+            <index name="IDX_ftUserCapabilityInfo_capName_userId" columns="capabilityName,userId" unique="true"/>
+            <key-ref name="FK_ftUserCapabilityInfo_capabilityName" columns="capabilityName" table="ftCapabilityInfo"
+                     references="name" rule="cascade"/>
+            <key-ref name="FK_ftUserCapabilityInfo_userId" columns="userId" table="FTUSERS" references="USER_ID"
+                     rule="cascade"/>
+        </table>
 
         <!-- master data -->
         <rowset table="FTUSERS">
@@ -35,14 +49,6 @@
 				<item column="FIRST_NAME" value="admin"/>
 				<item column="LAST_NAME" value="admin"/>
 				<item column="PASSWORD" value="55,107,-47,13,47,97,113,-69,-3,10,-78,-88,19,-25,-80,29,"/>
-			</row>
-		</rowset>
-
-		<rowset table="TestTable">
-			<row>
-				<item column="ID" value="1"/>
-				<item column="USERNAME" value="admin"/>
-				<item column="PASSWORD" value="admin"/>
 			</row>
 		</rowset>
 
