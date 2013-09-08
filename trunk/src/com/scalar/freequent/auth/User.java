@@ -5,9 +5,15 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.List;
+import java.util.HashMap;
 
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.Global;
+import com.scalar.freequent.l10n.FrameworkResource;
+import com.scalar.core.ScalarAuthException;
+import com.scalar.core.util.MsgObject;
+import com.scalar.core.util.MsgObjectUtil;
 
 
 /**
@@ -33,7 +39,7 @@ public class User {
     private Date modifiedOn;
     private Date expiresOn;
     private boolean disabled;
-    private Map<String, Capability> capabilitiesMap = null;
+    private List<UserCapability> userCapabilities = null;
 
     public String getUserId() {
         return userId;
@@ -107,12 +113,15 @@ public class User {
         this.disabled = disabled;
     }
 
-    public Map<String, Capability> getCapabilitiesMap() {
+    public Map<String, UserCapability> getCapabilitiesMap() {
+        List<UserCapability> userCapabilities = getUserCapabilities();
+        Map<String, UserCapability> capabilitiesMap = new HashMap<String, UserCapability>();
+        if (userCapabilities != null) {
+            for (UserCapability userCapability: userCapabilities) {
+                capabilitiesMap.put(userCapability.getCapabilityName(), userCapability);
+            }
+        }
         return capabilitiesMap;
-    }
-
-    public void setCapabilitiesMap(Map<String, Capability> capabilitiesMap) {
-        this.capabilitiesMap = capabilitiesMap;
     }
 
     public static void setActiveUser(User user) {
@@ -127,43 +136,61 @@ public class User {
         return (User)userThreadLocal.get();
     }
 
-    public boolean checkCapability ( Capability capability )
-    {
-        boolean isAuthenticated =  false;
+    public List<UserCapability> getUserCapabilities() {
+        return userCapabilities;
+    }
+
+    public void setUserCapabilities(List<UserCapability> userCapabilities) {
+        this.userCapabilities = userCapabilities;
+    }
+
+    public void checkCapabilities (Capability[] capabilities) throws ScalarAuthException {
+        if (StringUtil.isEmpty(capabilities)) {
+            return ;
+        } else {
+            for (Capability capability: capabilities) {
+                checkCapability(capability);
+            }
+        }
+    }
+
+    public void checkCapability ( Capability capability ) throws ScalarAuthException {
+        if (capability == null) {
+            return;
+        }
+
         // admin user has all the capabilities
         if (Global.getAdminUserId().equals(getUserId())) {
-            return true;
+            return;
         }
-        if ( capability != null && capabilitiesMap != null)
-        {
-            if ( !StringUtil.isEmpty( capability.getName() ) )
-            {
-                Capability cap = capabilitiesMap.get( capability.getName() );
-                if ( cap != null ) //USER HAS THIS FUNCTIONALITY
-                {
-                    if ( capability.isRead() )
-                    {
-                        isAuthenticated = cap.isRead();
-                    }
-                    if ( capability.isWrite() )
-                    {
-                        isAuthenticated = cap.isWrite();
-                    }
-                    if ( capability.isDelete() )
-                    {
-                        isAuthenticated = cap.isDelete();
+
+        boolean isAuthorized =  false;
+        Map<String, UserCapability> capabilitiesMap = getCapabilitiesMap();
+        if ( capabilitiesMap != null) {
+                UserCapability cap = capabilitiesMap.get( capability.getName() );
+                if ( cap != null ) {//USER HAS THIS FUNCTIONALITY
+                    if (capability.isSupportsRead() ) {
+                        isAuthorized = cap.isHasRead();
+                    } else if (capability.isSupportsWrite()){
+                        isAuthorized = cap.isHasWrite();
+                    } else if (capability.isSupportsDelete()){
+                        isAuthorized = cap.isHasDelete();
                     }
                 }
-            }
+        }
+        if (!isAuthorized) {
+            String args[] = new String[2];
+            args[0] = capability.getName();
+            if (capability.isSupportsRead())
+                args[1] = Capability.READ_TYPE;
+            else if (capability.isSupportsWrite())
+                args[1] = Capability.WRITE_TYPE;
+            else if (capability.isSupportsDelete())
+                args[1] = Capability.DELETE_TYPE;
             else
-            {
-                isAuthenticated = true;
-            }
+                args[1] = "UNKNOWN";
+            MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.USER_DOES_NOT_HAVE_CAPABILITY, args);
+            throw ScalarAuthException.create (msgObject);
         }
-        else
-        {
-            isAuthenticated = true;
-        }
-        return isAuthenticated;
     }
 }

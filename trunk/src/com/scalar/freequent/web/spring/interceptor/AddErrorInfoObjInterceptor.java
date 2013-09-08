@@ -6,11 +6,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.scalar.freequent.web.request.RequestParameters;
 import com.scalar.freequent.web.util.ErrorInfoUtil;
 import com.scalar.core.request.BasicRequest;
 import com.scalar.core.request.Request;
+import com.scalar.core.util.MsgObject;
 
 /**
  * User: ssuppala
@@ -23,15 +26,15 @@ public class AddErrorInfoObjInterceptor extends HandlerInterceptorAdapter {
 		//logger.info ( "Checking Errors, Info Objects in Request" );
         Request request = new BasicRequest();
         request.setWrappedObject(httpServletRequest);
-		Map<String, Object> errors = ErrorInfoUtil.getErrors(request);
-		Map<String, Object> info = ErrorInfoUtil.getInfos(request);
+		List<MsgObject> errors = ErrorInfoUtil.getErrors(request);
+		List<MsgObject> info = ErrorInfoUtil.getInfos(request);
 		if (errors == null) {
 			//logger.info ( "Adding Errors object to the Request" );
-			httpServletRequest.setAttribute(RequestParameters.ATTRIBUTE_ERROR_MESSAGES, new LinkedHashMap<String, Object>());
+			httpServletRequest.setAttribute(RequestParameters.ATTRIBUTE_ERROR_MESSAGES, new LinkedList<MsgObject>());
 		}
 		if (info == null) {
 			//logger.info ( "Adding Info Object to the Request" );
-			httpServletRequest.setAttribute(RequestParameters.ATTRIBUTE_INFO_MESSAGES, new LinkedHashMap<String, Object>());
+			httpServletRequest.setAttribute(RequestParameters.ATTRIBUTE_INFO_MESSAGES, new LinkedList<MsgObject>());
 		}
 		return true;
 	}

@@ -82,7 +82,7 @@ public class ScalarException extends Exception {
 	 *            that the cause is nonexistent or unknown.)
 	 * @see com.scalar.freequent.util.ResourceUtil#getMessage(String, Locale, String, Object)
 	 */
-	protected ScalarException(MsgObject msgObject, Locale locale,Throwable throwable) {
+	public ScalarException(MsgObject msgObject, Locale locale,Throwable throwable) {
 		super(throwable);
 
         this.msgObj = msgObject;

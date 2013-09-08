@@ -18,6 +18,8 @@ import java.io.IOException;
 import com.scalar.freequent.util.Global;
 import com.scalar.freequent.auth.User;
 import com.scalar.freequent.auth.Capability;
+import com.scalar.freequent.auth.UserCapability;
+import com.scalar.core.ScalarAuthException;
 
 /**
  * User: Sujan Kumar Suppala
@@ -120,8 +122,6 @@ public class MenuBuilder {
         if (user == null) {
             return userMainMenuList;
         }
-        Map<String, Capability> capabilityMap = user.getCapabilitiesMap();
-
         List<MenuType> mainMenuList = getRawMenu();
         if (mainMenuList != null) {
             int listSize = mainMenuList.size();
@@ -131,20 +131,38 @@ public class MenuBuilder {
                 Menu userMainMenu = new Menu();
                 buildUserMenuFromXmlMenu(mainMenu, userMainMenu);
                 userMainMenuList.add(userMainMenu);
-                if (userMainMenu.isEnabled() && user.checkCapability(userMainMenu.getCapability()))
-                {
+                boolean hasCapability;
+                try {
+                    user.checkCapability(userMainMenu.getCapability());
+                    hasCapability = true;
+                } catch (ScalarAuthException e) {
+                    hasCapability = false;
+                }
+                if (userMainMenu.isEnabled() && hasCapability) {
+
 
                     List<Menu> menuItemsList = userMainMenu.getMenuItems();
                     int size = (menuItemsList != null) ? menuItemsList.size() : 0;
-                    for (int j = 0; j < size; j++) //main menu items iterator
-                    {
+                    for (int j = 0; j < size; j++) { //main menu items iterator
                         Menu menuItem = menuItemsList.get(j);
-                        if (menuItem.isEnabled() && user.checkCapability(menuItem.getCapability())) {
+                        try {
+                            user.checkCapability(menuItem.getCapability());
+                            hasCapability = true;
+                        } catch (ScalarAuthException e) {
+                            hasCapability = false;
+                        }
+                        if (menuItem.isEnabled() && hasCapability) {
                             List<Menu> subMenuItemsList = menuItem.getMenuItems();
                             int subMenuItemsSize = (subMenuItemsList != null) ? subMenuItemsList.size() : 0;
                             for (int k = 0; k < subMenuItemsSize; k++) {
                                 Menu subMenuItem = subMenuItemsList.get(k);
-                                if (subMenuItem.isEnabled() && user.checkCapability(subMenuItem.getCapability())) {
+                                try {
+                                    user.checkCapability(subMenuItem.getCapability());
+                                    hasCapability = true;
+                                } catch (ScalarAuthException e) {
+                                    hasCapability = false;
+                                }
+                                if (subMenuItem.isEnabled() && hasCapability) {
                                     //keep enabled
                                 } else {
                                     subMenuItem.setEnabled(false);
@@ -154,8 +172,7 @@ public class MenuBuilder {
                             menuItem.setEnabled(false);
                         }
                     }
-                } else //disable menu for this user
-                {
+                } else { //disable menu for this user
                     mainMenu.setEnabled(false);
                 }
             }
@@ -170,11 +187,11 @@ public class MenuBuilder {
         if (capabilityType != null) {
             Capability capability = new Capability(capabilityType.getName());
             if (Capability.READ_TYPE.equalsIgnoreCase(capabilityType.getType())) {
-                capability.setRead(true);
+                capability.setSupportsRead(true);
             } else if (Capability.WRITE_TYPE.equalsIgnoreCase(capabilityType.getType())) {
-                capability.setWrite(true);
+                capability.setSupportsWrite(true);
             } else if (Capability.DELETE_TYPE.equalsIgnoreCase(capabilityType.getType())) {
-                capability.setDelete(true);
+                capability.setSupportsDelete(true);
             }
             userMenu.setCapability(capability);
         }

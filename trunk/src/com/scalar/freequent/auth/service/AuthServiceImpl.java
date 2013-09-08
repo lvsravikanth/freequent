@@ -14,7 +14,10 @@ import com.scalar.freequent.util.DebugUtil;
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.dao.UserDataDAO;
 import com.scalar.freequent.dao.UserDataRow;
+import com.scalar.freequent.dao.UserCapabilityInfoDAO;
+import com.scalar.freequent.dao.UserCapabilityInfoRow;
 import com.scalar.freequent.auth.User;
+import com.scalar.freequent.auth.UserCapability;
 import com.scalar.freequent.l10n.ServiceResource;
 import com.scalar.core.ScalarServiceException;
 import com.scalar.core.ScalarException;
@@ -24,6 +27,7 @@ import com.scalar.core.service.AbstractService;
 import com.scalar.core.jdbc.DAOFactory;
 
 import java.sql.Connection;
+import java.util.List;
 
 /**
  * User: Sujan Kumar Suppala
@@ -77,5 +81,53 @@ public class AuthServiceImpl extends AbstractService implements ApplicationConte
         User user = UserDataDAO.rowToData(row);
 
         return user;
+    }
+
+    @Transactional
+    public void createUser (User user) throws ScalarServiceException {
+        UserDataDAO userDataDAO = DAOFactory.getDAO (UserDataDAO.class, getRequest());
+        try {
+            userDataDAO.insert(UserDataDAO.dataToRow(user, false, true));
+        } catch (ScalarException e) {
+            MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_CREATE_USER, user.getUserId());
+            throw ScalarServiceException.create (msgObject, e);
+        }
+
+        List<UserCapability> userCapabilities = user.getUserCapabilities();
+        UserCapabilityInfoDAO userCapabilityInfoDAO = DAOFactory.getDAO (UserCapabilityInfoDAO.class, getRequest());
+        userCapabilityInfoDAO.deleteByUserId(user.getUserId());
+        if (!StringUtil.isEmpty(userCapabilities)) {
+            UserCapabilityInfoRow[] rows = new UserCapabilityInfoRow[userCapabilities.size()];
+            int i=0;
+            for (UserCapability userCapability: userCapabilities) {
+                rows[i++] = UserCapabilityInfoDAO.dataToRow(userCapability);
+            }
+
+            userCapabilityInfoDAO.insert(rows);
+        }
+    }
+
+    @Transactional
+    public void updateUser(User user, boolean skipPwd, boolean encryptPwd) throws ScalarServiceException {
+       UserDataDAO userDataDAO = DAOFactory.getDAO (UserDataDAO.class, getRequest());
+        try {
+            userDataDAO.update(UserDataDAO.dataToRow(user, skipPwd, encryptPwd));
+        } catch (ScalarException e) {
+            MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_CREATE_USER, user.getUserId());
+            throw ScalarServiceException.create (msgObject, e);
+        }
+
+        List<UserCapability> userCapabilities = user.getUserCapabilities();
+        UserCapabilityInfoDAO userCapabilityInfoDAO = DAOFactory.getDAO (UserCapabilityInfoDAO.class, getRequest());
+        userCapabilityInfoDAO.deleteByUserId(user.getUserId());
+        if (!StringUtil.isEmpty(userCapabilities)) {
+            UserCapabilityInfoRow[] rows = new UserCapabilityInfoRow[userCapabilities.size()];
+            int i=0;
+            for (UserCapability userCapability: userCapabilities) {
+                rows[i++] = UserCapabilityInfoDAO.dataToRow(userCapability);
+            }
+
+            userCapabilityInfoDAO.insert(rows);
+        }
     }
 }

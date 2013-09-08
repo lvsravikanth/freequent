@@ -7,6 +7,8 @@ import org.springframework.context.support.AbstractMessageSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletRequest;
 import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.scalar.freequent.web.request.RequestParameters;
 import com.scalar.freequent.util.ResourceUtil;
@@ -25,30 +27,30 @@ public class ErrorInfoUtil {
 	}
 
 	public static void addError(Request request, MsgObject msgObject) {
-		Map<String, Object> errors = getErrors(request);
-		errors.put(msgObject.localize(request.getLocale()), null);
+		List<MsgObject> errors = getErrors(request);
+		errors.add(msgObject);
 	}
 
 	public static void addInfo(Request request, MsgObject msgObject) {
-		Map<String, Object> info = getInfos(request);
-		info.put(msgObject.localize(request.getLocale()), null);
+		List<MsgObject> info = getInfos(request);
+		info.add(msgObject);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Map<String, Object> getErrors(Request request) {
+	public static List<MsgObject> getErrors(Request request) {
 		Object obj = ((HttpServletRequest) request.getWrappedObject()).getAttribute(RequestParameters.ATTRIBUTE_ERROR_MESSAGES);
-		if (obj == null || (obj instanceof Map)) {
-			return (Map<String, Object>) obj;
+		if (obj == null || (obj instanceof List)) {
+			return (List<MsgObject>) obj;
 		}
 
 		throw ScalarRuntimeException.create(MsgObjectUtil.getMsgObject("invalid type"), null);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Map<String, Object> getInfos(Request request) {
+	public static List<MsgObject> getInfos(Request request) {
 		Object obj = ((HttpServletRequest) request.getWrappedObject()).getAttribute(RequestParameters.ATTRIBUTE_INFO_MESSAGES);
-		if (obj == null || (obj instanceof Map)) {
-			return (Map<String, Object>) obj;
+		if (obj == null || (obj instanceof List)) {
+			return (List<MsgObject>) obj;
 		}
 
 		throw ScalarRuntimeException.create(MsgObjectUtil.getMsgObject("invalid type"), null);

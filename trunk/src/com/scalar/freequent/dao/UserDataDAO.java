@@ -11,6 +11,7 @@ import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.MessageDigestUtils;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -71,6 +72,47 @@ public class UserDataDAO extends AbstractDAO {
         }, userId);
 
         return users.get(0);
+    }
+
+    public void insert (UserDataRow row) {
+        StringBuilder query = new StringBuilder();
+        String sep = "";
+        query.append ("insert into " + TABLE_NAME + " (");
+        query.append(sep).append (COL_USER_ID); sep = ",";
+        query.append(sep).append(COL_PASSWORD);
+        query.append(sep).append(COL_FIRST_NAME);
+        query.append(sep).append(COL_MIDDLE_NAME);
+        query.append(sep).append(COL_LAST_NAME);
+        query.append(") values (?, ?, ?, ?, ?)");
+
+        getJdbcTemplate().update(query.toString(),
+                row.getUserId(),
+                row.getPassword(),
+                row.getFirstName(),
+                row.getMiddleName(),
+                row.getLastName()
+        );
+    }
+
+    public void update (UserDataRow row) {
+        StringBuilder query = new StringBuilder();
+        String sep = "";
+        query.append ("update " + TABLE_NAME + " set ");
+        if( row.modPassword() ){ query.append(sep).append(COL_PASSWORD).append(" = ?"); sep = ","; }
+        if( row.modFirstName() ){ query.append(sep).append(COL_FIRST_NAME).append(" = ?"); sep = ","; }
+        if( row.modMiddleName() ){ query.append(sep).append(COL_MIDDLE_NAME).append(" = ?"); sep = ","; }
+        if( row.modLastName() ){ query.append(sep).append(COL_LAST_NAME).append(" = ?"); sep = ","; }
+        query.append(" where ").append(COL_USER_ID).append(" = ?");
+
+        List<Object> args = new ArrayList<Object>();
+        if (row.modPassword()) args.add (row.getPassword());
+        if (row.modFirstName()) args.add (row.getFirstName());
+        if (row.modMiddleName()) args.add (row.getMiddleName());
+        if (row.modLastName()) args.add (row.getLastName());
+
+        args.add (row.getUserId());
+
+        getJdbcTemplate().update(query.toString(), args);
     }
 
     public static User rowToData (UserDataRow row) {
