@@ -12,47 +12,32 @@
 	<jsp-version>1.2</jsp-version>
 	
 	<!-- The short name -->
-	<short-name>vcm</short-name>
+	<short-name>freequent</short-name>
 	
 	<!-- The global URI -->
-	<uri>http://ui.vignette.com/vcm</uri>
-	
+	<uri>http://www.freequent.com/freequent</uri>
+
 	<!-- The description -->
-	<description>Vignette UI VCM Tag Library</description>
+	<description>Freequent Tag Library</description>
 
-	<!-- Render widget tag -->
+	<!-- Error tag to display error messges -->
 	<tag>
-		<name>renderWidget</name>
-		<tag-class>com.vignette.ui.vcm.web.tag.RenderWidgetTag</tag-class>
+		<name>errors</name>
+		<tag-class>com.scalar.freequent.web.tag.ErrorTagSupport</tag-class>
 		<body-content>empty</body-content>
-		<attribute>
-			<name>id</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
 	</tag>
 
-	<!-- Render widgets tag -->
+	<!-- Warnings tag to display warning messages-->
 	<tag>
-		<name>renderWidgets</name>
-		<tag-class>com.vignette.ui.vcm.web.tag.RenderWidgetsTag</tag-class>
+		<name>warnings</name>
+		<tag-class>com.scalar.freequent.web.tag.WarningTagSupport</tag-class>
 		<body-content>empty</body-content>
-		<attribute>
-			<name>ids</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
 	</tag>
 
-	<!-- Render facets tag -->
+	<!-- Infos tags to display info messages-->
 	<tag>
-		<name>renderFacets</name>
-		<tag-class>com.vignette.ui.vcm.web.tag.RenderFacetsTag</tag-class>
+		<name>infos</name>
+		<tag-class>com.scalar.freequent.web.tag.InfoTagSupport</tag-class>
 		<body-content>empty</body-content>
-		<attribute>
-			<name>ids</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
 	</tag>
 </taglib>

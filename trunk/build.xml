@@ -18,20 +18,6 @@
 	<property name="bea.jdk.jars" value="${bea.jdk.dir}/jre/lib/rt.jar${path.separator}${bea.jdk.dir}/lib/tools.jar${path.separator}${bea.jdk.dir}/jre/lib/jsse.jar${path.separator}${bea.jdk.dir}/jre/lib/security.jar" />
 	<property name="bea.jdk.jvm" value="${bea.jdk.dir}/bin/java" />
 
-	<condition property="scalar.tomcat.dir" value="${tomcat.dir}" else="${thirdparty.dir}/tomcat/lib/apache-tomcat-7.0.26">
-		<isset property="tomcat.dir" />
-	</condition>
-
-	<path id="scalar.tomcat.classpath">
-		<fileset dir="${scalar.tomcat.dir}/lib">
-			<include name="*.jar" />
-		</fileset>
-	</path>
-
-	<condition property="scalar.tomcat.deployer.dir" value="${tomcat.deployer.dir}" else="${thirdparty.dir}/tomcat/lib/apache-tomcat-7.0.26-deployer">
-		<isset property="tomcat.deployer.dir" />
-	</condition>
-
 	<!-- packages -->
 	<property name="source.packages" value="com.scalar.freequent.*" />
 

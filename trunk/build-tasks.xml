@@ -208,6 +208,20 @@
 		<fileset dir="${thirdparty.dir}/jakarta-taglibs/standard/lib"/>
 	</path>
 
+	<condition property="scalar.tomcat.dir" value="${tomcat.dir}" else="${thirdparty.dir}/tomcat/lib/apache-tomcat-7.0.26">
+		<isset property="tomcat.dir" />
+	</condition>
+
+	<path id="scalar.tomcat.classpath">
+		<fileset dir="${scalar.tomcat.dir}/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<condition property="scalar.tomcat.deployer.dir" value="${tomcat.deployer.dir}" else="${thirdparty.dir}/tomcat/lib/apache-tomcat-7.0.26-deployer">
+		<isset property="tomcat.deployer.dir" />
+	</condition>
+
 	<!-- paths -->
 	<path id="classpath.ref">
 		<fileset dir="${lib.dir}">
@@ -227,6 +241,7 @@
 		<fileset file="${sanselan.jar}" />
 		<fileset file="${script-api.jar}" />-->
 		<!--<fileset file="${ui-core.jar}" />-->
+		<fileset file="${json.jar}" />
 		<fileset file="${struts.jar}" />
 		<fileset file="${log4j.jar}" />
 		<fileset file="${org.springframework.asm.jar}" />
@@ -397,6 +412,7 @@
 		<javac destdir="${classes.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryInitialSize="${compiler.initial.memory}" memoryMaximumSize="${compiler.max.memory}" executable="${jdk.javac}" includeAntRuntime="no" fork="true">
 			<compilerarg line="${compiler.args}" />
 			<classpath refid="classpath.ref" />
+			<classpath refid="scalar.tomcat.classpath" />
 			<src path="${param.source.dir}" />
 			<src path="${gen.source.dir}" />
 		</javac>
