@@ -200,6 +200,7 @@
 			<fileset file="${scalar-freequent-config.jar}" />
 			<fileset file="${struts.jar}" />
 			<fileset file="${xerces.jar}" />
+			<fileset file="${json.jar}" />
 			<fileset file="${org.springframework.asm.jar}" />
 			<fileset file="${org.springframework.beans.jar}" />
 			<fileset file="${org.springframework.context.jar}" />
