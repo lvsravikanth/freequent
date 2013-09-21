@@ -1,7 +1,7 @@
 <%@ page import="com.scalar.core.util.MsgObject" %>
 <%@ page import="java.util.List" %>
 <%@ page isELIgnored="true" %>
-<%@ taglib prefix="freequent" uri="http://ui.vignette.com/vcm" %>
+<%@ taglib prefix="freequent" uri="http://www.freequent.com/freequent" %>
 
 
 <!doctype html>
@@ -11,17 +11,11 @@
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/script/jquery/css/start/jquery-ui-1.10.3.custom.css"/>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/script/jquery/js/jquery-1.9.1.js" ></script>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/script/jquery/js/jquery-ui-1.10.3.custom.js" ></script>
-		<script type="text/javascript" src="<%=request.getContextPath()%>/script/common/util/notifications.js"> </script>
+		<script type="text/javascript" src="<%=request.getContextPath()%>/script/common/util/errorinfoutil.js"> </script>
 		<script type="text/javascript">
 				$(function() {
 					$("#site_signin_button" ).button();
-					/*$('<div class="ui-widget"><div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"><p id="warning"></p></div></div>').appendTo('#error');
-					$('#warning').text("Sample ui-state-highlight style.");
-					$('#warning').text("Sample ui-state-highlight style2.");
-					$('#warning').append('<span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>');  */
-			})
-
-
+				})
 		</script>
 	</head>
 	<body >
@@ -68,7 +62,7 @@
 									</div>
 								</form>
 							</div>
-							<freequent:error />
+							<freequent:errors />
 						</div>
 					</div>
 

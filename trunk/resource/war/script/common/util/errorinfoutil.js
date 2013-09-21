@@ -8,13 +8,24 @@ freequent.util ={
 
 freequent.util.errorinfoutil = {
 
+	ERRORS_ID : 'frq-error-msg',
+	INFOS_ID : 'frq-info-msg',
+	WARNINGS_ID : 'frq-warning-msg',
 	errors : [],
 	warnings : [],
 	infos : [],
 
-	showerrors : function(id, errorObj) {
+	/**
+	 * shows errors on the page 
+	 *
+	 * @param errorObj the errorObj is of type String or Object
+	 */
+	showerrors : function( errorObj ) {
+		id = this.ERRORS_ID
 		this.clearerrors();
-		if(errorObj) {
+		if(typeof errorObj == 'string' || errorObj instanceof String) {
+			this.adderror(errorObj);
+		} else {
 			for (var i=0; i < errorObj.messages.length ; i++) {
 				this.adderror(errorObj.messages[i].msg);
 			}
@@ -27,7 +38,13 @@ freequent.util.errorinfoutil = {
 		}
 	},
 
-	showwarnings: function(id, warningObj) {
+	/**
+	 * shows warnings messssages on the page
+	 *
+	 * @param warningObj the warningObj is of type String or Object
+	 */
+	showwarnings: function( warningObj ) {
+		id = this.WARNINGS_ID;
 		this.clearwarnings();
 		if(warningObj) {
 			var msgJsonArray = warningObj.messages;
@@ -43,7 +60,13 @@ freequent.util.errorinfoutil = {
 		}
 	},
 
-	showinfos: function(infoObj) {
+	/**
+	 * shows info messssages on the page
+	 *
+	 * @param infoObj the infoObj is of type String or Object
+	 */
+	showinfos: function( infoObj ) {
+		id = this.INFOS_ID;
 		this.clearinfos();
 		if(infoObj) {
 			var msgJsonArray = infoObj.messages;
@@ -59,41 +82,80 @@ freequent.util.errorinfoutil = {
 		}
 	},
 
+	/**
+	 * Add errors  
+	 *
+	 * @param error Add error messages into errors arrays.
+	 */
 	adderror: function(error) {
 		errors.push(error);
 	},
 
+	/**
+	 * Add warnings
+	 *
+	 * @param warning Add warning messages into warning arrays.
+	 */
 	addwarning: function(warning) {
 		warnings.push(warning);
 	},
 
+	/**
+	 * Add infos
+	 *
+	 * @param infos Add inof messages into infos arrays.
+	 */
 	addinfo: function(info) {
 		infos.push(info);
 	},
 
+	/**
+	 * Clear errors clear all existing error messages
+	 *
+	 */
 	clearerrors: function() {
 		errors = [];
 	},
 
+	/**
+	 * Clear warnings clear all existing warning messages
+	 *
+	 */
 	clearwarnings: function() {
 		warning = [];
 	},
 
+	/**
+	 * Clear infos clear all existing info messages
+	 *
+	 */
 	clearinfos: function() {
 		infos = [];
 	},
 
+	/**
+	 * Clear errors clear all existing error messages
+	 *
+	 */
 	clearall: function() {
-
+		errors = [];
+		warnings = [];
+		infos = [];
 	},
 
-	createNode : function(id ,errors) {
+	/**
+	 * Create messages
+	 *
+	 * @param id
+	 * @param msg
+	 */
+	createNode : function(id, msg) {
 		$('<div class="ui-widget"><div id=\"'+ id +'-wrap" class="ui-corner-all" style="padding: 0 .3em ;"></div></div>').appendTo('#' + id);
 			$('<span class="ui-icon" style="float: left; margin-right: .3em; background-position: 3px -140px;"></span>').appendTo("#"+ id +"-wrap");
-			for (var j=0; j < errors.length ; j++) {
+			for (var j=0; j < msg.length ; j++) {
 				$('<li style="list-style-position: inside; margin-left: 22px;"></li>').appendTo("#"+ id +"-wrap");
 				var list = $("#"+ id +"-wrap > li");
-				$(list[j]).text(errors[j]);
+				$(list[j]).text(msg[j]);
 			}
 	}
 };

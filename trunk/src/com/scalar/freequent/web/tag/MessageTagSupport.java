@@ -13,33 +13,21 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-/**
- * Created by IntelliJ IDEA.
- * User: snakka
- * Date: Sep 15, 2013
- * Time: 8:23:26 PM
- * To change this template use File | Settings | File Templates.
- */
 public abstract class MessageTagSupport extends TagSupport {
 	
 	public abstract List<MsgObject> getMessages();
 
-	public JSONObject getMessageJSON() {
+	public JSONObject getMessageJSON() throws JSONException{
 		JSONObject messagesJSON = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
+		Iterator<MsgObject> iterator =getMessages().iterator();
 
-		try {
-			Iterator<MsgObject> iterator =getMessages().iterator();
-
-			while (iterator.hasNext()) {
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("msg", iterator.next().localize());
-				jsonArray.put(jsonObject);
-			}
-				messagesJSON.put("messages", jsonArray);
-		} catch(JSONException e) {
-			e.printStackTrace();
+		while (iterator.hasNext()) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("msg", iterator.next().localize());
+			jsonArray.put(jsonObject);
 		}
+		messagesJSON.put("messages", jsonArray);
 		return messagesJSON;
 	}
 }

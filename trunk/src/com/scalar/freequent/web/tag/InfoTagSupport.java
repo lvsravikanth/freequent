@@ -8,22 +8,10 @@ import com.scalar.freequent.web.util.ErrorInfoUtil;
 import javax.servlet.jsp.JspException;
 import java.util.*;
 
+import org.json.JSONException;
 
-/**
- * Created by IntelliJ IDEA.
- * User: snakka
- * Date: Sep 15, 2013
- * Time: 7:12:46 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class InfoTagSupport extends MessageTagSupport {
-
-	// private member variables
-	private List<MsgObject> message = null;
-
-	public List<MsgObject> getMessage() {
-		return message;
-	}
 
 	/**
 	 * Performs localization on the message <code>String</code> from the
@@ -39,10 +27,12 @@ public class InfoTagSupport extends MessageTagSupport {
 		// Finally, localize the MsgObject and return the localized string.
 		try {
 
-			pageContext.getOut().write("<div id='frq-info-msg'><script type=\"text/javascript\"> freequent.util.errorinfoutil.showinfos('frq-info-msg' , "+getMessageJSON() +")</script></div>");
+			pageContext.getOut().write("<div id='frq-info-msg'><script type=\"text/javascript\"> freequent.util.errorinfoutil.showinfos("+getMessageJSON() +")</script></div>");
 
-        } catch (IOException ioe) {
-			throw new JspException(ioe.getMessage());
+		} catch (JSONException jsonException) {
+			throw new JspException(jsonException.getMessage());
+		} catch (IOException ioException) {
+			throw new JspException(ioException.getMessage());
 		}
 
 		// Skip the body of this tag
