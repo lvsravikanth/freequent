@@ -8,4 +8,6 @@
 		<property name="url" value="/WEB-INF/jsp/WelcomePage.jsp" />
 	</bean>
 
+    <bean id="jsonView" class="com.scalar.freequent.web.spring.view.JsonView"/>
+
 </beans>

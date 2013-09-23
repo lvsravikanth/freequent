@@ -89,4 +89,10 @@
             </menu>
         </menuItems>
     </menu>
+    <menu name="Demo" id="demo">
+        <link>demo</link>
+        <enabled>true</enabled>
+        <display>true</display>
+        <capability type="read"><name></name></capability>
+    </menu>
 </menus>

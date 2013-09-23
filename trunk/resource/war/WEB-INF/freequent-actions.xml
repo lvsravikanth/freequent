@@ -9,4 +9,6 @@
 	<bean id="auth" class="com.scalar.freequent.auth.action.AuthAction">
 	</bean>
 
+    <bean id="demo" class="com.scalar.freequent.action.demo.DemoAction"/>
+
 </beans>
