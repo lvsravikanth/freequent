@@ -2,11 +2,11 @@ package com.scalar.core.response;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.DebugUtil;
 import com.scalar.core.request.Request;
 
 import java.util.Map;
+import java.util.Collections;
 
 /**
  * User: Sujan Kumar Suppala
@@ -15,6 +15,14 @@ import java.util.Map;
  */
 public class BasicResponse implements Response {
     protected static final Log logger = LogFactory.getLog(BasicResponse.class);
+
+    /**
+	 * Constant used as the default tag name for this <code>Response</code>.
+	 *
+	 * @see #getTag()
+	 */
+	protected static final String FREEQUENT_RESPONSE = "freequentResponse";
+
     private Object wrappedObject;
     /**
 	 * The <code>Request</code> which generated this <code>Response</code>.
@@ -67,7 +75,29 @@ public class BasicResponse implements Response {
 		this.data = loadData;
 	}
 
+    /**
+	 * Returns the data created for this <code>Response</code> by the <code>Action</code>.
+	 *
+	 * @return a <code>Map</code> containing the data created by the <code>Action</code>
+	 */
+	public Map<String, ? extends Object> getActionData() {
+		if ( null == data ) {
+			return Collections.emptyMap();
+		}
+
+		return data;
+	}
+
     public String getViewName() {
         return (String)data.get(Response.TEMPLATE_ATTRIBUTE);
     }
+
+    public String getTemplateName() {
+        return (String)data.get(Response.TEMPLATE_ATTRIBUTE);
+    }
+
+    public String getTag() {
+		return FREEQUENT_RESPONSE;
+	}
+
 }

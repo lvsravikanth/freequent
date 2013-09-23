@@ -97,6 +97,7 @@ public final class AbstractControllerUtil {
 
 		ModelAndView mav = new ModelAndView(response.getViewName());
 		mav.addObject(Response.RESPONSE_ATTRIBUTE, response);
+        mav.addAllObjects(response.getActionData());
 
 		return mav;
 	}

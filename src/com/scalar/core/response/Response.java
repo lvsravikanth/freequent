@@ -73,5 +73,21 @@ public interface Response {
 	 */
 	public void load(Map<String, Object> data);
 
+    /**
+	 * Returns the data created for this <code>Response</code> by the <code>Action</code>.
+	 *
+	 * @return a <code>Map</code> containing the data created by the <code>Action</code>
+	 */
+	public Map<String, ? extends Object> getActionData();
+
     public String getViewName ();
+
+    public String getTemplateName ();
+
+    /**
+	 * Returns the tag name for this <code>Response</code>.
+	 *
+	 * @return the tag name
+	 */
+	public String getTag();
 }
