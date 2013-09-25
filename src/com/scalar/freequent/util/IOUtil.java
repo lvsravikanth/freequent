@@ -9,6 +9,11 @@ import java.io.Reader;
 import java.io.Writer;
 
 import org.apache.log4j.Level;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import com.scalar.core.response.Response;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * The <code>IOUtil</code> class provides utility functions for working with I/O.
@@ -17,6 +22,7 @@ import org.apache.log4j.Level;
  * @version $Revision: #1 $ $Date: 2011/11/08 $
  */
 public final class IOUtil {
+    protected static final Log logger = LogFactory.getLog(IOUtil.class);
 	/**
 	 * Constant used to for character encoding/decoding.
 	 */
@@ -75,26 +81,24 @@ public final class IOUtil {
 	 * Returns a <code>Writer</code> from the <code>ResponseService</code>. The content type should already have
 	 * been set on the <code>ResponseService</code> before calling this method.
 	 *
-	 * @param service the <code>Service</code>
+	 * @param response the <code>Response</code>
 	 * @return a <code>Writer</code>
 	 * @throws IOException if there is a problem getting the <code>Writer</code>
 	 */
-	/*public static Writer getServiceWriter(Service service) throws IOException {
-		ResponseService response = service.getResponse();
-
+	public static Writer getResponseWriter(Response response) throws IOException {
 		// Check global setting
 		boolean useOutputStream = Global.getBoolean("core.use.output.stream");
 		if ( useOutputStream ) {
 			// We need to be able to spew output
 			OutputStream outputStream = null;
 			try {
-				outputStream = response.getOutputStream();
+				outputStream = ((HttpServletResponse)response.getWrappedObject()).getOutputStream();
 			} catch ( IOException e ) {
 				// Can't create output :(
 				if ( null == outputStream ) {
-					*//*if ( log.isEnabledFor(Level.ERROR) ) {
-						log.error("Unable to get output stream from service", e);
-					}*//*
+					if ( logger.isErrorEnabled() ) {
+						logger.error("Unable to get output stream from service", e);
+					}
 
 					return null;
 				}
@@ -104,7 +108,7 @@ public final class IOUtil {
 			// encoding below (UTF-8)
 			return new OutputStreamWriter(outputStream, IOUtil.UTF8);
 		} else {
-			return response.getWriter();
+			return ((HttpServletResponse)response.getWrappedObject()).getWriter();
 		}
-	}*/
+	}
 }

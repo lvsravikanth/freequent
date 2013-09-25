@@ -21,11 +21,15 @@ import com.scalar.freequent.web.util.ErrorInfoUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import javax.servlet.ServletOutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * User: Sujan Kumar Suppala
@@ -50,6 +54,7 @@ public final class AbstractControllerUtil {
     }
 
     protected static AbstractControllerUtil abstractControllerUtil;
+
     public static AbstractControllerUtil getInstance() {
         if (abstractControllerUtil == null) {
             abstractControllerUtil = new AbstractControllerUtil();
@@ -59,63 +64,63 @@ public final class AbstractControllerUtil {
     }
 
     public void invokeNamedMethod(Object tthis, String methodName, Request request, Object command, Map<String, Object> data) throws Exception {
-		ModelAndView modelAndView = null;
-		Method method = tthis.getClass().getMethod(methodName, new Class[]{Request.class,
-				Object.class,
-				Map.class});
-		if (method == null) {
+        ModelAndView modelAndView = null;
+        Method method = tthis.getClass().getMethod(methodName, new Class[]{Request.class,
+                Object.class,
+                Map.class});
+        if (method == null) {
             MsgObject authenticationMsg = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.NO_SUCH_METHOD_EXCEPTION, methodName);
-			throw ScalarActionException.create(authenticationMsg, new NoSuchRequestHandlingMethodException(methodName, getClass()));
-		}
-		List<Object> params = new ArrayList<Object>(4);
-		params.add(request);
-		params.add(command);
-		params.add(data);
-		try {
-			modelAndView = (ModelAndView) method.invoke(tthis, params.toArray(new Object[params.size()]));
-		}
-		catch (InvocationTargetException ex) {
-			processException(request, command, data, ex.getTargetException());
-		}
-	}
+            throw ScalarActionException.create(authenticationMsg, new NoSuchRequestHandlingMethodException(methodName, getClass()));
+        }
+        List<Object> params = new ArrayList<Object>(4);
+        params.add(request);
+        params.add(command);
+        params.add(data);
+        try {
+            modelAndView = (ModelAndView) method.invoke(tthis, params.toArray(new Object[params.size()]));
+        }
+        catch (InvocationTargetException ex) {
+            processException(request, command, data, ex.getTargetException());
+        }
+    }
 
-     public ModelAndView processException(Request request, Object command, Map<String, Object> data, Throwable exception) throws Exception {
+    public ModelAndView processException(Request request, Object command, Map<String, Object> data, Throwable exception) throws Exception {
         ReflectionUtils.rethrowException(exception);
         return null; //no use return...above line will throw the exception
     }
 
     /**
-	 * Returns a <code>ModelAndView</code> that is properly setup for a response view.
-	 *
-	 * @param response the <code>Response</code>
-	 * @return a <code>ModelAndView</code>
-	 */
-	public static ModelAndView createResponseModelAndView(Response response) {
-		if ( logger.isDebugEnabled() ) {
-			logger.debug("Creating response ModelAndView");
-		}
+     * Returns a <code>ModelAndView</code> that is properly setup for a response view.
+     *
+     * @param response the <code>Response</code>
+     * @return a <code>ModelAndView</code>
+     */
+    public static ModelAndView createResponseModelAndView(Response response) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Creating response ModelAndView");
+        }
 
-		ModelAndView mav = new ModelAndView(response.getViewName());
-		mav.addObject(Response.RESPONSE_ATTRIBUTE, response);
+        ModelAndView mav = new ModelAndView(response.getViewName());
+        mav.addObject(Response.RESPONSE_ATTRIBUTE, response);
         mav.addAllObjects(response.getActionData());
 
-		return mav;
-	}
+        return mav;
+    }
 
     /**
-	 * Returns a <code>ModelAndView</code> that is properly setup for a response view.
-	 *
-	 * @param response the <code>Response</code>
-	 * @return a <code>ModelAndView</code>
-	 */
-	public static ModelAndView createResponseModelAndView(Response response, Throwable th) {
-		if ( logger.isDebugEnabled() ) {
-			logger.debug("Creating response ModelAndView");
-		}
+     * Returns a <code>ModelAndView</code> that is properly setup for a response view.
+     *
+     * @param response the <code>Response</code>
+     * @return a <code>ModelAndView</code>
+     */
+    public static ModelAndView createResponseModelAndView(Response response, Throwable th) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Creating response ModelAndView");
+        }
         //todo need to consider the json, xml response types
-		ModelAndView mav = new ModelAndView();
-		mav.addObject (Response.RESPONSE_ATTRIBUTE, response);
-        mav.addObject (Response.EXCEPTIOIN_ATTRIBUTE, th);
+        ModelAndView mav = new ModelAndView();
+        mav.addObject(Response.RESPONSE_ATTRIBUTE, response);
+        mav.addObject(Response.EXCEPTIOIN_ATTRIBUTE, th);
         if (ScalarException.class.isInstance(th)) {
             mav.setViewName("common/actionexception");
             if (ScalarAuthException.class.isInstance(th)) {
@@ -134,6 +139,8 @@ public final class AbstractControllerUtil {
             mav.setViewName("common/unknownexception");
         }
 
-		return mav;
-	}
+        return mav;
+    }
+
+    
 }
