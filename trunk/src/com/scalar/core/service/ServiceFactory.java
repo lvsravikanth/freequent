@@ -79,4 +79,17 @@ public class ServiceFactory extends AbstractFactory {
 
         return bean;
     }
+
+    /**
+	 * Flushes the logic cache for the <code>Request</code>.
+	 *
+	 * @param request the <code>Request</code> which is being handled.
+	 */
+	public static void flushCache(Request request) {
+		if ( logger.isDebugEnabled() ) {
+			logger.debug("Clearing service cache for request: " + request);
+		}
+
+		cacheMap.remove(request);
+	}
 }

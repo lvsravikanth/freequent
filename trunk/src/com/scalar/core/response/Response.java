@@ -1,8 +1,10 @@
 package com.scalar.core.response;
 
 import com.scalar.core.request.Request;
+import com.scalar.core.ScalarActionException;
 
 import java.util.Map;
+import java.io.Writer;
 
 /**
  * User: Sujan Kumar Suppala
@@ -90,4 +92,17 @@ public interface Response {
 	 * @return the tag name
 	 */
 	public String getTag();
+
+    /**
+	 * Cleans up anything after the output is finished.
+	 */
+	public void cleanup();
+
+    /**
+	 * Creates the output for this <code>Response</code> using the <code>Transport</code> and <code>Writer</code>.
+	 *
+	 * @param writer the <code>Writer</code> for the output
+	 * @throws ScalarActionException if there is a problem creating the output
+	 */
+	public void createOutput(Writer writer) throws ScalarActionException;
 }

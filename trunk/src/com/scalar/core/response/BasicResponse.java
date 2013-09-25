@@ -4,9 +4,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.scalar.freequent.util.DebugUtil;
 import com.scalar.core.request.Request;
+import com.scalar.core.service.ServiceFactory;
+import com.scalar.core.ScalarActionException;
 
 import java.util.Map;
 import java.util.Collections;
+import java.io.Writer;
 
 /**
  * User: Sujan Kumar Suppala
@@ -100,4 +103,14 @@ public class BasicResponse implements Response {
 		return FREEQUENT_RESPONSE;
 	}
 
+    public void cleanup() {
+		// Make sure to flush request cache
+		if ( null != request ) {
+			ServiceFactory.flushCache(request);
+		}
+	}
+
+    public void createOutput(Writer writer) throws ScalarActionException {
+        
+    }
 }

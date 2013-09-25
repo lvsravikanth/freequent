@@ -62,4 +62,8 @@ public class RequestUtil {
         }
         return (User)session.getAttribute(SessionParameters.ATTRIBUTE_USER);
     }
+
+    public static StringBuffer getRequestURL(Request request) {
+		return ((HttpServletRequest)request.getWrappedObject()).getRequestURL();
+	}
 }
