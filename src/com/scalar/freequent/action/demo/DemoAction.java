@@ -26,4 +26,8 @@ public class DemoAction  extends AbstractActionController {
         data.put ("jsonKey1", "jsonValue1");
         data.put ("jsonKey2", "jsonValue2");
     }
+
+	public void demotemplate (Request request, Object command, Map<String, Object> data) throws ScalarActionException {
+		data.put (Response.TEMPLATE_ATTRIBUTE, "demo/demotemplate");
+	}
 }

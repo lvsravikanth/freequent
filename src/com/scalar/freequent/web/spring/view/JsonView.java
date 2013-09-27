@@ -3,6 +3,13 @@ package com.scalar.freequent.web.spring.view;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.view.JstlView;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.View;
+import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.core.OrderComparator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +17,10 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.ServletOutputStream;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 import java.io.Writer;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -70,8 +81,18 @@ public class JsonView extends JstlView {
 	 */
 	protected static final String TEXT_PLAIN_CONTENT_TYPE = "text/plain;charset=UTF-8";
 
+	/**
+	 * Constant used to identify the request content in a service request.
+	 */
+	protected static final String CONTENT = "content";
 
-    @Override
+	/** List of ViewResolvers used by this servlet */
+	private static List<ViewResolver> viewResolvers;
+
+	/** Detect all ViewResolvers or just expect "viewResolver" bean? */
+	private boolean detectAllViewResolvers = true;
+
+	@Override
     public boolean isUrlRequired() {
         return false;
     }
@@ -94,12 +115,18 @@ public class JsonView extends JstlView {
             // create json from the action data
         } else {
             // create json from the template output
-            setUrl(response.getTemplateName());
-            ContentAdapterResponseWrapper proxyHttpResponse = new ContentAdapterResponseWrapper(httpResponse);
-            super.render(model, httpRequest, proxyHttpResponse);
-            StringBuffer templateOutput = proxyHttpResponse.getBuffer();
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put ("template", templateOutput.toString());
+
+			DummyServletOutputStream dummyStream = new DummyServletOutputStream();
+			SwallowingHttpServletResponse proxyHttpResponse = new SwallowingHttpServletResponse(httpResponse, dummyStream);
+			View view = resolveViewName(response.getTemplateName(), null, response.getRequest().getLocale(), httpRequest );
+			if (view != null) {
+				view.render(model, httpRequest, proxyHttpResponse);
+			}
+			String templateOutput = dummyStream.getBuffer();
+			dummyStream.close();
+			dummyStream = null;
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put (CONTENT, templateOutput);
             response.load(data);
         }
 
@@ -392,174 +419,74 @@ public class JsonView extends JstlView {
 	}
 
     /**
-     * An output stream which stores it's content in an accessible string buffer.
-     */
-    class DummyOutputStream extends ServletOutputStream {
-        private StringBuffer buffer = new StringBuffer();
+	 * Initialize the ViewResolvers used by this class.
+	 * <p>If no ViewResolver beans are defined in the BeanFactory for this
+	 * namespace, we default to InternalResourceViewResolver.
+	 */
+	private void initViewResolvers(ApplicationContext context) {
+		viewResolvers = null;
 
-        public String toString() {
-            return buffer.toString();
-        }
+		if (this.detectAllViewResolvers) {
+			// Find all ViewResolvers in the ApplicationContext, including ancestor contexts.
+			Map<String, ViewResolver> matchingBeans =
+					BeanFactoryUtils.beansOfTypeIncludingAncestors(context, ViewResolver.class, true, false);
+			if (!matchingBeans.isEmpty()) {
+				viewResolvers = new ArrayList<ViewResolver>(matchingBeans.values());
+				// We keep ViewResolvers in sorted order.
+				OrderComparator.sort(viewResolvers);
+			}
+		}
+		else {
+			try {
+				ViewResolver vr = context.getBean(DispatcherServlet.VIEW_RESOLVER_BEAN_NAME, ViewResolver.class);
+				this.viewResolvers = Collections.singletonList(vr);
+			}
+			catch (NoSuchBeanDefinitionException ex) {
+				// Ignore, we'll add a default ViewResolver later.
+			}
+		}
 
-        public StringBuffer getBuffer() {
-            return buffer;
-        }
+		// Ensure we have at least one ViewResolver, by registering
+		// a default ViewResolver if no other resolvers are found.
+		/*if (this.viewResolvers == null) {
+			this.viewResolvers = getDefaultStrategies(context, ViewResolver.class);
+			if (logger.isDebugEnabled()) {
+				logger.debug("No ViewResolvers found in servlet '" + getServletName() + "': using default");
+			}
+		}*/
+	}
 
+	protected List<ViewResolver> getViewResolvers () {
+		if (viewResolvers == null) {
+			initViewResolvers(getApplicationContext());
+		}
 
-        public void write(final int b) throws IOException {
-            buffer.append(b);
-        }
+		return viewResolvers;
+	}
 
-
-        public void print(final boolean arg0) throws IOException {
-            buffer.append(arg0);
-        }
-
-
-        public void print(final char arg0) throws IOException {
-            buffer.append(arg0);
-        }
-
-
-        public void print(final double arg0) throws IOException {
-            buffer.append(arg0);
-        }
-
-
-        public void print(final float arg0) throws IOException {
-            buffer.append(arg0);
-        }
-
-
-        public void print(final int arg0) throws IOException {
-            buffer.append(arg0);
-        }
-
-
-        public void print(final long arg0) throws IOException {
-            buffer.append(arg0);
-        }
-
-
-        public void print(final String arg0) throws IOException {
-            buffer.append(arg0);
-        }
-
-
-        public void println() throws IOException {
-            buffer.append("\n");
-        }
-
-
-        public void println(final boolean arg0) throws IOException {
-            buffer.append(arg0);
-            buffer.append("\n");
-        }
-
-        public void println(final char arg0) throws IOException {
-            buffer.append(arg0);
-            buffer.append("\n");
-        }
-
-
-        public void println(final double arg0) throws IOException {
-            buffer.append(arg0);
-            buffer.append("\n");
-        }
-
-
-        public void println(final float arg0) throws IOException {
-            buffer.append(arg0);
-            buffer.append("\n");
-        }
-
-
-        public void println(final int arg0) throws IOException {
-            buffer.append(arg0);
-            buffer.append("\n");
-        }
-
-
-        public void println(final long arg0) throws IOException {
-            buffer.append(arg0);
-            buffer.append("\n");
-        }
-
-
-        public void println(final String arg0) throws IOException {
-            buffer.append(arg0);
-            buffer.append("\n");
-        }
-
-
-        public void write(final byte[] b) throws IOException {
-            print(new String(b));
-        }
-
-
-        public void write(final byte[] b, final int off, final int len) throws IOException {
-            if (b == null) {
-                throw new NullPointerException();
-            } else if ((off < 0) || (off > b.length) || (len < 0) ||
-                    ((off + len) > b.length) || ((off + len) < 0)) {
-                throw new IndexOutOfBoundsException();
-            } else if (len == 0) {
-                return;
-            }
-            for (int i = 0; i < len; i++) {
-                write(b[off + i]);
-            }
-        }
-    }
-
-    /**
-     * Wraps a HttpServletResponse to redirect the output to a StringBuffer.
-     */
-    class ContentAdapterResponseWrapper extends HttpServletResponseWrapper {
-        private DummyOutputStream outstream;
-
-        /**
-         * Constructor.
-         *
-         * @param response the response to wrap
-         */
-        public ContentAdapterResponseWrapper(final HttpServletResponse response) {
-            super(response);
-            outstream = new DummyOutputStream();
-        }
-
-        /**
-         * @return the string buffer containing the wrapped responses output
-         */
-        public StringBuffer getBuffer() {
-            return outstream.getBuffer();
-        }
-
-        /**
-         * @{inheritDoc}
-         */
-        public ServletOutputStream getOutputStream() throws IOException {
-            return outstream;
-        }
-
-        /**
-         * @{inheritDoc}
-         */
-        public PrintWriter getWriter() throws IOException {
-            return new PrintWriter(outstream);
-        }
-
-        /**
-         * @{inheritDoc}
-         */
-        public String toString() {
-            return outstream.toString();
-        }
-
-        /**
-         * Override to always have the original content type.
-         */
-        public void setContentType(final String arg0) {
-        }
-    }
+	/**
+	 * Resolve the given view name into a View object (to be rendered).
+	 * <p>The default implementations asks all ViewResolvers of this dispatcher.
+	 * Can be overridden for custom resolution strategies, potentially based on
+	 * specific model attributes or request parameters.
+	 * @param viewName the name of the view to resolve
+	 * @param model the model to be passed to the view
+	 * @param locale the current locale
+	 * @param request current HTTP servlet request
+	 * @return the View object, or <code>null</code> if none found
+	 * @throws Exception if the view cannot be resolved
+	 * (typically in case of problems creating an actual View object)
+	 * @see ViewResolver#resolveViewName
+	 */
+	protected View resolveViewName(String viewName, Map<String, Object> model, Locale locale,
+			HttpServletRequest request) throws Exception {
+		List<ViewResolver> resolvers = getViewResolvers();
+		for (ViewResolver viewResolver : resolvers) {
+			View view = viewResolver.resolveViewName(viewName, locale);
+			if (view != null) {
+				return view;
+			}
+		}
+		return null;
+	}
 }
