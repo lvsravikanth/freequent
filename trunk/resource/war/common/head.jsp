@@ -1,62 +1,47 @@
-<%--
-/*######################################################################################
-Copyright 2009 Vignette Corporation. All rights reserved. This software
-is an unpublished work and trade secret of Vignette, and distributed only
-under restriction. This software (or any part of it) may not be used,
-modified, reproduced, stored on a retrieval system, distributed, or
-transmitted without the express written consent of Vignette. Violation of
-the provisions contained herein may result in severe civil and criminal
-penalties, and any violators will be prosecuted to the maximum extent
-possible under the law. Further, by using this software you acknowledge and
-agree that if this software is modified by anyone such as you, a third party
-or Vignette, then Vignette will have no obligation to provide support or
-maintenance for this software.
-#####################################################################################*/
---%>
-<%@ page import="com.vignette.as.server.logic.archive.ArchiveUtil" %>
-<%@ page import="com.vignette.ui.core.request.Context"%>
-<%@ page import="com.vignette.ui.util.ContextUtil" %>
-<%@ page import="com.vignette.ui.util.LocaleUtil" %>
-<%@ page import="com.vignette.ui.vcm.l10n.WorkspaceResource" %>
-<%@ page import="java.util.Locale" %>
+<%@ taglib prefix="core" uri="http://www.springframework.org/tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<%@ taglib prefix="core" uri="http://ui.vignette.com/core" %>
+<%@ page import="com.scalar.core.request.Request" %>
+<%@ page import="com.scalar.core.ContextUtil" %>
+<%@ page import="com.scalar.freequent.l10n.MessageResource" %>
+
+<%--<%@ taglib prefix="core" uri="http://ui.vignette.com/core" %>--%>
 
 <%
-	Context ctx = (Context) request.getAttribute(Context.CONTEXT_ATTRIBUTE);
-	Locale locale = LocaleUtil.getLocale(ctx);
+	//Context ctx = (Context) request.getAttribute(Context.CONTEXT_ATTRIBUTE);
+	//Locale locale = LocaleUtil.getLocale(ctx);
+    Request fRequest = (Request)request.getAttribute(Request.REQUEST_ATTRIBUTE);
 %>
 
 <%-- Set locale and bundle --%>
-<core:setLocale value="<%= locale %>"/>
-<core:setBundle basename="<%= WorkspaceResource.BASE_NAME %>"/>
+<fmt:setLocale value="<%= fRequest.getLocale() %>"/>
+<fmt:setBundle basename="<%= MessageResource.BASE_NAME %>"/>
+
 
 <%
-	String docType = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+	String docType = "<!doctype html>";
 	String context = ContextUtil.getContextPath(request);
-	String apiContext = "/contentapi";
-	boolean isArchiveConfigured = ArchiveUtil.getArchives().size() > 0;
+	String apiContext = context;
 %>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<%-- Base CSS --%>
-		<link rel="stylesheet" type="text/css" href="<%= context %>/theme/base.css"/>
-		<link rel="stylesheet" type="text/css" href="<%= context %>/script/thirdparty/vext/resources/css/vext-all.css"/>
+        <link rel="stylesheet" type="text/css" href="<%=context%>/theme/corporate/style/content.css"/>
+        <link rel="stylesheet" type="text/css" href="<%=context%>/script/thirdparty/jquery/css/start/jquery-ui-1.10.3.custom.css"/>
+
 		<%-- vExt CSS
 
 		<link rel="stylesheet" type="text/css" href="<%= context %>/script/thirdparty/vext/vext-ux/GridFilters/resources/style.css"/>
 		<link rel="stylesheet" type="text/css" href="<%= context %>/script/thirdparty/vext/vext-ux/multiselect/multiselect.css"/>
 		--%>
-		<link rel="stylesheet" type="text/css" href="<%= context %>/script/thirdparty/vext/vext-ux/carousel/carousel.css"/>
-		<link rel="stylesheet" type="text/css" href="<%= context %>/script/thirdparty/vext/vext-ux/grid/css/GridFilters.css"/>
-		<link rel="stylesheet" type="text/css" href="<%= context %>/script/thirdparty/vext/vext-ux/grid/css/RangeMenu.css"/>
 
 		<%-- Global CSS --%>
-		<core:global-css/>
+		<%--<core:global-css/>--%>
 
 		<%-- Theme CSS --%>
-		<core:css/>
+		<%--<core:css/>--%>
 
 		<!--[if lte IE 7]>
 		  <script type="text/javascript">
@@ -80,38 +65,22 @@ maintenance for this software.
 		<![endif]-->
 
 		<%-- Thirdparty javascript --%>
-		<%-- vquery --%>
-		<script type="text/javascript" src="<%= apiContext %>/script/thirdparty/vquery/vquery.min.js"></script>
+		<%-- jquery --%>
+        <script type="text/javascript" src="<%=context%>/script/thirdparty/jquery/js/jquery-1.9.1.min.js" ></script>
+		<script type="text/javascript" src="<%=context%>/script/thirdparty/jquery/js/jquery-ui-1.10.3.custom.min.js" ></script>
+
+
 		<script type="text/javascript">
-			(function(){ vQuery.noConflict(); })();
+			(function(){ jQuery.noConflict(); })();
 		</script>
-		<script type="text/javascript" src="<%= apiContext %>/script/thirdparty/vquery/vquery.form.js"></script>
-
-		<%-- vext --%>
-		<script type="text/javascript" src="<%= context %>/script/thirdparty/vext/vext-debug.js"></script>
-		<script type="text/javascript" src="<%= context %>/script/thirdparty/vext/vext-all-debug.js"></script>
-		<script type="text/javascript" src="<%= context %>/script/thirdparty/vext/vext-ux/vext-ux.js"></script>
-		
-		<%-- rangy --%>
-		<script type="text/javascript" src="<%= context %>/script/thirdparty/rangy/rangy-core.js"></script>
-		<script type="text/javascript" src="<%= context %>/script/thirdparty/rangy/rangy-cssclassapplier.js"></script>
-		<script type="text/javascript" src="<%= context %>/script/thirdparty/rangy/rangy-selectionsaverestore.js"></script>
-
-		<%-- tinyMCE --%>
-		<script type="text/javascript" src="<%= context %>/script/thirdparty/tiny_mce/tiny_mce.js"></script>
-
-		<%-- swfObject --%>
-		<script type="text/javascript" src="<%= context %>/script/thirdparty/swf/swfobject.js"></script>
-
+		<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/form/jquery.form.min.js"></script>
 
 		<script type="text/javascript">
 			<%-- Configure VUI --%>
-			var vui;
-			var vuiConfig = {
+			var fui;
+			var fuiConfig = {
 				<%-- Libraries --%>
-				query: vQuery,
-				ext: vExt,
-				extRootName: 'vExt',
+				query: jQuery,
 
 				<%-- Set the api path --%>
 				apiPath: "<%= apiContext %>",
@@ -123,53 +92,30 @@ maintenance for this software.
 				appContext: "<%= context %>"
 			};
 		
-			<%-- Configure VCM --%>
-			var vcmConfig = {
-				archiveConfigured: <%= isArchiveConfigured%>
-			};
-
-			<%-- Configure UI --%>
-			var uiConfig = {
-				<%-- Set the classic console path. --%>
-				appConsole: "/AppConsole"
-			};
-
-			<%-- Call back handler for classic --%>
-			function doPostSubmit(JSName, JSCall) {
-				if (eval(JSName)) eval(JSCall);
-			}
-
 			<%-- Configure VUI libraries --%>
 		</script>
 
 		<%-- Application javascript --%>
-		<%-- vui --%>
-		<script type="text/javascript" src="<%= apiContext %>/script/impl/vquery/logging.js"></script>
-		<script type="text/javascript" src="<%= apiContext %>/script/impl/vquery/vui-impl.js"></script>
-		<script type="text/javascript" src="<%= apiContext %>/script/vui/vui.js"></script>
+		<%-- fui --%>
+		<%--<script type="text/javascript" src="<%= apiContext %>/script/impl/vquery/logging.js"></script>--%>
+		<script type="text/javascript" src="<%= apiContext %>/script/fui/fui.js"></script>
 
-		<%-- vui ui & vext --%>
-		<script type="text/javascript" src="<%= context %>/script/vui/ui/vui-ui.js"></script>
-		<script type="text/javascript" src="<%= context %>/script/vui/ui/vext.js"></script>
+		<%-- fui ui --%>
+		<script type="text/javascript" src="<%= context %>/script/fui/ui/fui-ui.js"></script>
 
-		<%-- vcm --%>
-		<script type="text/javascript" src="<%= apiContext %>/script/vcm/vcm.js"></script>
 
-		<%-- vcm vext & vcm ui --%>
-		<script type="text/javascript" src="<%= context %>/script/vcm/ui/vcm-vext.js"></script>
-		<script type="text/javascript" src="<%= context %>/script/vcm/ui/vcm-ui.js"></script>
 
 		<%-- patch--%>
 		<script type="text/javascript">
 			(function(){
 				try{
-					var patchCSSBoxModel = function(){
+					/*var patchCSSBoxModel = function(){
 						//set CSS box model to "content-box"
-						vQuery("html").removeClass("x-border-box");
+						jQuery("html").removeClass("x-border-box");
 						vExt.isBorderBox = false; //default ExtJS box model calculations to be based on "content-box"
 					}
 
-					vExt.onReady(patchCSSBoxModel);
+					vExt.onReady(patchCSSBoxModel);*/
 				} catch (ex){
 					if (vui.log.isError()){
 						vui.log.error(e);
@@ -179,29 +125,7 @@ maintenance for this software.
 		</script>
 
 		<%-- messages --%>
-		<script type="text/javascript" src="<%= context %>/script/messages.jsp"></script>
+		<%--<script type="text/javascript" src="<%= context %>/script/messages.jsp"></script>--%>
 		
-		<%-- editlive --%>
-		<script type="text/javascript" src="/editLiveJava/editlivejava.js"></script>
-
-		<%-- Global javascript --%>
-		<core:global-javascript/>
-
-		<%-- Theme javascript --%>
-		<core:javascript/>
-	
-		<%-- 
-			vuit : block vuit from clobbering console and this needs to be loaded at the end of all other JS due to the JS threading/loading in FF3.5.x 
-		--%>
-		<script type="text/javascript">
-			if ( console && !console["firebug"] ) {
-				console.firebug = "vuit";
-			}
-		</script>		
-		<script type="text/javascript" src="<%= context %>/script/thirdparty/vuit/vuit.js"></script>
-		<script type="text/javascript">
-			vExt.Loader.setConfig({enabled:true});
-		</script>
-		
-		<title><core:message key="<%= WorkspaceResource.OPENTEXT_TITLE %>"/></title>
+		<title><fmt:message key="<%= MessageResource.SAMSKRITI_TITLE %>"/></title>
 	</head>

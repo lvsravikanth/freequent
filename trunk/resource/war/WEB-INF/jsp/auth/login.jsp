@@ -1,24 +1,21 @@
 <%@ page import="com.scalar.core.util.MsgObject" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.scalar.core.ContextUtil" %>
 <%@ page isELIgnored="true" %>
 <%@ taglib prefix="freequent" uri="http://www.freequent.com/freequent" %>
-
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    String context = ContextUtil.getContextPath(request);
+%>
 <!doctype html>
 <html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/theme/corporate/style/content.css"/>
-		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/script/jquery/css/start/jquery-ui-1.10.3.custom.css"/>
-		<script type="text/javascript" src="<%=request.getContextPath()%>/script/jquery/js/jquery-1.9.1.js" ></script>
-		<script type="text/javascript" src="<%=request.getContextPath()%>/script/jquery/js/jquery-ui-1.10.3.custom.js" ></script>
-		<script type="text/javascript" src="<%=request.getContextPath()%>/script/common/util/errorinfoutil.js"> </script>
-		<script type="text/javascript">
-				$(function() {
-					$("#site_signin_button" ).button();
-				})
-		</script>
-	</head>
+	<c:import url="/common/head.jsp" context="<%=context%>"/>
 	<body >
+        <script type="text/javascript">
+				fui.query(function() {
+					fui.query("#site_signin_button" ).button();
+				});
+		</script>
 		<div id="login_globalContainer">
 
 		</div>
