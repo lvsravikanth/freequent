@@ -1,12 +1,6 @@
-var freequent = {
+fui.provide ("fui.util.errorinfoutil");
 
-};
-
-freequent.util ={
-
-};
-
-freequent.util.errorinfoutil = {
+fui.util.errorinfoutil = {
 
 	ERRORS_ID : 'frq-error-msg',
 	INFOS_ID : 'frq-info-msg',
@@ -31,10 +25,10 @@ freequent.util.errorinfoutil = {
 			}
 		}
 		if (errors && errors.length > 0 ) {
-			$(id).remove();
+			fui.query(id).remove();
 			this.createNode(id, errors);
-			$("#"+ id +"-wrap").addClass("ui-state-error");
-			$("#"+ id +"-wrap  > .ui-icon").addClass("ui-icon-alert");
+			fui.query("#"+ id +"-wrap").addClass("ui-state-error");
+			fui.query("#"+ id +"-wrap  > .ui-icon").addClass("ui-icon-alert");
 		}
 	},
 
@@ -53,10 +47,10 @@ freequent.util.errorinfoutil = {
 			}
 		}
 		if ( warnings && warnings.length > 0) {
-			$(id).remove();
+			fui.query(id).remove();
 			this.createNode(id, warnings);
-			$("#"+ id +"-wrap").addClass(".ui-state-highlight");
-			$("#"+ id +"-wrap  > .ui-icon").addClass("ui-icon-info");
+			fui.query("#"+ id +"-wrap").addClass(".ui-state-highlight");
+			fui.query("#"+ id +"-wrap  > .ui-icon").addClass("ui-icon-info");
 		}
 	},
 
@@ -75,10 +69,10 @@ freequent.util.errorinfoutil = {
 			}
 		}
 		if (infos && infos.length > 0) {
-			$(id).remove();
+			fui.query(id).remove();
 			this.createNode(id, infos);
-			$("#"+ id +"-wrap").addClass("ui-state-error");
-			$("#"+ id +"-wrap  > .ui-icon").addClass("ui-icon-info");
+			fui.query("#"+ id +"-wrap").addClass("ui-state-error");
+			fui.query("#"+ id +"-wrap  > .ui-icon").addClass("ui-icon-info");
 		}
 	},
 
@@ -150,12 +144,12 @@ freequent.util.errorinfoutil = {
 	 * @param msg
 	 */
 	createNode : function(id, msg) {
-		$('<div class="ui-widget"><div id=\"'+ id +'-wrap" class="ui-corner-all" style="padding: 0 .3em ;"></div></div>').appendTo('#' + id);
-			$('<span class="ui-icon" style="float: left; margin-right: .3em; background-position: 3px -140px;"></span>').appendTo("#"+ id +"-wrap");
+		fui.query('<div class="ui-widget"><div id=\"'+ id +'-wrap" class="ui-corner-all" style="padding: 0 .3em ;"></div></div>').appendTo('#' + id);
+			fui.query('<span class="ui-icon" style="float: left; margin-right: .3em; background-position: 3px -140px;"></span>').appendTo("#"+ id +"-wrap");
 			for (var j=0; j < msg.length ; j++) {
-				$('<li style="list-style-position: inside; margin-left: 22px;"></li>').appendTo("#"+ id +"-wrap");
-				var list = $("#"+ id +"-wrap > li");
-				$(list[j]).text(msg[j]);
+				fui.query('<li style="list-style-position: inside; margin-left: 22px;"></li>').appendTo("#"+ id +"-wrap");
+				var list = fui.query("#"+ id +"-wrap > li");
+				fui.query(list[j]).text(msg[j]);
 			}
 	}
 };

@@ -157,6 +157,31 @@
 
 	<!-- scripts -->
 	<target name="scripts" depends="jslint" description="Build scripts">
+        <!-- root level js -->
+		<copy todir="${scripts.dir}" includeEmptyDirs="false">
+			<fileset dir="${war.script.dir}">
+				<include name="*.js" />
+			</fileset>
+		</copy>
+
+        <!-- fui -->
+		<antcall target="build.scripts.concat">
+			<param name="param.src.dir" value="${war.script.dir}/fui" />
+			<param name="param.dst.dir" value="${scripts.dir}/fui" />
+			<param name="param.src.name" value="fui" />
+			<param name="param.root.name" value="fui" />
+			<param name="param.file.name" value="fui" />
+		</antcall>
+
+        <!-- ui -->
+		<antcall target="build.scripts.concat">
+			<param name="param.src.dir" value="${war.script.dir}/ui" />
+			<param name="param.dst.dir" value="${scripts.dir}/fui/ui" />
+			<param name="param.src.name" value="ui" />
+			<param name="param.root.name" value="fui.ui" />
+			<param name="param.file.name" value="fui-ui" />
+		</antcall>
+
 		<!-- vcm-vext -->
 		<!--<antcall target="build.scripts.concat">
 			<param name="param.src.dir" value="${war.script.dir}" />
@@ -166,26 +191,18 @@
 			<param name="param.file.name" value="vcm-vext" />
 		</antcall>-->
 
-		<!-- ui -->
-		<!--<antcall target="build.scripts.concat">
-			<param name="param.src.dir" value="${war.script.dir}/ui" />
-			<param name="param.dst.dir" value="${scripts.dir}/vcm/ui" />
-			<param name="param.src.name" value="ui" />
-			<param name="param.root.name" value="vui.vcm.ui" />
-			<param name="param.file.name" value="vcm-ui" />
-		</antcall>-->
 
-		<!-- root js -->
-		<copy todir="${scripts.dir}" includeEmptyDirs="false">
-			<fileset dir="${war.script.dir}">
-				<include name="**/*" />
-			</fileset>
-		</copy>
+
+
 
 		<!-- rangy -->
 		<!--<copy todir="${thirdparty.scripts.dir}/rangy" includeEmptyDirs="false">
 			<fileset dir="${lib.dir}/ship/rangy" />
 		</copy>-->
+        <!-- thirdparty scripts -->
+        <copy todir="${thirdparty.scripts.dir}" includeEmptyDirs="false">
+			<fileset dir="${war.script.dir}/thirdparty" />
+		</copy>
 	</target>
 
 	<!-- exploded war -->
@@ -247,8 +264,21 @@
 		</copy>-->
 
 		<!-- copy scalar resources -->
-		<copy todir="${exploded.war}" includeEmptyDirs="false">
+        <copy todir="${exploded.war}" includeEmptyDirs="false">
 			<fileset dir="${resources.dir}">
+				<include name="WEB-INF/**/*" />
+				<include name="properties/**/*" />
+				<include name="script/fui/**/*" />
+                <include name="script/thirdparty/**/*" />
+				<include name="theme/**/*" />
+				<include name="common/**/*" />
+			</fileset>
+		</copy>
+
+		<!-- copy vcm resources -->
+		<!--<copy todir="${exploded.war}" includeEmptyDirs="false">
+			<fileset dir="${resources.dir}">
+				<exclude name="imports/**/*" />
 				<exclude name="properties/**/*" />
 			</fileset>
 		</copy>
@@ -257,7 +287,7 @@
 			<fileset dir="${resources.dir}">
 				<include name="properties/**/*" />
 			</fileset>
-		</copy>
+		</copy>-->
 		
 	</target>
 

@@ -27,7 +27,7 @@ public class ErrorTagSupport extends MessageTagSupport {
 		// Finally, localize the MsgObject and return the localized string.
 		try {
 
-			pageContext.getOut().write("<div id='frq-error-msg'><script type=\"text/javascript\"> freequent.util.errorinfoutil.showerrors("+getMessageJSON() +")</script></div>");
+			pageContext.getOut().write("<div id='frq-error-msg'><script type=\"text/javascript\"> fui.util.errorinfoutil.showerrors("+getMessageJSON() +")</script></div>");
 
         } catch (JSONException jsonException) {
 			throw new JspException(jsonException.getMessage());

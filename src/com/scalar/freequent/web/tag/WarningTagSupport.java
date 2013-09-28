@@ -26,7 +26,7 @@ public class WarningTagSupport extends MessageTagSupport {
 		// Finally, localize the MsgObject and return the localized string.
 		try {
 
-			pageContext.getOut().write("<div id='frq-warning-msg'><script type=\"text/javascript\"> freequent.util.errorinfoutil.showwarnings("+getMessageJSON() +")</script></div>");
+			pageContext.getOut().write("<div id='frq-warning-msg'><script type=\"text/javascript\"> fui.util.errorinfoutil.showwarnings("+getMessageJSON() +")</script></div>");
 
 		} catch (JSONException jsonException) {
 			throw new JspException(jsonException.getMessage());

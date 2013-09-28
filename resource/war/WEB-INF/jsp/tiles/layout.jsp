@@ -1,4 +1,9 @@
+<%@ page import="com.scalar.core.ContextUtil" %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+    String context = ContextUtil.getContextPath(request);
+%>
 <!DOCTYPE html>
 <html style="height:99.9%">
 <head class="freequent-html">
@@ -68,7 +73,7 @@
 
 </style>
 
-</head>
+<c:import url="/common/head.jsp" context="<%=context%>"/>
 
 <body class="freequent-body">
 

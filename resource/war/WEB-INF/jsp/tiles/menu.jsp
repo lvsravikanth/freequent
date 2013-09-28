@@ -3,8 +3,6 @@
 <%@ page import="com.scalar.core.menu.MenuFactory" %>
 <%@ page import="com.scalar.core.request.RequestUtil" %>
 <%@ page import="com.scalar.freequent.util.StringUtil" %>
-<script type="text/javascript" src="<%=request.getContextPath()%>/script/jquery/js/jquery-1.9.1.js" ></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/script/jquery/js/jquery-ui-1.10.3.custom.js" ></script>
 <STYLE>
 body, input{
 	font-family: Calibri, Arial;
@@ -78,14 +76,14 @@ body, input{
 </ul>
 
 <SCRIPT>
-$("#accordion > li").click(function(){
+fui.query("#accordion > li").click(function(){
 
-	if(false == $(this).next().is(':visible')) {
-		$('#accordion > ul').slideUp(300);
+	if(false == fui.query(this).next().is(':visible')) {
+		fui.query('#accordion > ul').slideUp(300);
 	}
-	$(this).next().slideToggle(300);
+	fui.query(this).next().slideToggle(300);
 });
 
-$('#accordion > ul:eq(1)').show();
+fui.query('#accordion > ul:eq(1)').show();
 
 </SCRIPT>
