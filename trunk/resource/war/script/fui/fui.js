@@ -20,6 +20,8 @@ if ( typeof this.fuiLog == "undefined" ) {
 var fui = {
     query: (typeof fuiConfig != "undefined") && fuiConfig.query ? fuiConfig.query : ((typeof this.jQuery != "undefined") ? jQuery : undefined),
 
+    log: new fuiLog(),
+    
     // Temporary area for throw away functions
 	tmp: {},
 
