@@ -20,6 +20,11 @@ if ( typeof this.fuiLog == "undefined" ) {
 var fui = {
     query: (typeof fuiConfig != "undefined") && fuiConfig.query ? fuiConfig.query : ((typeof this.jQuery != "undefined") ? jQuery : undefined),
 
+    // Global settings
+	requestURL: fuiConfig.requestURL || "request",
+	apiPath: fuiConfig.apiPath || "/contentapi",
+	appContext: fuiConfig.appContext || "/content",
+
     log: new fuiLog(),
     
     // Temporary area for throw away functions
@@ -94,7 +99,7 @@ var fui = {
 	},
 
 	isIE: function() {
-		return fui.query.browser.msie;
+		return navigator.appName == 'Microsoft Internet Explorer';
 	},
 
 	ready: function(func) {
@@ -345,4 +350,18 @@ var fui = {
 
 		options.xhr = fui.query("#" + options.formId).ajaxSubmit(data);
 	}
+};
+
+if ( typeof this.fuiConfig == "undefined" ) {
+	this.fuiConfig = {};
 }
+
+/**
+ * A vui impl must have been loaded by now
+ */
+fui.combine(fui, {
+	// Global settings
+	requestURL: fuiConfig.requestURL || "request",
+	apiPath: fuiConfig.apiPath || "/freequent",
+	appContext: fuiConfig.appContext || "/freequent"
+});
