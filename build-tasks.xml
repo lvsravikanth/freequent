@@ -519,7 +519,7 @@
 
 		<taskdef name="jsdeps" classpath="${ui-tools.jar}" classname="com.vignette.ui.tools.BuildJavaScriptDependencies" />
 
-		<jsdeps srcDir="${param.src.dir}" namespace="vuit"
+		<jsdeps srcDir="${param.src.dir}" namespace="fui"
 			excludenames="${param.exclude.list}"  excludeenabled="${param.exclude.enabled}"
 			sourcename="${param.src.name}" rootname="${param.root.name}" property="ordered.list"
 			includes="**/*.js" />
