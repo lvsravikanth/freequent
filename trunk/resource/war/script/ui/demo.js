@@ -33,7 +33,9 @@ fui.ui.demo = {
     testSimpleJson: function() {
         var requestData = {};
         requestData.sync = true;
-        requestData.handler = function(data) { alert(data); };
+        requestData.handler = function(data) {
+            alert("json string:" + fui.json.stringify(data)); 
+        };
         fui.ui.demo.getSimpleJson(requestData);
     }
 };
