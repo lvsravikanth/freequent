@@ -105,4 +105,11 @@ public interface Response {
 	 * @throws ScalarActionException if there is a problem creating the output
 	 */
 	public void createOutput(Writer writer) throws ScalarActionException;
+
+	/**
+	 * Returns the <code>Response</code> output attributes.
+	 *
+	 * @return the output attributes
+	 */
+	public Map<String, String> getOutputAttributes();
 }

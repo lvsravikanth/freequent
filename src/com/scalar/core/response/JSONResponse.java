@@ -21,7 +21,7 @@ import com.scalar.freequent.l10n.FrameworkResource;
  */
 public class JSONResponse extends BasicResponse {
     protected static final Log logger = LogFactory.getLog(JSONResponse.class);
-    public final String VIEW_NAME = "jsonView";
+    public static final String VIEW_NAME = "jsonView";
 
     @Override
     public String getViewName() {

@@ -17,10 +17,13 @@ public class ResponseFactory {
 
     public static Response createResponse(String responseFormat, Request request, Map<String, Object> data) {
         Response response = null;
-        if (Response.JSON_FORMAT.equals(responseFormat)) {
-            response = new JSONResponse();
-
-        } else if (Response.XML_FORMAT.equals(responseFormat)) {
+		if (Response.JSON_FORMAT.equals(responseFormat)) {
+			if (data.containsKey(Response.TEMPLATE_ATTRIBUTE)) {
+				response = new JSONTemplateResponse();
+			} else {
+				response = new JSONResponse();
+			}
+		} else if (Response.XML_FORMAT.equals(responseFormat)) {
             response = new BasicResponse();
 
         } else if (Response.TEMPLATE_FORMAT.equals(responseFormat)) {

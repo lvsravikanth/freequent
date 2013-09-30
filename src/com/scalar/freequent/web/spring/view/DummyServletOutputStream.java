@@ -26,7 +26,7 @@ public class DummyServletOutputStream extends ServletOutputStream {
 		return getBuffer("UTF-8");
 	}
 
-	public void close() throws IOException {
-		writer.close();
+	public void close() {
+		try { writer.close(); } catch (IOException ignore) {}
 	}
 }

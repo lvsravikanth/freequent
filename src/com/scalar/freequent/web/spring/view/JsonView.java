@@ -28,6 +28,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 
 import com.scalar.core.response.Response;
+import com.scalar.core.response.ErrorResponse;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.request.Request;
 import com.scalar.core.request.RequestUtil;
@@ -64,7 +65,7 @@ public class JsonView extends JstlView {
 	/**
 	 * Constant used to identify the container type.
 	 */
-	private static final String CONTAINER_TYPE = "vui";
+	private static final String CONTAINER_TYPE = "fui";
 
     /**
 	 * Constant used to format metadata time values.
@@ -86,11 +87,10 @@ public class JsonView extends JstlView {
 	 */
 	protected static final String CONTENT = "content";
 
-	/** List of ViewResolvers used by this servlet */
-	private static List<ViewResolver> viewResolvers;
-
-	/** Detect all ViewResolvers or just expect "viewResolver" bean? */
-	private boolean detectAllViewResolvers = true;
+	/**
+	 * Constant used to identify the response type in the output.
+	 */
+	protected static final String TYPE = "type";
 
 	@Override
     public boolean isUrlRequired() {
@@ -111,25 +111,6 @@ public class JsonView extends JstlView {
 		long startMillis = System.currentTimeMillis();
 
         Response response = (Response)model.get (Response.RESPONSE_ATTRIBUTE);
-        if (StringUtil.isEmpty(response.getTemplateName())) {
-            // create json from the action data
-        } else {
-            // create json from the template output
-
-			DummyServletOutputStream dummyStream = new DummyServletOutputStream();
-			SwallowingHttpServletResponse proxyHttpResponse = new SwallowingHttpServletResponse(httpResponse, dummyStream);
-			View view = resolveViewName(response.getTemplateName(), null, response.getRequest().getLocale(), httpRequest );
-			if (view != null) {
-				view.render(model, httpRequest, proxyHttpResponse);
-			}
-			String templateOutput = dummyStream.getBuffer();
-			dummyStream.close();
-			dummyStream = null;
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put (CONTENT, templateOutput);
-            response.load(data);
-        }
-
         Writer writer = null;
 		try {
 			// Set the response content type based on the transport
@@ -233,9 +214,41 @@ public class JsonView extends JstlView {
 
 		response.cleanup();
 	}
-    
-    protected void startResponseOutput(Response response, Writer writer) throws ScalarActionException {
-        
+
+	/**
+	 * Starts the output process for the <code>Response</code> by wrapping the output with JSON and adding the
+	 * attributes.
+	 */
+	protected void startResponseOutput(Response response, Writer writer) throws ScalarActionException {
+        // No wrapping if there is no tag
+		String tag = response.getTag();
+		if ( (null == tag) || (tag.length() == 0) ) {
+			return;
+		}
+
+		try {
+			writer.write('{');
+			addOutputAttribute(TYPE, response.getTag(), writer, false);
+
+			Map<String, String> data = response.getOutputAttributes();
+			for ( Map.Entry<String, String> entry  : data.entrySet() ) {
+				String key = entry.getKey();
+				String value = entry.getValue();
+				if(value != null && tag.equals(ErrorResponse.FUI_ERROR) &&
+						( key.equals(ErrorResponse.MESSAGE_ATTRIBUTE) || key.equals(ErrorResponse.ROOT_MESSAGE_ATTRIBUTE) )){
+					value = value.replace('\n', ' ');
+					value = value.replace('\r', ' ');
+					value = value.replace('\t', ' ');
+				}
+				addOutputAttribute(key, value, writer, true);
+			}
+
+
+			writer.write(",\"" + CONTENT + "\": \"");
+		} catch ( IOException e ) {
+			MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.WRITE_OUTPUT_FAILURE);
+			throw ScalarActionException.create(msgObject, e);
+		}
     }
 
     /**
@@ -416,77 +429,5 @@ public class JsonView extends JstlView {
 		if ( null != previousContext ) {
 			requestService.setAttribute(Context.CONTEXT_ATTRIBUTE, previousContext);
 		}*/
-	}
-
-    /**
-	 * Initialize the ViewResolvers used by this class.
-	 * <p>If no ViewResolver beans are defined in the BeanFactory for this
-	 * namespace, we default to InternalResourceViewResolver.
-	 */
-	private void initViewResolvers(ApplicationContext context) {
-		viewResolvers = null;
-
-		if (this.detectAllViewResolvers) {
-			// Find all ViewResolvers in the ApplicationContext, including ancestor contexts.
-			Map<String, ViewResolver> matchingBeans =
-					BeanFactoryUtils.beansOfTypeIncludingAncestors(context, ViewResolver.class, true, false);
-			if (!matchingBeans.isEmpty()) {
-				viewResolvers = new ArrayList<ViewResolver>(matchingBeans.values());
-				// We keep ViewResolvers in sorted order.
-				OrderComparator.sort(viewResolvers);
-			}
-		}
-		else {
-			try {
-				ViewResolver vr = context.getBean(DispatcherServlet.VIEW_RESOLVER_BEAN_NAME, ViewResolver.class);
-				this.viewResolvers = Collections.singletonList(vr);
-			}
-			catch (NoSuchBeanDefinitionException ex) {
-				// Ignore, we'll add a default ViewResolver later.
-			}
-		}
-
-		// Ensure we have at least one ViewResolver, by registering
-		// a default ViewResolver if no other resolvers are found.
-		/*if (this.viewResolvers == null) {
-			this.viewResolvers = getDefaultStrategies(context, ViewResolver.class);
-			if (logger.isDebugEnabled()) {
-				logger.debug("No ViewResolvers found in servlet '" + getServletName() + "': using default");
-			}
-		}*/
-	}
-
-	protected List<ViewResolver> getViewResolvers () {
-		if (viewResolvers == null) {
-			initViewResolvers(getApplicationContext());
-		}
-
-		return viewResolvers;
-	}
-
-	/**
-	 * Resolve the given view name into a View object (to be rendered).
-	 * <p>The default implementations asks all ViewResolvers of this dispatcher.
-	 * Can be overridden for custom resolution strategies, potentially based on
-	 * specific model attributes or request parameters.
-	 * @param viewName the name of the view to resolve
-	 * @param model the model to be passed to the view
-	 * @param locale the current locale
-	 * @param request current HTTP servlet request
-	 * @return the View object, or <code>null</code> if none found
-	 * @throws Exception if the view cannot be resolved
-	 * (typically in case of problems creating an actual View object)
-	 * @see ViewResolver#resolveViewName
-	 */
-	protected View resolveViewName(String viewName, Map<String, Object> model, Locale locale,
-			HttpServletRequest request) throws Exception {
-		List<ViewResolver> resolvers = getViewResolvers();
-		for (ViewResolver viewResolver : resolvers) {
-			View view = viewResolver.resolveViewName(viewName, locale);
-			if (view != null) {
-				return view;
-			}
-		}
-		return null;
 	}
 }
