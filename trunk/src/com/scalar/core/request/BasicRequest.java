@@ -228,4 +228,23 @@ public class BasicRequest extends AbstractRequest implements Request {
 
 		return responseFormat;
     }
+
+	/**
+	 * Returns the <code>Request</code> output attributes.
+	 * <p>
+	 * The following attributes are returned:
+	 * <dl compact>
+	 * <dt>{@link #ID}
+	 * <dd>The id for this <code>Request</code>
+	 * </dl>
+	 *
+	 * @return the output attributes
+	 */
+	public Map<String, String> getOutputAttributes() {
+		Map<String, String> attributes = new HashMap<String, String>();
+
+		attributes.put(ID, getId());
+
+		return attributes;
+	}
 }

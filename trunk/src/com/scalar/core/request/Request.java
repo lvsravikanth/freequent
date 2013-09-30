@@ -229,4 +229,11 @@ public interface Request extends Serializable {
     public String getResponseDataFormat();
 
     public User getActiveUser();
+
+	/**
+	 * Returns the <code>Request</code> output attributes.
+	 *
+	 * @return the output attributes
+	 */
+	public Map<String, String> getOutputAttributes();
 }
