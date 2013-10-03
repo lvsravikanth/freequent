@@ -15,25 +15,30 @@ import com.scalar.core.request.Request;
 public class ResponseFactory {
     protected static final Log logger = LogFactory.getLog(ResponseFactory.class);
 
-    public static Response createResponse(String responseFormat, Request request, Map<String, Object> data) {
+    public static Response createResponse(String responseType, Request request, Map<String, Object> data) {
         Response response = null;
-		if (Response.JSON_FORMAT.equals(responseFormat)) {
+        String responseFormat = request.getResponseDataFormat();
+        if (Response.ERROR.equals(responseType)) {
+            response = new ErrorResponse();
+        } else if (Response.MESSAGE.equals(responseType)) {
+            response = new MessageResponse();
+        } else if (Response.JSON_FORMAT.equals(responseType)) {
 			if (data.containsKey(Response.TEMPLATE_ATTRIBUTE)) {
 				response = new JSONTemplateResponse();
 			} else {
 				response = new JSONResponse();
 			}
-		} else if (Response.XML_FORMAT.equals(responseFormat)) {
+		} else if (Response.XML_FORMAT.equals(responseType)) {
             response = new BasicResponse();
 
-        } else if (Response.TEMPLATE_FORMAT.equals(responseFormat)) {
+        } else if (Response.TEMPLATE_FORMAT.equals(responseType)) {
             response = new BasicResponse();
 
         }
 
         if (null == response) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Unable to find response for key: " + responseFormat);
+                logger.debug("Unable to find response for key: " + responseType);
             }
             return null;
         }

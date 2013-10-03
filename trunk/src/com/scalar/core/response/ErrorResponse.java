@@ -2,8 +2,10 @@ package com.scalar.core.response;
 
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.l10n.FrameworkResource;
+import com.scalar.freequent.web.util.ErrorInfoUtil;
 import com.scalar.core.ScalarException;
 import com.scalar.core.ScalarActionException;
+import com.scalar.core.ScalarAuthException;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
 
@@ -155,7 +157,6 @@ public class ErrorResponse extends AbstractResponse {
 	 * Creates the error output for this <code>Response</code> using the <code>Writer</code>. If there is a
 	 * <code>Throwable</code> cause, the stack trace is added to the output.
 	 */
-	@Override
 	public void createOutput(Writer writer) throws ScalarActionException {
 		Throwable t = getThrowable();
 		if ( null == t ) {
@@ -239,4 +240,32 @@ public class ErrorResponse extends AbstractResponse {
 	public Throwable getThrowable() {
 		return throwable;
 	}
+
+    @Override
+    public String getViewName() {
+        String viewName;
+        if (JSON_FORMAT.equals(getRequest().getResponseDataFormat())) {
+            return JSONResponse.VIEW_NAME;
+        } else {
+            Throwable th = getThrowable();
+             if (ScalarException.class.isInstance(th)) {
+            viewName = "common/actionexception";
+            if (ScalarAuthException.class.isInstance(th)) {
+                // check if authentication failed
+                ScalarAuthException sae = ScalarAuthException.class.cast(th);
+                MsgObject msgObject = sae.getMsgObject();
+                MsgObject authenticationMsg = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.AUTHENTICATION_REQUIRED);
+                if (msgObject.localize().equals(authenticationMsg.localize())) {
+                    ErrorInfoUtil.addError(getRequest(), sae.getMsgObject());
+                    viewName="auth/login";
+                }
+            }
+        } else {
+                //todo set the error msg
+                // some unexpected exception has occcured
+                viewName = "common/unknownexception";
+            }
+        }
+        return viewName;
+    }
 }

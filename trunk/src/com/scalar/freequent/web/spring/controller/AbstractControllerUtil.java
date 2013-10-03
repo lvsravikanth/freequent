@@ -120,7 +120,7 @@ public final class AbstractControllerUtil {
         //todo need to consider the json, xml response types
         ModelAndView mav = new ModelAndView();
         mav.addObject(Response.RESPONSE_ATTRIBUTE, response);
-        mav.addObject(Response.EXCEPTIOIN_ATTRIBUTE, th);
+        //mav.addObject(Response.EXCEPTIOIN_ATTRIBUTE, th);
         if (ScalarException.class.isInstance(th)) {
             mav.setViewName("common/actionexception");
             if (ScalarAuthException.class.isInstance(th)) {

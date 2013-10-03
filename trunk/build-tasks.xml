@@ -551,6 +551,11 @@
 			</fileset>
 		</replaceregexp>
 
+        <antcall target="rename.js.for.debug">
+			<param name="param.src.dir" value="${param.dst.dir}" />
+			<param name="param.src.name" value="${param.file.name}" />
+		</antcall>
+
 		<!-- Copy other files -->
 		<copy todir="${param.dst.dir}" includeEmptyDirs="false">
 			<fileset dir="${param.src.dir}">
@@ -559,6 +564,12 @@
 		</copy>
 	</target>
 
+    <target  name="rename.js.for.debug" if="ui.debug.mode">
+        <!-- if in debug mode, we need to use uncompressed files -->
+        <move file="${param.src.dir}/${param.src.name}.js" tofile="${param.src.dir}/${param.src.name}.compressed.js"/>
+        <move file="${param.src.dir}/${param.src.name}.uncompressed.js" tofile="${param.src.dir}/${param.src.name}.js"/>
+
+    </target>
 	<!-- concat thirdparty scripts -->
 	<target name="build.scripts.thirdparty.concat">
 		<mkdir dir="${param.dst.dir}" />

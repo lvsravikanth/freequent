@@ -29,7 +29,7 @@ fui.auth = {
 	/**
 	 * Login screen
 	 */
-	LOGIN_SCREEN_PATH:"/auth/loginscreen.json",
+	LOGIN_SCREEN_PATH:"/auth/login.json",
 
 	/**
 	 * Log the user into the application.

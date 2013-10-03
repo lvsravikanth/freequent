@@ -65,7 +65,9 @@ fui.ui = {
 	 */
 	authorizationHandler: function(response) {
 		//if ( fui.log.isError() ) { fui.log.error(response); }
-		fui.auth.logout(fui.auth.AUTHORIZATION_LOGOUT);
+        alert("authorizaationHandler:" + response);
+		fui.auth.logout(fui.auth.AUTHORIZATION_LOGOUT); //todo
+
 		return true;
 	}
 };

@@ -87,6 +87,9 @@ public abstract class AbstractResponse implements Response {
 	}
 
     public String getViewName() {
+        if (JSON_FORMAT.equals(getRequest().getResponseDataFormat())) {
+            return JSONResponse.VIEW_NAME;
+        }
 		return (String)data.get(Response.TEMPLATE_ATTRIBUTE);
     }
 

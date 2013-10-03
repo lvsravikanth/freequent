@@ -11,6 +11,13 @@
         <put-attribute name="footer" value="/WEB-INF/jsp/tiles/footer.jsp" />
     </definition>
 
+    <definition name="empty.definition" extends="base.definition">
+        <put-attribute name="header" value="" />
+        <put-attribute name="menu" value="" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="" />
+    </definition>
+
     <definition name="test" extends="base.definition">
         <put-attribute name="body" value="/WEB-INF/jsp/auth/login.jsp" />
     </definition>

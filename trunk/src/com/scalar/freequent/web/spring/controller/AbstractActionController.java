@@ -7,6 +7,7 @@ import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMeth
 import org.springframework.web.servlet.mvc.multiaction.MethodNameResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.validation.BindException;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import com.scalar.core.request.RequestUtil;
 import com.scalar.core.response.Response;
 import com.scalar.core.response.BasicResponse;
 import com.scalar.core.response.ResponseFactory;
+import com.scalar.core.response.ErrorResponse;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.ScalarActionException;
@@ -66,6 +68,7 @@ public abstract class AbstractActionController extends AbstractController implem
                     }
                 } else {
                     // forward to login page as the request is not authenticated.
+                    httpServletResponse.setStatus(401);
                     MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.AUTHENTICATION_REQUIRED);
                     throw ScalarAuthException.create (msgObject, null);
                 }
@@ -84,9 +87,10 @@ public abstract class AbstractActionController extends AbstractController implem
             if (! (ee instanceof ScalarLoggedException)) {
                 logger.error("Exception while processing the action", ee);
             }
-            Response response = ResponseFactory.createResponse(request.getResponseDataFormat(), request, data);
+            ErrorResponse.prepareData(data, ee);
+            Response response = ResponseFactory.createResponse(Response.ERROR, request, data);
             response.setWrappedObject(httpServletResponse);
-            return AbstractControllerUtil.createResponseModelAndView(response, ee);
+            return AbstractControllerUtil.createResponseModelAndView(response);
         }
     }
 
@@ -111,7 +115,7 @@ public abstract class AbstractActionController extends AbstractController implem
             return;
         } else {
             User user = request.getActiveUser();
-            user.checkCapabilities(getRequiredCapabilities(request));
+            user.checkCapabilities(capabilities);
         }
     }
 
