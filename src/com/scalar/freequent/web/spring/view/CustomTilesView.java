@@ -24,8 +24,18 @@ public class CustomTilesView extends TilesView {
 	protected static final String baseDefinitionName = "base.definition";
 	protected static final String baseDefinitionAttribute_BODY = "body";
 
-	public String getUrl() {
-		return baseDefinitionName;
+    private String definitionName = null;
+
+    public String getDefinitionName() {
+        return definitionName;
+    }
+
+    public void setDefinitionName(String definitionName) {
+        this.definitionName = definitionName;
+    }
+
+    public String getUrl() {
+		return getDefinitionName()==null ? baseDefinitionName : getDefinitionName();
 	}
 
 	@Override

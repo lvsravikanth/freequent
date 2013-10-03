@@ -21,6 +21,8 @@ fui.ui.demo = {
 	 */
 	DEMO_SIMPLE_JSON: "simpleJson",
 
+    TEST_EXCEPTION: "testexception",
+
     getSimpleJson: function(requestData){
 		if ( fui.log.isDebug() ) { fui.log.debug("Reading simpleJson method data " ); }
 
@@ -37,6 +39,33 @@ fui.ui.demo = {
             alert("json string:" + fui.json.stringify(data)); 
         };
         fui.ui.demo.getSimpleJson(requestData);
+    },
+
+    testException: function() {
+       var requestData = {};
+       requestData.handler = function(data) {
+            alert("json string:" + fui.json.stringify(data));
+        };
+        var c = fui.ui.content;
+		c.internal.sendAPI(this, this.TEST_EXCEPTION, requestData);
+    },
+
+    testauthorization: function() {
+       var requestData = {};
+       requestData.handler = function(data) {
+            alert("json string:" + fui.json.stringify(data));
+        };
+        var c = fui.ui.content;
+		c.internal.sendAPI(this, "testauthorization", requestData);
+    },
+
+    testtemplate: function(handler) {
+       var requestData = {};
+       requestData.handler = handler || function(data) {
+            alert("json string:" + fui.json.stringify(data));
+        };
+        var c = fui.ui.content;
+		c.internal.sendAPI(this, "demotemplate", requestData);
     }
 };
 

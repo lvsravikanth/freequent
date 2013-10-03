@@ -38,6 +38,7 @@ import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.JSONUtil;
 import com.scalar.freequent.util.IOUtil;
 import com.scalar.freequent.l10n.FrameworkResource;
+import com.scalar.freequent.auth.User;
 
 /**
  * User: Sujan Kumar Suppala
@@ -325,10 +326,11 @@ public class JsonView extends JstlView {
 		Map<String, String> metadata = new HashMap<String, String>();
         Request request = response.getRequest();
 
-		String user = request.getActiveUser().getUserId();
-		if ( null == user ) {
-			user = "?";
-		}
+        User authUser = request.getActiveUser();
+        String user = "?";
+        if (authUser != null) {
+            user = authUser.getUserId();
+        }
 
 		metadata.put("user", encodeValue(user));
 		metadata.put("request", encodeValue(RequestUtil.getRequestURL(request).toString()));

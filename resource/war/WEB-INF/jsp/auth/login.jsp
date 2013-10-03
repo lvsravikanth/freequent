@@ -1,5 +1,3 @@
-<%@ page import="com.scalar.core.util.MsgObject" %>
-<%@ page import="java.util.List" %>
 <%@ page import="com.scalar.core.ContextUtil" %>
 <%@ page isELIgnored="true" %>
 <%@ taglib prefix="freequent" uri="http://www.freequent.com/freequent" %>
@@ -12,7 +10,7 @@
 	<c:import url="/common/head.jsp" context="<%=context%>"/>
 	<body >
         <script type="text/javascript">
-				fui.query(function() {
+				fui.ready(function() {
 					fui.query("#site_signin_button" ).button();
 				});
 		</script>

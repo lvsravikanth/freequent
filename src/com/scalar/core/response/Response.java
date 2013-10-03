@@ -12,6 +12,19 @@ import java.io.Writer;
  * Time: 5:01:47 PM
  */
 public interface Response {
+
+    /**
+	 * Constant used to identify an error <code>Response</code> implementation.
+	 *
+	 */
+	public static final String ERROR = "error";
+
+	/**
+	 * Constant used to identify a message <code>Response</code> implementation.
+	 *
+	 */
+	public static final String MESSAGE = "message";
+
     /**
 	 * Constant used to identify the JSON format.
 	 */

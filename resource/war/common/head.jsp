@@ -24,7 +24,7 @@
 	String context = ContextUtil.getContextPath(request);
 	String apiContext = context;
 %>
-	<head>
+	<head class="fui-head">
 		<meta http-equiv="Content-Type" content="text/html; utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<%-- Base CSS --%>
@@ -117,8 +117,8 @@
 
 					vExt.onReady(patchCSSBoxModel);*/
 				} catch (ex){
-					if (vui.log.isError()){
-						vui.log.error(e);
+					if (fui.log.isError()){
+						fui.log.error(e);
 					}
 				}
 			})();
