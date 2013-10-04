@@ -6,9 +6,9 @@
     String context = ContextUtil.getContextPath(request);
 %>
 <!doctype html>
-<html>
+<html class="fui-html">
 	<c:import url="/common/head.jsp" context="<%=context%>"/>
-	<body >
+	<body class="fui-body">
         <script type="text/javascript">
 				fui.ready(function() {
 					fui.query("#site_signin_button" ).button();

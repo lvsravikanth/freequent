@@ -9,4 +9,4 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!-- Redirecting the jsp to login.jsp-->
-<c:redirect url="/auth" />
+<c:redirect url="/auth/login" />
