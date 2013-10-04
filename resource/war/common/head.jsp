@@ -28,6 +28,7 @@
 		<meta http-equiv="Content-Type" content="text/html; utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<%-- Base CSS --%>
+        <link rel="stylesheet" type="text/css" href="<%=context%>/theme/base.css"/>
         <link rel="stylesheet" type="text/css" href="<%=context%>/theme/corporate/style/content.css"/>
         <link rel="stylesheet" type="text/css" href="<%=context%>/script/thirdparty/jquery/css/start/jquery-ui-1.10.3.custom.css"/>
 

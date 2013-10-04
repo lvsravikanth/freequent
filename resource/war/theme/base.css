@@ -1,0 +1,34 @@
+/*
+ * Base CSS classes
+ */
+
+.fui-html, .fui-html *, .fui-html .x-form-item-label, .fui-button.x-btn .x-btn-inner, .fui-html .x-panel-header-text-default-framed,
+.fui-html .x-panel-header, .fui-html .x-grid-row .x-grid-cell, .fui-html .x-column-header, .fui-html .x-form-item, .fui-html .x-form-field{
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: Arial, sans-serif;
+	color: #000000;}
+
+.fui-html .x-form-item-label{
+	font-weight: bold;}
+
+.fui-html input.x-form-text, .fui-html textarea.x-form-field{
+	background: rgba(255,255,255,1) none;
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1) inset;
+	border: 1px solid #c0c0c0;
+	font-size: 13px; /*adding for consistency*/}
+
+.fui-html textarea.x-form-field{
+	padding: 2px 3px;}
+
+.fui-html input.x-form-text {
+	height: 18px;
+	padding: 2px 0;
+	text-indent: 3px;}
+
+.fui-html .x-grid-row .x-grid-cell {
+	background-color: transparent !important;}
+
+.fui-html a{
+	text-decoration: none;}
