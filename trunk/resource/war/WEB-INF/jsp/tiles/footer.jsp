@@ -1,1 +1,1 @@
-<p>Copyright &copy; Sujan Kumar Suppala</p>
+<p align="right">Copyright &copy; Sujan Kumar Suppala</p>
