@@ -4,9 +4,7 @@
 <%@ page import="com.scalar.core.response.Response" %>
 <%@ page import="com.scalar.core.response.ErrorResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-  <head><title>Simple jsp page</title></head>
-  <body>
+
     <%
         Request req = RequestUtil.getRequest(request);
         Response resp = (Response)request.getAttribute(Response.RESPONSE_ATTRIBUTE);
@@ -28,5 +26,3 @@
             }
         %>
     </pre>
-  </body>
-</html>
