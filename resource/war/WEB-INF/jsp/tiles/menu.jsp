@@ -3,10 +3,8 @@
 <%@ page import="com.scalar.core.menu.MenuFactory" %>
 <%@ page import="com.scalar.core.request.RequestUtil" %>
 <%@ page import="com.scalar.freequent.util.StringUtil" %>
+<%@ page import="com.scalar.core.ContextUtil" %>
 <STYLE>
-body, input{
-	font-family: Calibri, Arial;
-}
 #accordion {
 	list-style: none;
 	padding: 0 0 0 0;
@@ -44,36 +42,35 @@ body, input{
 </STYLE>
 <ul id="accordion">
     <%
+        String context = ContextUtil.getContextPath(request);
     List<Menu> menuList = MenuFactory.getMenu(RequestUtil.getRequest(request));
     for (Menu menu: menuList) {
+        out.println(prepareMenu(menu,context));
+    }
 %>
-	<li>
-        <%
-            String menuHtml = "";
-            if (StringUtil.isEmpty(menu.getLink())) {
-                menuHtml = menu.getName();
-            } else {
-                menuHtml = "<a href='" + request.getContextPath() + "/" + menu.getLink()+"'>" + menu.getName()+"</a>";
-            }
-        %>
-            <%=menuHtml%>
-    </li>
-    <ul>
-    <%
+</ul>
+
+<%!
+
+    private String prepareMenu(Menu menu, String context) {
+        String menuHtml = "<li>";
+        if (menu.isEnabled() && !StringUtil.isEmpty(menu.getLink())) {
+            menuHtml += "<a href='" + context + "/" + menu.getLink()+"'>" + menu.getName()+"</a>";
+        } else {
+            menuHtml += menu.getName();
+        }
+        menuHtml += "</li>";
         List<Menu> menuItems = menu.getMenuItems();
         if (menuItems != null) {
-        for (Menu menuItem: menuItems) {
-    %>
-
-		<li><a href="#"><%=menuItem.getName()%></a></li>
-     <%}
-     }%>
-
-	</ul>
-    <%
+            menuHtml  += "<ul>";
+            for (Menu menuItem: menuItems) {
+                menuHtml += prepareMenu(menuItem, context);
+            }
+            menuHtml += "</ul>";
         }
-    %>
-</ul>
+        return menuHtml;
+    }
+%>
 
 <SCRIPT>
 fui.query("#accordion > li").click(function(){

@@ -10,5 +10,6 @@
 	</bean>
 
     <bean id="demo" class="com.scalar.freequent.action.demo.DemoAction"/>
+    <bean id="manageusers" class="com.scalar.freequent.action.ManageUsersAction"/>
 
 </beans>
