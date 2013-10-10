@@ -60,6 +60,11 @@ public interface Response {
 	 */
 	public static final String EXCEPTIOIN_ATTRIBUTE = ".freequent.exception";
 
+    /**
+	 * Constant used to identify the items attribute.
+	 */
+	public static final String ITEMS_ATTRIBUTE = "items";
+
 
     public void setWrappedObject(Object wrappedObject);
 
