@@ -1,5 +1,5 @@
 /**
- * Set up the archived editions section
+ * Set up the demo
  */
 fui.provide("fui.ui.demo");
 

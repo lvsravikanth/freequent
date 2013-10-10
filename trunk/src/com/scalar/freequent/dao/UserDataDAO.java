@@ -65,13 +65,36 @@ public class UserDataDAO extends AbstractDAO {
                 row.setFirstName(rs.getString(COL_FIRST_NAME));
                 row.setMiddleName(rs.getString(COL_MIDDLE_NAME));
                 row.setLastName(rs.getString(COL_LAST_NAME));
-                row.setLastName(rs.getString(COL_PASSWORD));
+                row.setPassword(rs.getString(COL_PASSWORD));
                 row.clean();
                 return row;
             }
         }, userId);
 
         return users.get(0);
+    }
+
+    /**
+     * Returns all the users in the system.
+     *
+     * @return the User object for the given userId.
+     */
+    public List<UserDataRow> getAllUsers() {
+        String query = SQL_SelectAllColumns;
+
+        return getJdbcTemplate().query(query,
+        new RowMapper<UserDataRow>() {
+            public UserDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+                UserDataRow row = new UserDataRow();
+                row.setUserId(rs.getString(COL_USER_ID));
+                row.setFirstName(rs.getString(COL_FIRST_NAME));
+                row.setMiddleName(rs.getString(COL_MIDDLE_NAME));
+                row.setLastName(rs.getString(COL_LAST_NAME));
+                row.setPassword(rs.getString(COL_PASSWORD));
+                row.clean();
+                return row;
+            }
+        });
     }
 
     public void insert (UserDataRow row) {

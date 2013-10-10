@@ -12,7 +12,10 @@
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<bean id="com.scalar.freequent.auth.service.AuthService" class="com.scalar.freequent.auth.service.AuthServiceImpl" scope="prototype"/>
-	<bean id="com.scalar.freequent.dao.UserDataDAO" class="com.scalar.freequent.dao.UserDataDAO" scope="prototype">
+	<bean id="com.scalar.freequent.service.users.UserService" class="com.scalar.freequent.service.users.UserServiceImpl" scope="prototype"/>
+
+
+    <bean id="com.scalar.freequent.dao.UserDataDAO" class="com.scalar.freequent.dao.UserDataDAO" scope="prototype">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 </beans>

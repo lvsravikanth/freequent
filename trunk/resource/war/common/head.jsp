@@ -31,6 +31,7 @@
         <link rel="stylesheet" type="text/css" href="<%=context%>/theme/base.css"/>
         <link rel="stylesheet" type="text/css" href="<%=context%>/theme/corporate/style/content.css"/>
         <link rel="stylesheet" type="text/css" href="<%=context%>/script/thirdparty/jquery/css/start/jquery-ui-1.10.3.custom.css"/>
+        <link rel="stylesheet" type="text/css" href="<%=context%>/script/thirdparty/jquery/plugins/pqgrid/pqgrid.min.css"/>
 
 		<%-- vExt CSS
 
@@ -76,6 +77,7 @@
 		</script>
 		<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/form/jquery.form.min.js"></script>
 		<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/validate/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/pqgrid/pqgrid.min.js"></script>
 
 		<script type="text/javascript">
 			<%-- Configure VUI --%>
