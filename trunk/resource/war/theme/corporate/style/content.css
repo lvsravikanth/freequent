@@ -68,3 +68,25 @@
     background: transparent url(../image/header_background.jpg) 2px 0.1em no-repeat;
     height: 100%;
 }
+
+/* Start Admin menu Manage user*/
+.fui-workspace-search-table {
+	display: table;
+	line-height: 2;
+	width: 100%;
+	max-width: 1139px;
+	border: 1px solid #a6c9e2;
+	font-size: 13px;
+	border-radius: 5px;}
+
+.fui-workspace-search-table-row {
+    display: table-row;}
+
+.fui-workspace-search-table-cell {
+	display: table-cell;
+	padding: 10px;}
+
+.fui-workspace-header-search{
+	float: right;}
+
+/* End Admin menu Manage user*/
