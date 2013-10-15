@@ -66,5 +66,15 @@
         });
 		fui.query("#newusers").button();
 		fui.query("#reset").button();
+
+        //Register grid
+        fui.grid.register(fui.ui.type.MANAGEUSERS, fui.ui.grid.manageusers.get());
+
+        //buidl grid
+        var config = {
+            gridId: 'fui-workspace-search-results-container',
+            type: fui.ui.type.MANAGEUSERS
+        };
+        var gridUI = fui.grid.getGrid(config);
     });
 </script>

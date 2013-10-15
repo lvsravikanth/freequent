@@ -22,7 +22,7 @@ fui.ui = {
 		}
 
 		// If the message is just error, swallow it for now
-		if ( message && (message.toLowerCase() === "error") ) {
+		if ( message && (message.toLowerCase && message.toLowerCase() === "error") ) {
 			return true;
 		}
 

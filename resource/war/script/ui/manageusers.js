@@ -39,7 +39,10 @@ fui.ui.manageusers = {
 
     getRunSearchHandler: function() {
         return function(data) {
-            var obj = { width: '100%', height: 400, title: "Users", flexHeight: true };
+            var grid = fui.grid.find(fui.ui.type.MANAGEUSERS);
+            grid.updateData(data);
+
+            /*var obj = { width: '100%', height: 400, title: "Users", flexHeight: true };
             obj.colModel = [{ title: "User Id", width: 100, dataType: "string", dataIndx: "userid" },
                             { title: "First Name", width: 200, dataType: "string", dataIndx: "firstname" },
                             { title: "Last Name", width: 200, dataType: "string", dataIndx: "lastname" }
@@ -55,7 +58,7 @@ fui.ui.manageusers = {
                 sortDir: "up",
                 rPPOptions: [1, 10, 20, 30, 40, 50, 100, 500, 1000]
             };
-            var usersgrid = fui.query("#fui-workspace-search-results-container").pqGrid(obj);
+            var usersgrid = fui.query("#fui-workspace-search-results-container").pqGrid(obj);*/
         };
     }
 };

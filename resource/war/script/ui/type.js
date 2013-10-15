@@ -7,5 +7,7 @@ fui.ui.type = {
     /**
 	 * Constant used to identify DEMO Type.
 	 */
-	DEMO: 'demo'
+	DEMO: 'demo',
+
+    MANAGEUSERS: 'manageusers'
 };
