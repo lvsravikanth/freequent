@@ -50,6 +50,23 @@ var fui = {
 		}
 	},
 
+    scope: function(thisObject, func) {
+		var args = [];
+		for (var i = 2; i < arguments.length; ++i ) {
+			args.push(arguments[i]);
+		}
+
+		var f = (fui.isString(func) ? thisObject[func] : func) || function(){};
+		return function(){
+			var copyArgs = args.concat([]);
+			for (var j = 0; j < arguments.length; ++j ) {
+				copyArgs.push(arguments[j]);
+			}
+
+			return f.apply(thisObject, copyArgs);
+		};
+	},
+
     global: function() {
 		return window;
 	},
