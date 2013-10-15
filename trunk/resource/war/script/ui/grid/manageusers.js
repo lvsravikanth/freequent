@@ -71,8 +71,11 @@ fui.ui.grid.manageusers = {
         if ( fui.log.isDebug() ) {
             fui.log.debug("in actions rederer");
         }
-        //fui.query("tr[pq-row-indx='0'] > td[pq-col-indx='0'] > div[class='pq-td-div']").append(fui.query("<div></div>").button({icons:{primary:"ui-icon-pencil"}}));
-        return (fui.query("<div></div>").button({icons:{primary:"ui-icon-pencil"}})).html();
+        //fui.query("tr[pq-row-indx='0'] > td[pq-col-indx='0']").append(fui.query("<div></div>").button({icons:{primary:"ui-icon-pencil"}}));
+		var template = '<button onclick="alert(\'todo\')" onmouseover="javascript: fui.query(this).addClass( \'ui-state-hover\' )" onmouseout="javascript: fui.query(this).removeClass( \'ui-state-hover\' )" class="fui-actions-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false">' +
+					   	'<span class="ui-button-icon-primary ui-icon ui-icon-pencil"></span><span class="ui-button-text"></span>' +
+					   '</button>';
+		return template;
 	},
 
 	/**
