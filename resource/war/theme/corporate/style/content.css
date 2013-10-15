@@ -89,4 +89,8 @@
 .fui-workspace-header-search{
 	float: right;}
 
+.fui-actions-button {
+	height: 20px;
+	width: 30px;
+}
 /* End Admin menu Manage user*/
