@@ -78,6 +78,8 @@
 		<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/form/jquery.form.min.js"></script>
 		<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/validate/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/pqgrid/pqgrid.min.js"></script>
+        <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/noty/jquery.noty.js"></script>
+        <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins//noty/layouts/top.js"></script>
 
 		<script type="text/javascript">
 			<%-- Configure VUI --%>
