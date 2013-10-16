@@ -50,7 +50,7 @@
 			</form>
 		</div>
 	</div>
-    <div class="fui-workspace-search-results-container" id="fui-workspace-search-results-container">
+    <div class="fui-workspace-grid" id="fui-workspace-grid">
     </div>
 </div>
 <script type="text/javascript">
@@ -70,11 +70,10 @@
         //Register grid
         fui.grid.register(fui.ui.type.MANAGEUSERS, fui.ui.grid.manageusers.get());
 
-        //buidl grid
+        //build grid
         var config = {
-            gridId: 'fui-workspace-search-results-container',
             type: fui.ui.type.MANAGEUSERS
         };
-        var gridUI = fui.grid.getGrid(config);
+        fui.workspace.load(config);
     });
 </script>
