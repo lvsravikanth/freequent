@@ -50,6 +50,20 @@ fui.editor = {
 	 */
 	READONLY_ATTRIBUTE: '.fui.editor.readonly',
 
+	/**
+	 * @constant
+	 * @desc The CLONE_ATTRIBUTE attribute, which corresponds to the same on the server-side.
+	 * @public
+	 */
+	CLONE_ATTRIBUTE: '.fui.editor.clone',
+
+	/**
+	 * @constant
+	 * @desc The ID attribute, which corresponds to the same on the server-side.
+	 * @public
+	 */
+	ID_ATTRIBUTE: '.fui.editor.id',
+
 
 	/**
 	 * @constant
@@ -527,7 +541,7 @@ fui.extend(fui.editor.Editor,
 	getContentComponent: function() {
 		var id = this.componentId || this.id;
 		var contentId = fui.editor.CONTENT_ID + '-' + id;
-		return fui.ext.getCmp(contentId);
+		return fui.query("#"+contentId);//fui.ext.getCmp(contentId);
 	},
 
 	/**
@@ -538,7 +552,7 @@ fui.extend(fui.editor.Editor,
 	getBottomToolbar: function() {
 		var id = this.componentId || this.id ;
 		var toolbarId = fui.editor.CONTENT_BOTTOMBAR_ID + '-' + id;
-		return fui.ext.getCmp(toolbarId);
+		return fui.query("#"+toolbarId);//fui.ext.getCmp(toolbarId);
 	},
 
 	/**
@@ -561,7 +575,7 @@ fui.extend(fui.editor.Editor,
 
 		// Mask
 		if ( this.ui) {
-			this.ui.el.mask(msg);
+			this.ui.mask(msg);
         }
 		// Set timer if needed
 		if ( uiConfig.setTimer ) {
@@ -613,46 +627,19 @@ fui.extend(fui.editor.Editor,
 		requestData.handler = fui.scope(this, function(data) {
 			// Get the content area and remove everything
 			var content = this.getContentComponent();
-			content.removeAll();
+			content.empty();
 
 			// reload the editor with the same config with which the editor was first loaded
 			var updateFunc = fui.editor.internal.getUpdateFunction(this.editConfig);
-
-			// Remove all the buttons in the top toolbar
-			var tbar = this.ui.getDockedComponent('topToolbar');
-			if (tbar) {
-				tbar.removeAll();
-			}
-
-			// Remove all the buttons in the bottom toolbar
-			var bbar = this.ui.getDockedComponent('bottomToolbar');
-			if (bbar) {
-				bbar.removeAll();
-			}
-			
-			// Remove all the buttons in the footer
-			var footer = this.getFooterToolbar();
-			if (footer) {
-				footer.removeAll();
-			}
 
 			// This updates the content area with the new data and also creates new buttons with the new Id
 			updateFunc(this.ui, this, data);
 		});
 
-		// Remove all the editor widgets
-		this.deleteWidgets();
-
-		// Reset any previously added collectors / checkers too
-		this.collectors = [];
-		this.checkers = [];
 		this.deactivateListeners = [];
 
 		// Load the editor with the newly saved object
 		this.load(requestData);
-
-		// Reload properties
-		this.reloadProperties();
 
 		// Fire the reload event.
 		var e = new fui.editor.Event({
@@ -661,73 +648,6 @@ fui.extend(fui.editor.Editor,
 		});
 
 		fui.publish(fui.editor.event.TOPIC_ROOT + oldId, e);
-
-	},
-
-	/**
-	 * @function
-	 * @desc Adds the properties to the editor if it doesn't exist.
-	 * @public
-	 */
-	addProperties: function() {
-		if (!this.properties) {
-			this.properties = fui.properties.load(this.type, this.typeXmlName, this.id, this.object);
-		}
-
-		// Create and Add a collector for the properties.
-		this.addCollector(function (editor, data, requestData) {
-			data = data || {};
-			fui.combine(data, editor.properties.getData(requestData));
-			return data;
-		}, fui.editor.EDITOR_PROPERTIES_COLLECTOR + this.id);
-
-		// Create and Add a checker for the properties
-		this.addChecker(fui.scope(this, function () {
-			return this.properties.hasChanged();
-		}));
-
-		return this.properties;
-	},
-	
-	/**
-	 * @function
-	 * @desc Reloads the properties.
-	 * @public
-	 */
-	reloadProperties: function() {
-		//enable the properties button
-		var propertiesButton = fui.ext.getCmp(fui.editor.button.properties.BUTTON_ID);
-		if(propertiesButton){
-			propertiesButton.disabled = false;
-		}
-		
-		this.addProperties();
-
-		// If properties panel is visible, update the panel with the saved object data
-		if (this.isShowingProperties()) {
-			this.properties.update(this.type, this.id, this.object, this.typeXmlName);
-		}
-	},
-
-	/**
-	 * @function
-	 * @desc Sets the "Creation Time" or "Last Modification Time" in the editor.
-	 * @public
-	 */
-	setTime: function(time) {
-		if (!(fui.ext.get(fui.editor.LAST_SAVED_AT_DATE_ID))) {
-			var dateEl = this.ui.add({
-				tag: 'div',
-				id: fui.editor.LAST_SAVED_AT_DATE_ID,
-				cls: fui.editor.LAST_SAVED_AT_DATE_CLS,
-				html: fui.editor.getMessage('last.saved') + ' ' + time
-			});
-		} else {
-			var lastSaved = fui.ext.get(fui.editor.LAST_SAVED_AT_DATE_ID);
-			if (lastSaved) {
-				lastSaved.update(fui.editor.getMessage('last.saved') + ' ' + time);
-			}
-		}
 	},
 
 	/**
@@ -747,11 +667,11 @@ fui.extend(fui.editor.Editor,
 
 		// Unmask
 		if ( this.ui && !this.fullscreen ) {
-			if (this.ui && this.ui.el) {  // TODO: fix this for the editor save scenario
-				this.ui.el.unmask();
+			if (this.ui) {  // TODO: fix this for the editor save scenario
+				this.ui.unmask();
 			}
 		} else {
-			var body = fui.ext.getBody();
+			var body = fui.query("body");
 			body.unmask();
 		}
 	},
@@ -767,112 +687,8 @@ fui.extend(fui.editor.Editor,
 		var content = this.getContentComponent();
 
 		// Clear all the components from the content area
-		content.removeAll(true);
-
-		//Get the current active tab and clear the tabs
-		var activeTabIndex = 0;
-		if(this.tabs) {
-			activeTabIndex = this.tabs.activeTabIndex;
-			this.tabs.destroy();
-			this.tabs = null;
-		}
-
-		var general = fui.ext.create(fui.extRootName + '.panel.Panel', {
-			autoScroll: true
-		});
-		content.add(general);
-		content.doLayout();
-		general.hide();
-
-		fui.html.set(general.getTargetEl().dom, data, true, true, true);
-
-		// Build custom panels
-		var panels = fui.editor.panel.getPanels(this);
-		if ( panels.length > 0 ) {
-			if ( !this.tabs ) {
-				content.remove(general, false);
-				var generalTab = fui.ext.create(fui.extRootName + '.panel.Panel', {
-					autoScroll: true,
-					title: fui.editor.getMessage('general.panel.name'),
-					items: [general]
-				});
-				general.show();
-				this.addTabs();
-				this.tabs.add(generalTab);
-			} else {
-				content.remove(general);
-			}
-
-			for ( var i = 0 ; i < panels.length ; ++i ) {
-				var panel = panels[i];
-				this.addPanel(panel);
-			}
-
-			this.showTabs(activeTabIndex);
-		} else {
-			if ( this.tabs ) {
-				content.remove(general);
-				this.showTabs(activeTabIndex);
-			} else {
-				general.addCls('fui-editor-content-inner');
-				general.show();
-				content.doLayout();
-			}
-		}
-	},
-
-
-	/**
-	 * @function
-	 * @desc Returns the panel load handler.
-	 * @public
-	 */
-	getPanelLoadHandler : function() {
-		if ( !this.panelLoadHandler ) {
-			this.panelLoadHandler = fui.scope(this, function(panel) {
-				if ( panel.fuiLoadHandler && !panel.fuiLoaded ) {
-					panel.fuiLoadHandler(this, panel);
-				}
-				if(panel.focus){
-					panel.focus();
-				}
-			});
-		}
-
-		return this.panelLoadHandler;
-	},
-
-	/**
-	 * @function
-	 * @desc Add a panel to the editor.
-	 *
-	 * @param panel the panel
-	 * @public
-	 */
-	addPanel: function(panel) {
-		this.addTabs();
-
-		var immediateLoad = panel.isImmediateLoad() === true;
-		
-		var tab = fui.ext.create(fui.extRootName + '.panel.Panel', {
-			title: panel.getTitle(),
-			cls: panel.getPanelClass(),
-			autoScroll: true,
-			forceLayout: immediateLoad,
-			fuiLoadHandler: panel.loadHandler,
-			fuiImmediateLoad: immediateLoad,
-			fuiDestroy: panel.destroy,
-			fuiGroupName: panel.groupName
-		});
-
-		if ( panel.setupPanel ) {
-			panel.setupPanel(this, tab);
-		}
-
-		var activateFunc = this.getPanelLoadHandler();
-		tab.mon(tab, 'activate', activateFunc);
-
-		this.tabs.add(tab);
+		content.empty();
+		fui.html.set(content.id, data, true, true, true);
 	},
 
 	/**
@@ -892,121 +708,15 @@ fui.extend(fui.editor.Editor,
 
 	/**
 	 * @function
-	 * @desc Clears out any existing panels.
-	 * @public
-	 */
-	clearPanels : function() {
-		if ( !this.tabs ) {
-			return;
-		}
-
-		// Destroy the panels
-		this.tabs.items.each(function(panel, index) {
-			if ( panel.fuiDestroy ) {
-				panel.fuiDestroy();
-			}
-			
-			return true;
-		}, this);
-
-		this.tabs.destroy();
-		this.tabs = null;
-	},
-
-	/**
-	 * @function
-	 * @desc Add tabs to the editor.
-	 * @public
-	 */
-	addTabs: function() {
-		if ( this.tabs ) {
-			return;
-		}
-
-		// Build tabs
-		this.tabs = fui.ext.create('fui.vext.TabPanel', {
-			enableTabScroll: true,
-			layoutOnTabChange: true,
-			cls: 'fui-tab-panel fui-editor-tabpanel',
-			defaults: {
-				autoScroll: true,
-				tabCls: "fui-tab"
-			},
-			autoScroll: true,
-			deferredRender: false,
-			listeners:{
-				"render":{
-					fn: fui.scope(this, function(tb){
-						if (tb.strip){
-							tb.strip.addCls("fui-tab-strip");
-						}
-
-						this.ui.doLayout();
-					})
-				},
-				beforetabchange: this.deactivate,
-				scope: this
-			}
-		});
-	},
-
-	/**
-	 * @function
-	 * @desc Show the tabs.
-	 *
-	 * @param activeTabIndex index of the tab that needs to be set as the active tab
-	 * @public
-	 */
-	showTabs: function(activeTabIndex) {
-		if ( !this.tabs ) {
-			return;
-		}
-
-		var activeTab = activeTabIndex || 0;
-		this.tabs.setActiveTab(activeTab);
-
-		var content = this.getContentComponent();
-		content.add(this.tabs);
-
-		// Load any immediate panels
-		var tabsLoader = fui.scope(this, function(tabs) { 
-			tabs.items.each(function(panel, index) {
-				// Skip if index == activeTab since it will get loaded by the activate handler
-				if ( index === activeTab ) {
-					return true;
-				}
-				
-				// Load if immediate, capable and not loaded
-				if ( (panel.fuiImmediateLoad === true) && panel.fuiLoadHandler && !panel.fuiLoaded ) {
-					panel.fuiLoadHandler(this, panel);
-				}
-				
-				return true;
-			}, this);
-			
-			tabs.un("afterrender", tabsLoader);
-		});
-		
-		this.tabs.on("afterrender", tabsLoader);
-	},
-
-	/**
-	 * @function
 	 * @desc Loads an editor.
 	 *
 	 * @param requestData the request data
-	 * @param groupName the group name to load; can be null
 	 * @public
 	 */
-	load: function(requestData, groupName) {
+	load: function(requestData) {
 		var e = fui.editor;
 		requestData = requestData || {};
 		requestData.content = requestData.content || {};
-
-		// Set type 
-		requestData.content[e.TYPE_ATTRIBUTE] = this.type;
-		requestData.content[e.TYPE_ID_ATTRIBUTE] = this.typeId;
-		requestData.content[e.TYPE_XML_NAME_ATTRIBUTE] = fui.html.escape(this.typeXmlName);
 
 		// Set clone id and readonly state
 		requestData.content[e.CLONE_ATTRIBUTE] = this.cloneId ? this.cloneId : undefined;			
@@ -1014,9 +724,6 @@ fui.extend(fui.editor.Editor,
 		
 		// Set id
 		requestData.content[e.ID_ATTRIBUTE] = this.id || (this.cloneId ? e.getCloneEditorId() : e.getNewEditorId());
-
-		// Set group name
-		requestData.content[e.GROUP_ATTRIBUTE]=groupName ? groupName : undefined;
 
 		// Copy over content
 		fui.query.extend(this.requestContent, requestData.content);
@@ -1046,27 +753,6 @@ fui.extend(fui.editor.Editor,
 
 		request = fui.request.build(requestData);
 		fui.io.api(request);
-	 },
-
-	 /**
-	  * @function
-	  * @desc Loads a panel for the provided group name.
-	  *
-	  * @param panel the panel to load
-	  * @param groupName the group name
-	  * @param dynamic the dynamic flag to allow loading again
-	  * @param requestData the requestData
-	  * @public
-	  */
-	 loadPanel: function(panel, groupName, dynamic, requestData) {
-		 requestData = requestData || {};
-		 requestData.handler = function(data) {
-				fui.html.set(panel.getTargetEl().dom, data, true, true, true);
-				if ( !dynamic ) {
-					panel.fuiLoaded = true;
-				}
-		 	};
-		 this.load(requestData, groupName);
 	 },
 
 	/**
@@ -1106,9 +792,7 @@ fui.extend(fui.editor.Editor,
 			requestData.handler = fui.scope(this, function(data) {
 				// reset to prevent dup adds (particularly for relators)
 				this.data={};
-				this.clearWidgetCache();
 				this.hasSaved = true;
-				this.resetDirtyWidgets();
 
 				// parse data only if we need to
 				var callbackData;
@@ -1191,7 +875,7 @@ fui.extend(fui.editor.Editor,
 
 			// Check if we need to clone
 			if ( this.cloneId ) {
-				data[fui.editor.CLONE_ATTRIBUTE] = this.cloneId;			
+				data[fui.editor.CLONE_ATTRIBUTE] = this.cloneId;
 			}
 
 			fui.editor.internal.save(this.type, this.typeId, this.typeXmlName, this.id, data, requestData);
@@ -1224,18 +908,7 @@ fui.extend(fui.editor.Editor,
 
 	/**
 	 * @function
-	 * @desc Resets dirty flag on widgets after save.
-	 * @public
-	 */
-	resetDirtyWidgets: function() {
-		for ( var widgetId in this.widgets ) {
-			this.widgets[widgetId].resetDirty();
-		}
-	},
-
-	/**
-	 * @function
-	 * @desc Destroys the editor and its widgets.
+	 * @desc Destroys the editor.
 	 *
 	 * @param noHooks flag to disable callbacks and handlers
 	 * @public
@@ -1243,12 +916,6 @@ fui.extend(fui.editor.Editor,
 	close: function(noHooks) {
 		if ( !noHooks && this.closeCallback ) {
 			this.closeCallback();
-		}
-
-		if (this.properties) {
-			// Close/destroy the properties
-			this.properties.close();
-			this.properties = null;
 		}
 
 		if ( this.ui ) {
