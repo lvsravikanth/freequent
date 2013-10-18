@@ -59,6 +59,13 @@ fui.editor = {
 
 	/**
 	 * @constant
+	 * @desc The TYPE attribute, which corresponds to the same on the server-side.
+	 * @public
+	 */
+	TYPE_ATTRIBUTE: '.vui.editor.type',
+
+	/**
+	 * @constant
 	 * @desc The ID attribute, which corresponds to the same on the server-side.
 	 * @public
 	 */
@@ -920,12 +927,7 @@ fui.extend(fui.editor.Editor,
 
 		if ( this.ui ) {
 			this.ui.un('beforeclose', this.closeHandler, this);
-
-			if ( this.fullscreen ) {
-				this.ui.hide();
-			} else {
-				this.ui.close();
-			}
+			this.ui.close();
 		}
 
 		// Fire the close event.
@@ -958,24 +960,6 @@ fui.extend(fui.editor.Editor,
 			handler();
 		} else {
 			fui.editor.internal.remove(this.id);
-		}
-
-		// Clean up widgets
-		this.deleteWidgets();
-
-		// Reset the widgetValueCache to empty.
-		this.clearWidgetCache();
-
-		// Clean up editor panels
-		this.clearPanels();
-		
-		// Handle fullscreen mode
-		if ( this.fullscreen ) {
-			if ( opener ) {
-				window.close();
-			} else {
-				window.location.pathname = fui.appContext;
-			}
 		}
 	},
 
@@ -1016,19 +1000,9 @@ fui.extend(fui.editor.Editor,
 			};
 			var e = fui.editor;
 			var message;
-			var title = e.getMessage('lose.changes.title');
-			var type = this.editConfig.typeResolver ? fui.html.escape(this.editConfig.typeResolver(this.object)) : '';
-			var name = fui.html.escape(this.object.name);
-			if (type && name) {
-				message = fui.string.replace(e.getMessage('save.changes.type.name'), {type: type, name: name});
-			} else if (type) {
-				message = fui.string.replace(e.getMessage('save.changes.type'), {type: type});
-			} else if (name) {
-				message = fui.string.replace(e.getMessage('save.changes.name'), {name: name});
-			} else {
-				message = fui.string.replace(e.getMessage('save.changes'));
-			}
-			fui.vext.msg.confirmSave(title, message, func, this);
+			var title = e.getMessage('close.changes.title');
+			message = fui.string.replace(e.getMessage('save.changes'));
+			fui.msg.confirmSave(title, message, func, this);
 			return false;
 		}
 
@@ -1064,9 +1038,6 @@ fui.extend(fui.editor.Editor,
 
 		if ( skipHTML ) {
 			this.ui.setTitle(hasTitle ? title : displayType);
-			if ( this.fullscreen ) {
-				document.title = hasTitle ? title : displayType;
-			}
 			return;
 		}
 
@@ -1074,61 +1045,6 @@ fui.extend(fui.editor.Editor,
 		var displayTitle = hasTitle ? ' : ' + escapedTitle : '';
 		var uiTitle = '<div id="fui-header-type" class="fui-header-type fui-objecttype-' + this.type + '"  title="' + displayType + displayTitle + '">' + htmlTitle + '</div>';
 		this.ui.setTitle(uiTitle);
-
-		if ( this.fullscreen ) {
-			var fullTitle = hasTitle ? ': ' + title : "";
-			document.title = displayType + fullTitle;
-		}
-	},
-
-	/**
-	 * @function
-	 * @desc Adds one or more collectors.
-	 *
-	 * @param collector function/array of collector functions
-	 * @param collectorId The collector ID. It is used only when a single collector is passed in.
-	 * 			When a collectorId is passed, it is not added to the list of collectors if it
-	 * 			already exists.
-	 * @public
-	 */
-	addCollector: function(collector, collectorId) {
-		if ( collector ) {
-			if (fui.query.isArray(collector)) {
-				var len = collector.length;
-				for (var i = 0; i < len; ++i) {
-					this.collectors.push(collector[i]);
-				}
-			} else {
-				if (collectorId && collectorId !== "") {
-					collector.collectorId = collectorId;
-					// Add the collector only if a collector with the same ID is not present. 
-					if (fui.query.grep(this.collectors, function(item, itemIndex) {
-							return (item.collectorId && item.collectorId === collectorId);
-						}).length === 0) {
-						this.collectors.push(collector);
-					}
-				} else {
-					// If a collectorId was not provided, go ahead and push it in...
-					this.collectors.push(collector);
-				}
-			}
-		}
-	},
-
-	/**
-	 * @function
-	 * @desc Removes a named collector.
-	 *
-	 * @param collectorId
-	 * @public
-	 */
-	removeCollector: function(collectorId) {
-		if (!collectorId) {
-			return;
-		}
-		this.collectors=fui.query.grep(this.collectors, function(item, itemIndex) {
-			return (!item.collectorId || item.collectorId !== collectorId);
-		});
 	},
 
 	/**
@@ -1164,144 +1080,20 @@ fui.extend(fui.editor.Editor,
 		
 		// Scroll to helper function
 		var scrollTo = fui.scope(this, function(w) {
-			// Something to scroll to?
-			var field = fui.ext.get(w.fieldId) || fui.ext.get(w.fieldId + '-label');
-			if ( !field ) {
-				return;
-			}
-	
-			// Scroll it
-			var contentBody = this.getContentComponent().body;
-			var startScroll = contentBody.dom.scrollTop;
-			field.scrollIntoView(contentBody);
-	
-			// Enable this once ExtJS has fixed their scrollTo() bug
-			// http://www.extjs.com/forum/showthread.php?t=79491
-			// contentBody.scroll('b', contentBody.dom.clientHeight / 2);
-			var halfHeight = contentBody.dom.clientHeight / 2;
-			if ( contentBody.dom.scrollTop > startScroll ) {
-				contentBody.dom.scrollTop = Math.min(contentBody.dom.scrollHeight, contentBody.dom.scrollTop + halfHeight);
-			} else if ( contentBody.dom.scrollTop < startScroll ) {
-				contentBody.dom.scrollTop = Math.max(0, contentBody.dom.scrollTop - halfHeight);
-			}
+			//todo
 		});
-
-		for ( var widgetId in this.widgets ) {
-			var widget = this.getWidget(widgetId);
-
-			// Verify it's valid
-			if (!bypassValidators && !widget.validate() ) {
-				validData = false;
-
-				if ( widget.groupName ) {
-					if ( fui.query.inArray(widget.groupName, groupsToMark) === -1 ) {
-						groupsToMark.push(widget.groupName);
-						groupWidgets.push(widget);
-					}
-				}
-				
-				// Do we need to or can we scroll?
-				if ( scrolled || !widget.fieldId ) {
-					continue;
-				}
-
-				if ( !widget.groupName ) {
-					scrollTo(widget);
-				}
-				
-				scrolled = true;
-				continue;
-			}
-
-			// Checked if widget has changed.  If changed retrieve
-			// new value otherwise clear out the data for that widget id
-			// if it existed on a previous save
-			if (widget.hasChanged() || widget.getConsiderDefault()){
-				data = widget.getData(data, requestData);
-				if ( !data ) {
-					// Flag as bad and allow to continue to catch all bad cases
-					validData = false;
-					data = this.data;
-				} else {
-					this.addWidgetValueCache(widget);
-				}
-			} else {
-				data[widget.getDataId()] = undefined;
-			}
-
-		}
-
-		// If there are collectors, let them do some work
-		for ( var i = 0 ; !bypassCollectors && i < this.collectors.length ; ++i ) {
-			data = this.collectors[i](this, data, requestData);
-			if ( !data ) {
-				// Flag as bad and allow to continue to catch all bad cases
-				validData = false;
-				data = this.data;
-			}
-		}
 
 		// Make sure we had valid data
 		if ( !validData ) {
-			var groupScrolled = false;
-			var tabMarker = function(panel, index) {
-				// If not in groups to mark continue
-				var i = fui.query.inArray(panel.fuiGroupName, groupsToMark);
-				if ( i === -1 ) {
-					return true;
-				}
-				
-				var groupWidget = groupWidgets[i];
-				if ( !groupScrolled && groupWidget && (panel.fuiGroupName === groupWidget.groupName) ) {
-					this.tabs.setActiveTab(index);
-					scrollTo(groupWidget);
-					groupScrolled = true;
-				}
-				
-				var el = fui.ext.get(this.tabs.id + this.tabs.idDelimiter + panel.id);
-				if ( el ) {
-					el.addCls('fui-editor-tab-error');
-				}				
-				
-				return true;
-			};
-			
-			// Find the right tab
-			if ( this.tabs && (groupsToMark.length > 0) ) {
-				this.tabs.items.each(tabMarker, this);					
-			}
-			
-			if ( groupsToMark.length > 1 ) {
-				fui.notification.warning(fui.editor.getMessage("other.tabs.message"), 5000);
-			}
-			
+			//todo
+			fui.notification.warning(fui.editor.getMessage("other.tabs.message"), 5000);
 			return null;
 		}
 
 		// Store the data
 		this.data = data;
-		var widgetValueData = this.getWidgetValueData();
-		return fui.combine(widgetValueData,this.data);
-	},
 
-	/**
-	 * @function
-	 * @desc Adds one or more change checkers.
-	 *
-	 * @param checker function/array of change checkers.
-	 * @public
-	 */
-	addChecker: function(checker) {
-		if ( checker ) {
-			if (fui.query.isArray(checker)) {
-				var len = checker.length;
-				for (var i = 0; i < len; ++i) {
-					this.checkers.push(checker[i]);
-				}
-			} else {
-				this.checkers.push(checker);
-			}
-		}
+		return this.data;
 	},
 
 	/**
@@ -1310,21 +1102,9 @@ fui.extend(fui.editor.Editor,
 	 * @public
 	 */
 	hasChanged: function() {
-		for ( var widgetId in this.widgets ) {
-			var widget = this.getWidget(widgetId);
-			if ( widget.hasChanged() === true ) {
-				return true;
-			}
-		}
+		//todo check whether the form is dirty, if form is available
 
-		// If there are change checkers, let them do some work
-		for ( var i = 0 ; i < this.checkers.length ; ++i ) {
-			if ( this.checkers[i]() ) {
-				return true;
-			}
-		}
-
-		return false;
+		return true; //todo
 	},
 
 	/**
@@ -1473,164 +1253,6 @@ fui.extend(fui.editor.Editor,
 		});
 
 		fui.publish(fui.editor.event.TOPIC_ROOT + this.id, e);
-	},
-
-	/**
-	 * @function
-	 * @desc Returns the registered widget with the given ID, if found.
-	 * @public
-	 */
-	getWidget: function(dataId) {
-		return this.widgets[dataId] || null;
-	},
-
-	/**
-	 * @function
-	 * @desc Resets widgets to previous cache value.
-	 * @public
-	 */
-	cleanWidgets: function() {
-		var ei=fui.editor.internal;
-		for (var widgetId in this.widgets) {
-			var widget = this.getWidget(widgetId);
-			var cacheValue=this.getWidgetValueCache(widget.getDataId());
-			widget.renderValue(cacheValue);
-		}
-	},
-
-	/**
-	 * @function
-	 * @desc Displays the properties panel when the properties button is clicked.
-	 * @public
-	 */
-	showProperties: function() {
-		if ( !this.ui) {
-			return;
-		}
-
-		this.addProperties();
-
-		// Get the dock
-		var dock = this.getPropertiesDockComponent();
-
-		if (this.propertiesDocked) {
-			// If it is floated hide the window
-			if (this.properties.window) {
-				this.properties.window.hide();
-			}
-			dock.add(this.properties.ui);
-			dock.setHeight(174);
-			dock.show();
-			this.ui.doLayout();
-		} else {
-			// First hide the dock.
-			dock.hide();
-			this.ui.doLayout();
-
-			// Check if the properties was already opened in a window
-			// so we can reuse the same window, instead of creating new one.
-			if (!this.properties.window) {
-				var config = {
-					cls: 'fui-properties fui-window fui-window-editor ' + 'fui-properties-' + this.type,
-					border: false,
-					collapsible: false,
-					resizable: true,
-					draggable: true,
-					modal: false,
-					autoScroll: true,
-					width: 500,
-					height: 297,
-					layout: 'fit',
-					hideMode: 'visibility',
-					closeAction: 'hide',
-					title: fui.workspace.getMessage('properties.title') + ': <span class="fui-header-title">' +this.properties.object.name+ '</span>',
-					tools: [
-						{
-							cls: 'fui-tool-help',
-							tooltip: fui.editor.getMessage("editor.properties.floating.tooltip.help"),
-							handler: fui.scope(this, function(event, toolEl, panel) {
-								fui.help.show(fui.help.PROPERTIES_PALETTE);
-							})
-						},
-						{ xtype: 'tbseparator' },
-						{
-							cls: 'fui-tool-dock',
-							tooltip: fui.editor.getMessage("editor.properties.floating.tooltip.dock"),
-							handler: fui.scope(this, function(event, toolEl, panel) {
-								this.propertiesDocked = true;
-								this.showProperties();
-							})
-						},
-						{
-							cls: 'fui-tool-close',
-							tooltip: fui.editor.getMessage("editor.properties.floating.tooltip.close"),
-							handler: fui.scope(this, function(event, toolEl, panel) {
-								this.hideProperties();
-								var propertiesButton = fui.ext.getCmp(fui.editor.button.properties.BUTTON_ID);
-								propertiesButton.setText(fui.editor.button.properties.getTitle(this));
-								propertiesButton.setIconCls(fui.editor.button.properties.getIconClass(this));//TODO: v4
-							})
-						}
-					],
-					items: [this.properties.ui]
-				};
-
-				var win = fui.ext.create(fui.extRootName + '.window.Window', config);
-				this.properties.setWindow(win);
-				win.show();
-				win.doLayout();
-				this.properties.window.setTitle(fui.workspace.getMessage('properties.title') + ': <span class="fui-header-title">' +this.properties.object.name+ '</span>');
-				
-				fui.ext.WindowMgr.bringToFront(win);
-			} else {
-				// floating properties window was already present. Just display it.
-				this.properties.window.setTitle(fui.workspace.getMessage('properties.title') + ': <span class="fui-header-title">' +this.properties.object.name+ '</span>');
-				this.properties.window.show();
-				this.properties.window.setVisible(true);
-				this.properties.window.add(this.properties.ui);
-				this.properties.window.doLayout();
-			}
-		}
-	},
-
-	/**
-	 * Returns true if the properties is being shown. (either float or docked)
-	 */
-	isShowingProperties: function() {
-		if(!this.ui || !this.properties) {
-			return false;
-		}
-
-		// Get the dock
-		var dock = this.getPropertiesDockComponent();
-		if (dock && dock.isVisible()) {
-			return true;
-		}
-
-		if (this.properties.window && this.properties.window.isVisible()) {
-			return true;
-		}
-	},
-
-	/**
-	 * @function
-	 * @desc Hides the properties panel when the properties button is clicked (toggle).
-	 * @public
-	 */
-	hideProperties: function() {
-		if ( !this.ui || !this.properties ) {
-			return;
-		}
-
-		var dock = this.getPropertiesDockComponent();
-		dock.hide();
-
-		// If it is floated hide the window
-		if (this.properties.window) {
-			this.properties.window.hide();
-	}
-
-		this.ui.doLayout();
 	},
 
 	/**
@@ -1784,62 +1406,6 @@ fui.editor.internal = {
 	// Editors
 	editors: {},
 
-	// Widget name/value cache
-	widgetValueCache: {},
-
-	/**
-	 * Adds a value to the widgetValueCache
-	 * @param widget
-	 * @param id the editor parent Id.
-	 */
-	addWidgetValueCache: function(widget, id) {
-		this.widgetValueCache[id]=this.widgetValueCache[id]||{};
-		this.widgetValueCache[id][widget.getDataId()]=widget;
-	},
-
-
-	/**
-	 * Adds a value to the widgetValueCache
-	 * @param widgetId the id of the widget
-	 * @param id he editor parent Id
-	 */
-	getWidgetValueCache: function(widgetId, id) {
-		if (!this.widgetValueCache[id]) {
-			return null;
-		}
-		return this.widgetValueCache[id][widgetId];
-	},
-
-	/**
-	 * For incremental cache deletes.
-	 *
-	 * @param widget the widget to remove
-	 * @param id he editor parent Id
-	 */
-	removeWidgetValueCache: function(widget, id) {
-		if (!this.widgetValueCache[id]) {
-			return null;
-		}
-		delete this.widgetValueCache[id][widget.getDataId()];
-	},
-
-	/**
-	 * Builds a widget value data structure.
-	 *
-	 * @param id the parentId
-	 */
-	getWidgetValueData: function(id) {
-		if (!this.widgetValueCache[id]) {
-			return null;
-		}
-		var widgetValueData={};
-		for (var item in this.widgetValueCache[id]) {
-			var cachedWidget = this.getWidgetValueCache(item, id);
-			widgetValueData[item]=cachedWidget.getDataValue();
-		}
-		return widgetValueData;
-	},
-
 	/**
 	 * Add an editor.
 	 *
@@ -1867,13 +1433,11 @@ fui.editor.internal = {
 		return this.editors[id];
 	},
 
-	save: function(type, typeId, typeXmlName, id, data, requestData) {
+	save: function(type, id, data, requestData) {
 		var e = fui.editor;
 		requestData = requestData || {};
 		requestData.content = data;
 		requestData.content[e.TYPE_ATTRIBUTE] = type;
-		requestData.content[e.TYPE_ID_ATTRIBUTE] = typeId;
-		requestData.content[e.TYPE_XML_NAME_ATTRIBUTE] = fui.html.escape(typeXmlName);
 		requestData.content[e.ID_ATTRIBUTE] = id;
 
 		requestData.actionKey = e.ACTION_KEY;
@@ -1893,16 +1457,14 @@ fui.editor.internal = {
 		// if no object, create obj shell
 		var obj = editor.object || {type: type};
 
-		if (specific === true && buttons.length > 0){
-			// Add a separator before type specific buttons
-			tbar.add({
-				xtype: 'tbseparator'
-			});
-		}
-
 		for ( var i = 0 ; i < buttons.length ; ++i ) {
 			var button = buttons[i];
-			var tbButton = fui.ext.create('fui.vext.Button', {
+			var tbButton = {
+				text: button.getTitle(editor, obj),
+				disabled: disabled || button.disabled,
+				id: editor.id + "-" + button.id,
+				click: this.buildButtonHandler(type, editor.id, button.clickHandler)
+			}; /*fui.ext.create('fui.vext.Button', {
 				disabled: disabled || button.disabled,
 				text: button.getTitle(editor, obj),
 				id: editor.id + "-" + button.id,
@@ -1910,13 +1472,13 @@ fui.editor.internal = {
 				iconCls: button.getIconClass(editor, obj),
 				handler: this.buildButtonHandler(type, editor.id, button.clickHandler),
 				tooltip: button.getTooltip(editor, obj)
-			});
+			});*/ //todo
 
 			if ( button.setupButton) {
 				button.setupButton(type, editor, tbButton);
 			}
 
-			tbar.add(tbButton);
+			tbar.push(tbButton);
 		}
 	},
 
@@ -1931,144 +1493,33 @@ fui.editor.internal = {
 			editor.showBlock();
 			editor.updateContent(data);
 
-			// Set the properties mode
-			// TODO get this from a preference
-			// If it is docked then this is true else false.
-			editor.propertiesDocked = true;
-
 			// read-only mode is dictated by either the editor or the edited
 			// object
 			var readOnly = editor.isReadOnly();
 			var disabled = readOnly;
 			if ( fui.editor.isNewEditorId(editor.id) ) {
 				disabled = true;
-				// For objects being created newly, there is no need to display the "Last Saved At :" value
-				config.skipDate = true;
-
 			}
 
 			var toptbar=null;
-			tbar = ui.getDockedComponent('topToolbar');
-
+			var tbar = [];
 			var ei = ed.internal;
 			var defaultChrome = config.editorChrome == fui.editor.DEFAULT_EDITOR_CHROME;
 			var secondaryChrome = config.editorChrome == fui.editor.SECONDARY_EDITOR_CHROME;
-			
-			// Check for toolbar need
-			if ( defaultChrome && !config.skipToolbar ) {
-				var eb = ed.button;
-				tbar.addCls(ed.CONTENT_TOOLBAR_CLS);
 
-				if (config.toolbarBuilder) {
-					config.toolbarBuilder(editor.id, tbar, requestData);
-				} else if (editor.toolbarProperties !== false) {
-					// Build properties which is always at the beginning
-					var propertiesButton = eb.properties.get();
-					var cloneId = editor.cloneId;
-					ei.buildButtons(config.type, editor, [propertiesButton], tbar, cloneId && cloneId.length >0);
-					var propertiesHelpButton = eb.prophelp.get();
-					ei.buildButtons(config.type, editor, [propertiesHelpButton], tbar, false);
-					// Add a separator after the help icon on the toolbar.
-					tbar.add( { xtype: 'tbseparator' });
-				}
-
-				if(!config.skipType ){
-					// Add a fill before type specific buttons
-					tbar.add({
-						xtype: 'tbfill'
-					});
-
-					// Build type specific buttons
-					ei.buildButtons(config.type, editor, eb.getButtons(config.type, config.objectTypeXmlName), tbar, disabled, true);
-				}
-
-				if ( !config.skipSave ) {
-					if ( config.skipType ) {
-						tbar.add({
-							xtype: 'tbfill'
-						});
-					}
-
-					// Add a separator before save
-					tbar.add({
-						xtype: 'tbseparator'
-					});
-
-					// Build save which is always at the end
-					var buttons = [fui.editor.button.save.getSave(readOnly), fui.editor.button.save.getClose(readOnly)];
-					ei.buildButtons(config.type, editor, buttons, tbar, false);
-				}
-
-				if (!editor.hidden && (tbar.items.length > 0)) {
-					tbar.doLayout();
-					tbar.show();
-					if (toptbar) {
-						toptbar.doLayout();
-						toptbar.show();
-					}
-				} else{
-					tbar.hide();
-				}
-			} else  {
-				tbar.hide();
+			if ( !config.skipSave ) {
+				// Build save which is always at the end
+				var buttons = [fui.editor.button.save.getSave(readOnly), fui.editor.button.save.getClose(readOnly)];
+				ei.buildButtons(config.type, editor, buttons, tbar, false);
 			}
 
-			// Check for footerbar need
-			var fbar = editor.getFooterToolbar();
-			if ( secondaryChrome && !config.skipFooterBar ) {
-				if ( !fbar ) {
-					fbar = fui.ext.create(fui.extRootName + '.toolbar.Toolbar', {
-						dock: 'bottom',
-						itemId: 'bottomToolbar',
-						ui: "footer",
-						cls: "fui-toolbar",
-						items: [{
-							id:this.CONTENT_BOTTOMBAR_ID+'-'+editor.id,
-							hidden: true
-						}]
-					});
-					ui.dockedItems.add(fbar);
-				}
-				fbar.addCls(ed.CONTENT_FOOTERBAR_CLS);
-				if ( config.footerbarBuilder ) {
-					config.footerbarBuilder(editor.id, fbar, requestData);
-				}
-
-				fbar.add( { xtype: 'tbfill' });
-
-				if (!config.skipOkCancel ) {
-					buttons = [fui.editor.button.save.getOk(readOnly), fui.editor.button.save.getCancel()];
-					ei.buildButtons(config.type, editor, buttons, fbar, false);
-				}
-
-				if (!editor.hidden && (fbar.items.length > 0)) {
-					fbar.doLayout();
-					fbar.show();
-				} else{
-					fbar.hide();
-				}
-			} else if ( fbar ) {
-				fbar.hide();
+			if (!editor.hidden && (tbar.items.length > 0)) {
+				// show the tool bar //todo
+			} else{
+				//tbar.hide(); //todo
 			}
 
-			// Layout or hide the bottom bar
-			var bbar = ui.getDockedComponent('bottomToolbar');
-			if ( bbar ) {
-				if ( bbar.items.length > 0 ) {
-					bbar.addCls(ed.CONTENT_TOOLBAR_CLS);
-					bbar.doLayout();
-					bbar.show();
-				} else if ( !fbar || (fbar.items.length === 0) ) {
-					bbar.hide();
-				}
-			}
-
-			ui.doLayout();
-			
-			// Updating the "Last Saved At : " date value with the last modification time of the object / creation time
-			if ( !config.skipDate  && editor.object) {
-				editor.setTime(editor.object.lastModificationTime);
-			}
+			//ui.doLayout(); //todo
 
 			editor.clearBlock();
 			if ( reqHandler ) {
