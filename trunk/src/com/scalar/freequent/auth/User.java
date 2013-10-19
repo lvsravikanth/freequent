@@ -39,7 +39,9 @@ public class User {
     private Date modifiedOn;
     private Date expiresOn;
     private boolean disabled;
-    private List<UserCapability> userCapabilities = null;
+	private String createdBy;
+	private String modifiedBy;
+	private List<UserCapability> userCapabilities = null;
 
     public String getUserId() {
         return userId;
@@ -113,7 +115,24 @@ public class User {
         this.disabled = disabled;
     }
 
-    public Map<String, UserCapability> getCapabilitiesMap() {
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	
+
+	public Map<String, UserCapability> getCapabilitiesMap() {
         List<UserCapability> userCapabilities = getUserCapabilities();
         Map<String, UserCapability> capabilitiesMap = new HashMap<String, UserCapability>();
         if (userCapabilities != null) {
