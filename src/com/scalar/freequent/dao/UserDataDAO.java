@@ -3,12 +3,10 @@ package com.scalar.freequent.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.util.StringUtils;
 import com.scalar.core.jdbc.AbstractDAO;
 import com.scalar.core.ScalarException;
 import com.scalar.freequent.auth.User;
 import com.scalar.freequent.util.StringUtil;
-import com.scalar.freequent.util.MessageDigestUtils;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -28,14 +26,27 @@ public class UserDataDAO extends AbstractDAO {
     public static final String COL_MIDDLE_NAME = "MIDDLE_NAME";
     public static final String COL_LAST_NAME = "LAST_NAME";
     public static final String COL_PASSWORD = "PASSWORD";
+	public static final String COL_DISABLED = "DISABLED";
+	public static final String COL_EXPIRESON = "EXPIRESON";
+	public static final String COL_CREATEDBY = "CREATEDBY";
+	public static final String COL_CREATEDON = "CREATEDON";
+	public static final String COL_MODIFIEDBY = "MODIFIEDBY";
+	public static final String COL_MODIFIEDON = "MODIFIEDON";
 
-    static final String SQL_SelectAllColumns =
+
+	static final String SQL_SelectAllColumns =
 		"select " +
 		COL_USER_ID + ", " +
 		COL_FIRST_NAME + ", " +
 		COL_MIDDLE_NAME + ", " +
 		COL_LAST_NAME + ", " +
-		COL_PASSWORD +
+		COL_PASSWORD + ", " +
+		COL_DISABLED + ", " +
+		COL_EXPIRESON + ", " +
+		COL_CREATEDBY + ", " +
+		COL_CREATEDON + ", " +
+		COL_MODIFIEDBY + ", " +
+		COL_MODIFIEDON +
 		" from " + TABLE_NAME + " ";
 
 
@@ -66,7 +77,13 @@ public class UserDataDAO extends AbstractDAO {
                 row.setMiddleName(rs.getString(COL_MIDDLE_NAME));
                 row.setLastName(rs.getString(COL_LAST_NAME));
                 row.setPassword(rs.getString(COL_PASSWORD));
-                row.clean();
+				row.setDisabled(rs.getInt(COL_DISABLED));
+				row.setExpiresOn(rs.getDate(COL_EXPIRESON));
+				row.setCreatedBy(rs.getString(COL_CREATEDBY));
+				row.setModifiedBy(rs.getString(COL_MODIFIEDBY));
+				row.setCreatedOn(rs.getDate(COL_CREATEDON));
+				row.setModifiedOn(rs.getDate(COL_MODIFIEDON));
+				row.clean();
                 return row;
             }
         }, userId);
@@ -91,7 +108,13 @@ public class UserDataDAO extends AbstractDAO {
                 row.setMiddleName(rs.getString(COL_MIDDLE_NAME));
                 row.setLastName(rs.getString(COL_LAST_NAME));
                 row.setPassword(rs.getString(COL_PASSWORD));
-                row.clean();
+				row.setDisabled(rs.getInt(COL_DISABLED));
+				row.setExpiresOn(rs.getDate(COL_EXPIRESON));
+				row.setCreatedBy(rs.getString(COL_CREATEDBY));
+				row.setModifiedBy(rs.getString(COL_MODIFIEDBY));
+				row.setCreatedOn(rs.getDate(COL_CREATEDON));
+				row.setModifiedOn(rs.getDate(COL_MODIFIEDON));
+				row.clean();
                 return row;
             }
         });
@@ -99,22 +122,30 @@ public class UserDataDAO extends AbstractDAO {
 
     public void insert (UserDataRow row) {
         StringBuilder query = new StringBuilder();
-        String sep = "";
+		String sep = "";
         query.append ("insert into " + TABLE_NAME + " (");
         query.append(sep).append (COL_USER_ID); sep = ",";
         query.append(sep).append(COL_PASSWORD);
         query.append(sep).append(COL_FIRST_NAME);
         query.append(sep).append(COL_MIDDLE_NAME);
         query.append(sep).append(COL_LAST_NAME);
-        query.append(") values (?, ?, ?, ?, ?)");
+		query.append(sep).append(COL_DISABLED);
+		query.append(sep).append(COL_EXPIRESON);
+		query.append(sep).append(COL_CREATEDBY);
+		query.append(sep).append(COL_CREATEDON);
+		query.append(") values (?, ?, ?, ?, ?, ? ,? ,? ,?)");
 
-        getJdbcTemplate().update(query.toString(),
+		getJdbcTemplate().update(query.toString(),
                 row.getUserId(),
                 row.getPassword(),
                 row.getFirstName(),
                 row.getMiddleName(),
-                row.getLastName()
-        );
+                row.getLastName(),
+				row.getDisabled(),
+				row.getExpiresOn(),
+				row.getUserId(),
+				"CURRENT_TIMESTAMP"
+		);
     }
 
     public void update (UserDataRow row) {
@@ -125,37 +156,57 @@ public class UserDataDAO extends AbstractDAO {
         if( row.modFirstName() ){ query.append(sep).append(COL_FIRST_NAME).append(" = ?"); sep = ","; }
         if( row.modMiddleName() ){ query.append(sep).append(COL_MIDDLE_NAME).append(" = ?"); sep = ","; }
         if( row.modLastName() ){ query.append(sep).append(COL_LAST_NAME).append(" = ?"); sep = ","; }
-        query.append(" where ").append(COL_USER_ID).append(" = ?");
+		if( row.modDisabled() ){ query.append(sep).append(COL_DISABLED).append(" = ?"); sep = ","; }
+		if( row.modExpiresOn() ){ query.append(sep).append(COL_EXPIRESON).append(" = ?"); sep = ","; }
+		if( row.modModifiedBy() ){ query.append(sep).append(COL_MODIFIEDBY).append(" = ?"); sep = ","; }
+		query.append(sep).append(COL_MODIFIEDON).append(" = ?"); sep = ",";
+		query.append(" where ").append(COL_USER_ID).append(" = ?");
 
-        List<Object> args = new ArrayList<Object>();
+		List<Object> args = new ArrayList<Object>();
         if (row.modPassword()) args.add (row.getPassword());
         if (row.modFirstName()) args.add (row.getFirstName());
         if (row.modMiddleName()) args.add (row.getMiddleName());
         if (row.modLastName()) args.add (row.getLastName());
-
-        args.add (row.getUserId());
+        if (row.modDisabled()) args.add (row.getDisabled());
+        if (row.modExpiresOn()) args.add (row.getExpiresOn());
+        if (row.modModifiedBy()) args.add (row.getUserId());
+		args.add ("CURRENT_TIMESTAMP");
+		args.add (row.getUserId());
 
         getJdbcTemplate().update(query.toString(), args);
     }
 
     public static User rowToData (UserDataRow row) {
-        User user = new User();
+		User user = new User();
         user.setUserId(row.getUserId());
         user.setFirstName(row.getFirstName());
         user.setMiddleName(row.getMiddleName());
         user.setLastName(row.getLastName());
         user.setPassword(row.getPassword());
+		user.setDisabled(row.getDisabled() == 0);
+		user.setExpiresOn(row.getExpiresOn());
+		user.setCreatedBy(row.getCreatedBy());
+		user.setModifiedBy(row.getModifiedBy());
+		user.setCreatedOn(row.getCreatedOn());
+		user.setModifiedOn(row.getModifiedOn());
 
-        return user;
+		return user;
     }
 
     public static UserDataRow dataToRow (User user, boolean skipPwd, boolean encryptPwd) throws ScalarException {
-        UserDataRow row = new UserDataRow();
+		UserDataRow row = new UserDataRow();
         row.setUserId(user.getUserId());
         row.setFirstName(user.getFirstName());
         row.setMiddleName(user.getMiddleName());
         row.setLastName(user.getLastName());
-        if (!skipPwd) {
+		row.setDisabled(user.isDisabled() ? 1 : 0);
+		row.setExpiresOn(user.getExpiresOn());
+		row.setCreatedBy(user.getCreatedBy());
+		row.setModifiedBy(user.getModifiedBy());
+		row.setCreatedOn(user.getCreatedOn());
+		row.setModifiedOn(user.getModifiedOn());
+
+		if (!skipPwd) {
             row.setPassword(encryptPwd ? StringUtil.encrypt(user.getPassword()) : user.getPassword());
         }
 

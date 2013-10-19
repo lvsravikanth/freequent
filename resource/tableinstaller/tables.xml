@@ -18,6 +18,12 @@
 			<column name="MIDDLE_NAME" no-nulls="false" size="80" type="varchar" />
 			<column name="LAST_NAME" no-nulls="false" size="80" type="varchar" />
 			<column name="PASSWORD" no-nulls="true" size="80" type="varchar" />
+			<column name="DISABLED"  no-nulls="true" default="false"  type="bit"/>
+			<column name="EXPIRESON"  no-nulls="false" type="timestamp"/>
+			<column name="CREATEDBY" no-nulls="true" size="40" type="varchar"/>
+			<column name="CREATEDON" no-nulls="true" type="timestamp"/>
+			<column name="MODIFIEDBY" no-nulls="true" size="40" type="varchar"/>
+			<column name="MODIFIEDON" no-nulls="true" type="timestamp"/>
 			<index name="USER_ID_PK" columns="USER_ID" primary-key="true" />
 		</table>
 
@@ -49,9 +55,13 @@
 				<item column="FIRST_NAME" value="admin"/>
 				<item column="LAST_NAME" value="admin"/>
 				<item column="PASSWORD" value="55,107,-47,13,47,97,113,-69,-3,10,-78,-88,19,-25,-80,29,"/>
+				<item column="EXPIRESON" value="2019-10-16 00.00.00" />
+				<item column="CREATEDBY" value="admin" />
+				<item column="CREATEDON" value="2013-10-16 00.00.00" />
+				<item column="MODIFIEDBY" value="admin" />
+				<item column="MODIFIEDON" value="2013-10-16 00.00.00" />
 			</row>
 		</rowset>
-
 	</tablegroup>
 
 </schema>
