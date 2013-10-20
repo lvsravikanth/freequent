@@ -28,9 +28,9 @@ fui.ui.manageusers = {
 
 		requestData = requestData || {};
 		requestData.content = requestData.content || {};
-		requestData.content.userid = params.userid || {};
-		requestData.content.firstname = params.firstname || {};
-		requestData.content.lastname = params.lastname || {};
+		requestData.content.userid = params.userid;
+		requestData.content.firstname = params.firstname;
+		requestData.content.lastname = params.lastname;
         requestData.handler = this.getRunSearchHandler();
 
 		var c = fui.ui.content;
