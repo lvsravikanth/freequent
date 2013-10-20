@@ -83,4 +83,10 @@ fui.ui = {
 
 		return org(requestData, response);
 	};
+
+	// Editor resources
+	fui.editor.BASENAME = 'com.scalar.freequent.l10n.EditorResource';
+
+	// Workspace resources
+	fui.workspace.BASENAME = 'com.scalar.freequent.l10n.WorkspaceResource';
 })();

@@ -1,4 +1,4 @@
-vui.provide("fui.msg");
+fui.provide("fui.msg");
 
 /**
  * Convenient Ext.MessageBox "overridden" implementations
@@ -16,7 +16,7 @@ fui.msg = {
 	 *  Replaces Ext.Msg.confirm()
 	 */
 	confirm: function(title, msg, fn, scope) {
-		return fui.ext.Msg.show({
+		/*return fui.ext.Msg.show({
 			title: title,
 			msg: msg,
 			fn: fn,
@@ -26,21 +26,22 @@ fui.msg = {
 			closable: false,
 			cls: "fui-dialog",
 			icon: fui.ext.Msg.QUESTION
-		});
+		});*/
+		this.alert(title, msg, fn, scope);
 	},
 
 	/**
 	 *  Replaces fui.ext.Msg.alert()
 	 */
 	alert: function(title, msg, fn, scope) {
-		alert(msg); //todo
+		alert("TODO: "+msg); //todo
 	},
 
 	/**
 	 *  Confirm with ok/cancel buttons
 	 */
 	confirmOk: function(title, msg, fn, scope) {
-		return fui.ext.Msg.show({
+		/*return fui.ext.Msg.show({
 			title: title,
 			msg: msg,
 			fn: fn,
@@ -50,14 +51,15 @@ fui.msg = {
 			closable: false,
 			cls: "fui-dialog",
 			icon: fui.ext.Msg.QUESTION
-		});
+		});*/
+		this.alert(title, msg, fn, scope);
 	},
 
 	/**
 	 *  Confirm with yes/no/cancel buttons
 	 */
 	confirmSave: function(title, msg, fn, scope, buttons) {
-		return fui.ext.Msg.show({
+		/*return fui.ext.Msg.show({
 			title: title,
 			msg: msg,
 			fn: fn,
@@ -67,7 +69,8 @@ fui.msg = {
 			closable: false,
 			cls: "fui-dialog",
 			icon: fui.ext.Msg.QUESTION
-		});
+		});*/
+		this.alert(title, msg, fn, scope);
 	},
 
 	/**
@@ -75,7 +78,7 @@ fui.msg = {
 	 */
 	prompt: function(title, msg, value, fn, scope, multiline){
 		multiline = multiline || false;
-		return fui.ext.Msg.show({
+		/*return fui.ext.Msg.show({
 			title: title,
 			msg: msg,
 			fn: fn,
@@ -87,6 +90,7 @@ fui.msg = {
 			prompt: true,
 			multiline: multiline,
 			value: value
-		});	
+		});	*/
+		this.alert(title, msg, fn, scope);
 	}
 };

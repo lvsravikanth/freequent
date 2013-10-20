@@ -101,7 +101,7 @@
             if (typeof label == 'string') {
 //                maskMsgDiv.append('<span style="background-image:url(img/loading.gif);background-repeat: no-repeat;">&nbsp;&nbsp;&nbsp;</span> ' + 
 //                		'<span style="" class=\"ui-overlay-loading\">' + label + '</span>');
-                maskMsgDiv.append('<div style="padding-left: 20px; background-image:url(img/loading.gif);background-repeat: no-repeat;background-position: center left" class=\"ui-overlay-loading\">' + label + '</div>');
+                maskMsgDiv.append('<div style="padding-left: 20px; background-image:url(images/loading.gif);background-repeat: no-repeat;background-position: center left" class=\"ui-overlay-loading\">' + label + '</div>');
 
             } else {
                     maskMsgDiv.append($(label));

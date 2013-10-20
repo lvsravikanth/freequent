@@ -6,10 +6,15 @@
 <button id="testauthorization" onclick="javascript: fui.ui.demo.testauthorization();">Test Authorization</button>
 <button id="testtemplate">Test Template</button>
 <div id="template-container">Click 'Test Template' button to see the template</div>
-
-	<button id="opener">open the dialog</button>
 	<div id="dialog" title="Dialog Title">I'm a dialog</div>
 </div>
+<div id="testmask">
+	click mask to mask me.
+	<div style="heigh:100px">what's up?</div>
+	click unmask to unmask me.
+</div>
+<button id="maskbutton">Mask</button>
+<button id="unmaskbutton">UnMask</button>
 
 <script type="text/javascript">
     fui.ready(function() {
@@ -22,6 +27,15 @@
             };
             fui.ui.demo.testtemplate(handler);
       });
+
+		fui.query("#maskbutton").button()
+		.click(function(){
+			fui.query("#testmask").mask("mask label");
+		});
+		fui.query("#unmaskbutton").button()
+		.click(function(){
+			fui.query("#testmask").unmask();
+		});
 	fui.query('#opener').button()
 		.click(function() {
 			//show the dialog

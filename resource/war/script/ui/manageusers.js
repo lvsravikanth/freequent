@@ -5,6 +5,9 @@ fui.require("fui.ui.content");
 fui.require("fui.ui.type");
 
 fui.ui.manageusers = {
+
+    ID_ATTRIBUTE: "id",
+
 	/**
 	 * The action key
 	 */
@@ -60,5 +63,5 @@ fui.ui.manageusers = {
             };
             var usersgrid = fui.query("#fui-workspace-search-results-container").pqGrid(obj);*/
         };
-    }
+    }    
 };

@@ -72,7 +72,7 @@ fui.ui.grid.manageusers = {
             fui.log.debug("in actions rederer");
         }
         //fui.query("tr[pq-row-indx='0'] > td[pq-col-indx='0']").append(fui.query("<div></div>").button({icons:{primary:"ui-icon-pencil"}}));
-		var template = '<button onclick="alert(\'todo\')" onmouseover="javascript: fui.query(this).addClass( \'ui-state-hover\' )" onmouseout="javascript: fui.query(this).removeClass( \'ui-state-hover\' )" class="fui-actions-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false">' +
+		var template = '<button onclick="javascript: fui.ui.grid.manageusers.edit(\''+ui.rowData.userid+'\');" onmouseover="javascript: fui.query(this).addClass( \'ui-state-hover\' )" onmouseout="javascript: fui.query(this).removeClass( \'ui-state-hover\' )" class="fui-actions-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false">' +
 					   	'<span class="ui-button-icon-primary ui-icon ui-icon-pencil"></span><span class="ui-button-text"></span>' +
 					   '</button>';
 		return template;
@@ -84,5 +84,17 @@ fui.ui.grid.manageusers = {
 	getHeaderButtonsList: function() {
 
         return [];
+	},
+
+	edit: function(userid) {
+		var requestData = {
+			content: { userid: userid ? userid : "" }
+			};
+		var editConfig = {
+			type: fui.ui.type.USER,
+			id: userid,
+			ACTION_KEY: fui.ui.manageusers.ACTION_KEY
+		};
+		fui.ui.editor.edit(editConfig, requestData);
 	}
 };

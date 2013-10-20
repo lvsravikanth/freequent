@@ -45,6 +45,18 @@ public class ManageUsersAction  extends AbstractActionController {
         data.put(TOTAL_ATTRIBUTE, users.size()+"");
     }
 
+	/**
+	 * action method for user edit.
+	 *
+	 * @param request
+	 * @param command
+	 * @param data
+	 * @throws ScalarActionException
+	 */
+	public void load(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
+		data.put(Response.TEMPLATE_ATTRIBUTE, "user/usertemplate"); 
+	}
+
     private List<HashMap<String,Object>> convertToMap(List<User> users) {
         List<HashMap<String,Object>> items = new ArrayList<HashMap<String,Object>>();
         for (User user: users) {
