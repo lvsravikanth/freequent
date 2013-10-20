@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface UserService {
     public List<User> getAllUsers() throws ScalarServiceException;
+
+	public List<User> manageUserSearch() throws ScalarServiceException;
 }

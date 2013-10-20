@@ -91,7 +91,59 @@ public class UserDataDAO extends AbstractDAO {
         return users.get(0);
     }
 
-    /**
+	/**
+     * Returns the User object for the given userId or first name or last name.
+     *
+     * @param userId
+	 * @param fName
+	 * @param lName
+     *
+     * @return the User object for the given userId.
+     */
+	public List<UserDataRow> manageUserSearch(String userId, String fName, String lName) {
+		String query = SQL_SelectAllColumns +
+						"WHERE ";
+
+		List<String> list = new ArrayList<String>();
+		if (StringUtil.isEmpty(userId) && StringUtil.isEmpty(fName) && StringUtil.isEmpty(lName)) {
+			query += COL_USER_ID + " = ? ";
+			list.add(User.getActiveUser().getUserId());
+		}
+		if (!StringUtil.isEmpty(userId)) {
+			query += COL_USER_ID + " = ? ";
+			list.add(userId);
+		}
+		if (!StringUtil.isEmpty(fName)) {
+			query += COL_FIRST_NAME + " = ? ";
+			list.add(fName);
+		}
+		if (!StringUtil.isEmpty(lName)) {
+			query += COL_LAST_NAME + " = ? ";
+			list.add(lName);
+		}
+
+		return getJdbcTemplate().query(query, list.toArray(),
+		new RowMapper<UserDataRow>() {
+			public UserDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+				UserDataRow row = new UserDataRow();
+				row.setUserId(rs.getString(COL_USER_ID));
+				row.setFirstName(rs.getString(COL_FIRST_NAME));
+				row.setMiddleName(rs.getString(COL_MIDDLE_NAME));
+				row.setLastName(rs.getString(COL_LAST_NAME));
+				row.setPassword(rs.getString(COL_PASSWORD));
+				row.setDisabled(rs.getInt(COL_DISABLED));
+				row.setExpiresOn(rs.getDate(COL_EXPIRESON));
+				row.setCreatedBy(rs.getString(COL_CREATEDBY));
+				row.setModifiedBy(rs.getString(COL_MODIFIEDBY));
+				row.setCreatedOn(rs.getDate(COL_CREATEDON));
+				row.setModifiedOn(rs.getDate(COL_MODIFIEDON));
+				row.clean();
+				return row;
+			}
+		});
+	}
+
+	/**
      * Returns all the users in the system.
      *
      * @return the User object for the given userId.

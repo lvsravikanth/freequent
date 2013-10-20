@@ -37,7 +37,7 @@ public class ManageUsersAction  extends AbstractActionController {
         UserService userService = ServiceFactory.getService(UserService.class, request);
         List<User> users = null;
         try {
-            users = userService.getAllUsers();
+			users = userService.manageUserSearch();
         } catch (ScalarServiceException e) {
             throw ScalarActionException.create(e.getMsgObject(), e);
         }
