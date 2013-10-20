@@ -147,3 +147,24 @@
     padding-top: 1em;
     text-align: justify;
 }
+
+.fui-editor-no-native-close .ui-dialog-titlebar-close {
+	display: none;
+}
+
+.fui-tool-button {
+	height: 20px;
+	width: 30px;
+	float: right;
+	clear: left;
+	top: -25px;
+	right: -15px;
+}
+
+.fui-editor .ui-dialog-titlebar {
+	height: 25px;
+}
+
+.fui-editor .ui-dialog-buttonpane {
+	padding: 0 !important;
+}

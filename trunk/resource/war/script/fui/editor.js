@@ -11,10 +11,8 @@
 fui.provide("fui.editor");
 fui.provide("fui.editor.Editor");
 
-fui.require("fui.Modal");
 fui.require("fui.html");
 fui.require("fui.io");
-fui.require("fui.context");
 fui.require("fui.creator");
 
 /**
@@ -27,7 +25,7 @@ fui.editor = {
 	 * @desc The Action Key, which corresponds to the same on the server-side.
 	 * @public
 	 */
-	ACTION_KEY: "editor",
+	DEFAULT_ACTION_KEY: "editor",
 
 	/**
 	 * @constant
@@ -62,7 +60,7 @@ fui.editor = {
 	 * @desc The TYPE attribute, which corresponds to the same on the server-side.
 	 * @public
 	 */
-	TYPE_ATTRIBUTE: '.vui.editor.type',
+	TYPE_ATTRIBUTE: '.fui.editor.type',
 
 	/**
 	 * @constant
@@ -148,7 +146,7 @@ fui.editor = {
 	 * @public
 	 */
 	findActive: function() {
-		var activeWin = fui.ext.WindowManager.getActive();
+		var activeWin;//fui.ext.WindowManager.getActive(); //todo
 		if(activeWin && (activeWin.fuiEditor || activeWin.fuiParentEditor)){
 			return fui.editor.find(activeWin.fuiEditor || activeWin.fuiParentEditor);
 		} else {
@@ -263,112 +261,57 @@ fui.editor = {
 		requestData.handler = fui.scope(this, function(data) {
 			editor.showBlock();
 
-			// Tools
-			var tools = [];
-
-			// Help
-			if ( editConfig.helpHandler ) {
-				tools.push({
-					cls: 'fui-tool-help',
-					tooltip: fui.editor.getMessage("editor.tooltip.help"),
-					handler: editConfig.helpHandler
-				});
-			}
-            // Refresh
-            tools.push({
-                cls: 'fui-tool-refresh',
-                tooltip: fui.editor.getMessage("editor.tooltip.refresh"),
-                handler: function() {
-                    if ( editor.hasChanged() ) {
-                        var reloadFunc = function(btn) {
-                            if (btn == 'yes'){
-                                editor.reload();
-                            }
-                        };
-                        var reloadTitle = fui.editor.getMessage("reload.confirm.title");
-                        var reloadText = fui.editor.getMessage("reload.confirm.text");
-                        fui.msg.confirm(reloadTitle, reloadText, reloadFunc);
-                    } else {
-                        editor.reload();
-                    }
-                }
-            });
-
-			var editorCls = 'fui-css-reset fui-editor fui-editor-' + editConfig.type + ' fui-window fui-window-editor';
+			var editorCls = 'fui-editor fui-editor-' + editor.id +' fui-editor-' + editConfig.type + ' fui-window fui-window-editor fui-editor-no-native-close';
 
 			var config = {
 				id: editor.id,
-				cls: editorCls,
-				border: false,
-				collapsible: false,
-				maximizable: false, // Handled by custom tool buttons
-				closable: false, // Handled by custom tool buttons
-				dockedItems: [
-					{
-						xtype: 'toolbar',
-						dock: 'top',
-						itemId: 'topToolbar',
-						items: [{
-							id: this.CONTENT_TOOLBAR_ID + '-' + editor.id,
-							hidden: true,
-							enableOverflow: true
-						}]
-					},
-					{
-						xtype: 'toolbar',
-						dock: 'bottom',
-						itemId: 'bottomToolbar',
-						ui: 'footer',
-						cls: 'fui-toolbar',
-						items: [{
-							id: this.CONTENT_BOTTOMBAR_ID + '-' + editor.id,
-							hidden: true
-						}]
-					}
-				],
-				layout: 'border',
-				width: editConfig.fullscreen ? undefined : editConfig.width,
-				height: editConfig.fullscreen ? undefined : editConfig.height,
-				items: [{
-					region: 'north',
-					id: this.PROPERTIES_DOCK_ID + '-' + editor.id,
-					cls: this.PROPERTIES_DOCK_ID,
-					layout: 'fit',
-					margins: '0 0 0 0',
-					hidden: true,
-					split: true
-				}, {
-					region: 'center',
-					resizable: false,
-					autoScroll: true,
-					id: this.CONTENT_ID + '-' + editor.id,
-					cls: this.CONTENT_ID,
-					layout: 'fit',
-					margins: '0 0 0 0'
-				}],
-				tools: tools
+				autoOpen: false,
+				dialogClass: editorCls,
+				buttons: [], //todo
+				closeOnEscape: false,
+				draggable: true,
+				height: editor.height,
+				width: editor.width,
+				hide: "explode",
+				modal: true,
+				resizable: true,
+				title: "TODO: TITLE" //todo
 			};
 
-			var listenAndUpdate = function(ui) {
+			var listenAndUpdate = function(evnt) {
+				var ui = fui.query(evnt.currentTarget);
 				updateFunc(ui, editor, data);
 				var contentId = fui.editor.CONTENT_ID + '-' + editor.id;
-				fui.query('#' + contentId).mousedown(deactivator);
+				//fui.query('#' + contentId).mousedown(deactivator);
 				//reset the size so that everything lays out correctly (like toolbars).  
 				//not calling the fui.vext.forceLayout(ui); since that will use the container size 
 				//and for editors that is the body and is very big.
-				ui.setSize(ui.getSize());
+				//ui.setSize(ui.getSize());
 			};
 
-				var w = fui.ext.create('fui.Modal', config);
-				w.on('show', listenAndUpdate);
-				w.show();
-				if(editConfig.message){
-					var cls = editConfig.message.cls || fui.notification.WARNING;
-					var text = editConfig.message.text || '';
-					var autoClose = editConfig.message.autoClose || 5000;
-					fui.notification.show(cls, text, autoClose);
-				}
+			var contentDivId =  this.CONTENT_ID + '-' + editor.id;
+			//check if this div already present
+			var contentdiv = fui.byId(contentDivId);
+			if (contentdiv) {
+				// empty the content
+				fui.query(contentdiv).empty();
+			} else {
+				// create the content div
+				fui.query("<div id='"+contentDivId+"' class='"+this.CONTENT_ID+"'></div>").appendTo("body");
+			}
 
+			// initialize the dialogue
+			var ui = fui.query( "#" +contentDivId ).dialog (config);
+			// attach open event
+			fui.query( "#" +contentDivId ).on( "dialogopen", listenAndUpdate );
+			// open the dialogue
+			fui.query( "#" +contentDivId ).dialog( "open" );
+			if(editConfig.message){
+				var cls = editConfig.message.cls || fui.notification.WARNING;
+				var text = editConfig.message.text || '';
+				var autoClose = editConfig.message.autoClose || 5000;
+				fui.notification.show(cls, text, autoClose);
+			}
 		});
 
 		// Setup error handler
@@ -396,8 +339,12 @@ fui.editor = {
 			readOnly: editConfig.readOnly,
 			cloneId: cloneId,
 			editConfig: editConfig,
+			type: editConfig.type
 		});
 
+		if (editConfig.ACTION_KEY) {
+			editor.ACTION_KEY = editConfig.ACTION_KEY;
+		}
 		editor.load(requestData);
 	},
 
@@ -476,6 +423,7 @@ fui.editor = {
 	getCloneEditorId: function() {
 		return fui.editor.internal.CLONE_EDITOR_ID + (fui.editor.internal.newEditorIndex++);
 	}
+
 };
 
 /**
@@ -501,6 +449,10 @@ fui.editor.Editor = function() {
 	this.hasSaved = false;  // has this editor ever successfully saved?
 	this.editConfig = {}; // stores the editor config
 	this.requestContent = {}; // stores the request content
+	this.height = "auto";
+	this.width = "650";
+	this.type = "";
+	this.ACTION_KEY = fui.editor.DEFAULT_ACTION_KEY;
 
 	if ( (arguments.length == 1) && (typeof arguments[0] == "object") ) {
 		fui.combine(this, arguments[0]);
@@ -533,11 +485,11 @@ fui.extend(fui.editor.Editor,
 	 */
 	getContentSize: function() {
 		var content = this.getContentComponent();
-		if ( !content || ! content.getTargetEl() ) {
-			return { width: 0, height: 0 };
+		if ( !content ) {
+			return { width: "650", height: "auto" };
 		}
 
-		return content.getTargetEl().getSize(true);
+		return content.getSize(true); //todo
 	},
 
 	/**
@@ -583,7 +535,9 @@ fui.extend(fui.editor.Editor,
 		// Mask
 		if ( this.ui) {
 			this.ui.mask(msg);
-        }
+        } else {
+			fui.query("body").mask(msg);
+		}
 		// Set timer if needed
 		if ( uiConfig.setTimer ) {
 			this.blockTimer = setTimeout(fui.scope(this, function(){
@@ -695,7 +649,9 @@ fui.extend(fui.editor.Editor,
 
 		// Clear all the components from the content area
 		content.empty();
-		fui.html.set(content.id, data, true, true, true);
+		var contentPanelId = content.attr("id");
+		//fui.html.set(contentPanelId, data, true, true, true);
+		fui.query("#"+contentPanelId).html(data);
 	},
 
 	/**
@@ -726,7 +682,7 @@ fui.extend(fui.editor.Editor,
 		requestData.content = requestData.content || {};
 
 		// Set clone id and readonly state
-		requestData.content[e.CLONE_ATTRIBUTE] = this.cloneId ? this.cloneId : undefined;			
+		requestData.content[e.CLONE_ATTRIBUTE] = this.cloneId ? this.cloneId : undefined;
 		requestData.content[e.READONLY_ATTRIBUTE] = this.readOnly ? this.readOnly : undefined;
 		
 		// Set id
@@ -735,7 +691,7 @@ fui.extend(fui.editor.Editor,
 		// Copy over content
 		fui.query.extend(this.requestContent, requestData.content);
 		
-		requestData.actionKey = e.ACTION_KEY;
+		requestData.actionKey = requestData.actionKey || this.ACTION_KEY;
 		requestData.method = e.LOAD;
 
 		var orgHandler = requestData.handler;
@@ -873,7 +829,7 @@ fui.extend(fui.editor.Editor,
 				if ( orgErrorHandler ) {
 					return orgErrorHandler(message, rootMessage);
 				}
-				return fui.errorHandler(message, rootMessage);
+				return fui.ui.errorHandler(message, rootMessage);
 			});
 
 			this.showBlock({
@@ -885,7 +841,7 @@ fui.extend(fui.editor.Editor,
 				data[fui.editor.CLONE_ATTRIBUTE] = this.cloneId;
 			}
 
-			fui.editor.internal.save(this.type, this.typeId, this.typeXmlName, this.id, data, requestData);
+			fui.editor.internal.save(this.type, this.id, data, requestData);
 		});
 
 		var sh = this.saveHandlers;
@@ -926,8 +882,12 @@ fui.extend(fui.editor.Editor,
 		}
 
 		if ( this.ui ) {
-			this.ui.un('beforeclose', this.closeHandler, this);
-			this.ui.close();
+			var contentPanelId = this.ui.attr("id");
+			this.ui.off('dialogbeforeclose', this.closeHandler);
+			this.ui.off( "dialogopen" );
+			this.ui.empty();
+			this.ui.dialog("close");
+			this.ui.dialog("destroy");
 		}
 
 		// Fire the close event.
@@ -974,7 +934,9 @@ fui.extend(fui.editor.Editor,
 		this.ui = ui;
 		if ( ui ) {
 			ui.fuiEditor = this.id;
-			ui.on('beforeclose', this.closeHandler, this);
+			var contentPanelId = ui.attr("id");
+			//fui.query("#"+contentPanelId).on('dialogbeforeclose', fui.scope(this, this.closeHandler, this));
+			//fui.query("#"+contentPanelId).on( "dialogclose", fui.scope(this, this.destroy, this) ); //we will handle closing dialog
 
 			if ( this.fullscreen ) {
 				window.fuiEditor = this.id;
@@ -987,15 +949,15 @@ fui.extend(fui.editor.Editor,
 	 * @desc The window close handler. Checks for changes before allowing the close.
 	 * @public
 	 */
-	closeHandler: function(ui) {
-		if ( this.hasChanged() ) {
+	closeHandler: function(editor) {
+		if ( editor.hasChanged() ) {
 			var func = function(button) {
 				if ( button === "cancel") {
 					// do nothing
 				} else if( button === "yes") {
-					this.save( {close: true} );
+					editor.save( {close: true} );
 				} else {
-					this.close();
+					editor.close();
 				}
 			};
 			var e = fui.editor;
@@ -1005,8 +967,7 @@ fui.extend(fui.editor.Editor,
 			fui.msg.confirmSave(title, message, func, this);
 			return false;
 		}
-
-		this.close();
+		editor.close();
 		return true;
 	},
 
@@ -1016,11 +977,10 @@ fui.extend(fui.editor.Editor,
 	 *
 	 * @param displayType the display type
 	 * @param title the title
-	 * @param skipHTML flag to skip HTML wrapping
 	 * @param escaped flag to indicate if title is escaped
 	 * @public
 	 */
-	setTitle: function(displayType, title, skipHTML, escaped) {
+	setTitle: function(displayType, title, escaped) {
 		if ( !this.ui) {
 			return;
 		}
@@ -1036,15 +996,10 @@ fui.extend(fui.editor.Editor,
 			}
 		}
 
-		if ( skipHTML ) {
-			this.ui.setTitle(hasTitle ? title : displayType);
-			return;
-		}
+		var displayTitle = hasTitle ? ' : ' + title : '';
+		var uiTitle = displayType + displayTitle;
 
-		var htmlTitle = hasTitle ? '<div class="fui-header-title"><span class="fui-header-title-type">' + displayType + ' :&nbsp;</span><span class="fui-header-title-text">' + escapedTitle + '</span></div>' : '<div class="fui-header-title"><span class="fui-header-title-text">' + displayType + '</span></div>';
-		var displayTitle = hasTitle ? ' : ' + escapedTitle : '';
-		var uiTitle = '<div id="fui-header-type" class="fui-header-type fui-objecttype-' + this.type + '"  title="' + displayType + displayTitle + '">' + htmlTitle + '</div>';
-		this.ui.setTitle(uiTitle);
+		this.ui.dialog( "option", "title", uiTitle );
 	},
 
 	/**
@@ -1104,7 +1059,7 @@ fui.extend(fui.editor.Editor,
 	hasChanged: function() {
 		//todo check whether the form is dirty, if form is available
 
-		return true; //todo
+		return false;
 	},
 
 	/**
@@ -1460,7 +1415,7 @@ fui.editor.internal = {
 		for ( var i = 0 ; i < buttons.length ; ++i ) {
 			var button = buttons[i];
 			var tbButton = {
-				text: button.getTitle(editor, obj),
+				text: fui.html.unescape(button.getTitle(editor, obj)),
 				disabled: disabled || button.disabled,
 				id: editor.id + "-" + button.id,
 				click: this.buildButtonHandler(type, editor.id, button.clickHandler)
@@ -1488,6 +1443,9 @@ fui.editor.internal = {
 
 			editor.clearBlock();
 			editor.setUI(ui);
+			var displayType = editor.type ? editor.type : null;
+			var title = fui.editor.isNewEditorId(editor.id) ? ed.getMessage("new") : (data.name ? data.name : null);
+			editor.setTitle(displayType, title, true);
 			editor.setCloseCallback(config.closeCallback);
 			editor.setSaveCallback(config.saveCallback);
 			editor.showBlock();
@@ -1501,25 +1459,77 @@ fui.editor.internal = {
 				disabled = true;
 			}
 
-			var toptbar=null;
-			var tbar = [];
 			var ei = ed.internal;
-			var defaultChrome = config.editorChrome == fui.editor.DEFAULT_EDITOR_CHROME;
-			var secondaryChrome = config.editorChrome == fui.editor.SECONDARY_EDITOR_CHROME;
 
+			// setup top tools
+			// Tools
+			var tools = [];
+			// Close
+			tools.push({
+				id: 'fui-tool-close-'+editor.id,
+				cls: 'ui-icon-close',
+				tooltip: fui.editor.getMessage("editor.tooltip.close"),
+				handler: function() {
+					if (editor.hasChanged()) {
+						var func = function(button) {
+							if (button === "cancel") {
+								// do nothing
+							} else if (button === "yes") {
+								editor.save({close: true});
+							} else {
+								editor.close();
+							}
+						};
+						var e = fui.editor;
+						var message;
+						var title = e.getMessage('close.changes.title');
+						message = fui.string.replace(e.getMessage('save.changes'));
+						fui.msg.confirmSave(title, message, func, this);
+						return false;
+					}
+					editor.close();
+					return true;
+				}
+			});
+			// Refresh
+			tools.push({
+				id: 'fui-tool-refresh-'+editor.id,
+				cls: 'ui-icon-refresh',
+				tooltip: fui.editor.getMessage("editor.tooltip.refresh"),
+				handler: function() {
+					if (editor.hasChanged()) {
+						var reloadFunc = function(btn) {
+							if (btn == 'yes') {
+								editor.reload();
+							}
+						};
+						var reloadTitle = fui.editor.getMessage("reload.confirm.title");
+						var reloadText = fui.editor.getMessage("reload.confirm.text");
+						fui.msg.confirm(reloadTitle, reloadText, reloadFunc);
+					} else {
+						editor.reload();
+					}
+				}
+			});
+
+
+
+			ei.setupTools(editor, tools);
+
+			// setup bottom buttons
+			var dialogButtons = [];
 			if ( !config.skipSave ) {
 				// Build save which is always at the end
 				var buttons = [fui.editor.button.save.getSave(readOnly), fui.editor.button.save.getClose(readOnly)];
-				ei.buildButtons(config.type, editor, buttons, tbar, false);
+				ei.buildButtons(config.type, editor, buttons, dialogButtons, false);
 			}
 
-			if (!editor.hidden && (tbar.items.length > 0)) {
-				// show the tool bar //todo
+			if (!editor.hidden && (dialogButtons.length > 0)) {
+				// show the dialog buttons
+				ui.dialog( "option", "buttons", dialogButtons );
 			} else{
 				//tbar.hide(); //todo
 			}
-
-			//ui.doLayout(); //todo
 
 			editor.clearBlock();
 			if ( reqHandler ) {
@@ -1563,6 +1573,27 @@ fui.editor.internal = {
 			if ( editor ) {
 				editor.close(true);
 			}
+		}
+	},
+
+	setupTools: function(editor, tools) {
+		var dialogClass = 'fui-editor-'+editor.id;
+		for (var i = 0; i < tools.length; i++) {
+			var tool = tools[i];
+			//check if tool already exists
+			if (fui.byId(tool.id)) {
+				fui.query("#"+tool.id ).button( "destroy" );
+			} else {
+				fui.query("."+dialogClass).children(".ui-dialog-titlebar").append("<button id='"+ tool.id +"' class='fui-tool-button' title='"+tool.tooltip+"'></button>");
+			}
+
+			var toolButtonConfig = {
+				icons: {primary: tool.cls},
+				text: false,
+				disabled: tool.disabled || false
+			};
+			fui.query("#"+tool.id).button(toolButtonConfig)
+				.click(tool.handler);
 		}
 	}
 };

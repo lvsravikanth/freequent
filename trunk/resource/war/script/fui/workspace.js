@@ -5,9 +5,9 @@
  * @name vui.ui.workspace
  * @public
  */
-vui.provide("fui.workspace");
+fui.provide("fui.workspace");
 
-vui.require("fui.resource");
+fui.require("fui.resource");
 fui.require("fui.html");
 
 /**

@@ -1,10 +1,19 @@
 /**
  * Set up the resource section and our requirements
  */
-vui.provide("fui.resource");
+fui.provide("fui.resource");
 
 fui.resource = {
 	DEFAULT_TRANSPORT: "json",
+
+	ACTION_KEY: "resource",
+
+	/**
+	 * method name for getting the catalog.
+	 */
+	GET_CATALOG: "getcatalog",
+
+	BASENAME_ATTRIBUTE: "basename",
 	
 	/**
 	 * Stores a map of messages under the basename for later retrieval.
@@ -25,9 +34,12 @@ fui.resource = {
 	getMessage: function(basename, key) {
 		var map = fui.resource.internal.catalog[basename];
 		if ( !map ) {
+			//return basename + '.' + key;
+			map = fui.resource.internal.getCatalog(basename);
+		}
+		if (!map) {
 			return basename + '.' + key;
 		}
-		
 		var message = map[key];
 		if ( !message ) {
 			return basename + '.' + key;
@@ -43,5 +55,24 @@ fui.resource = {
 fui.provide("fui.resource.internal");
 
 fui.resource.internal = {
-	catalog: {}
+	catalog: {},
+	getCatalog: function(basename) {
+		var handler = function(messageMap) {
+
+			fui.resource.setMessages(basename, fui.secure_eval(messageMap));
+			return messageMap;
+		};
+
+		var requestData = requestData || {};
+		requestData.content = requestData.content || {};
+		requestData.content[fui.resource.BASENAME_ATTRIBUTE] = basename;
+
+		requestData.actionKey = fui.resource.ACTION_KEY;
+		requestData.method = fui.resource.GET_CATALOG;
+		requestData.handler = handler;
+		requestData.sync = true;
+
+		var request = fui.request.build(requestData);
+		fui.io.api(request);
+	}
 };

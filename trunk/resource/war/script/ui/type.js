@@ -9,5 +9,7 @@ fui.ui.type = {
 	 */
 	DEMO: 'demo',
 
-    MANAGEUSERS: 'manageusers'
+    MANAGEUSERS: 'manageusers',
+
+	USER: 'user'
 };

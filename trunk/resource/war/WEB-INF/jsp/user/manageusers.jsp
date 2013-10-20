@@ -17,7 +17,7 @@
 		<div class="fui-workspace-search-table-row">
 			<div class="fui-workspace-header ui-widget-header ui-corner-top"><fmt:message key="<%=WorkspaceResource.MANAGEUSERS_TITLE%>"/>
 				<div class="fui-workspace-header-search">
-					<button type="button" id="newusers"><fmt:message key="<%=WorkspaceResource.NEWUSERS%>"/></button>
+					<button type="button" id="newuser"><fmt:message key="<%=WorkspaceResource.NEWUSER%>"/></button>
 				</div>
 			</div>
 		</div>
@@ -64,7 +64,10 @@
             fui.ui.manageusers.runSearch(params);          
 
         });
-		fui.query("#newusers").button();
+		fui.query("#newuser").button()
+			.click( function(event) {
+			fui.ui.grid.manageusers.edit(null);
+		});
 		fui.query("#reset").button();
 
         //Register grid
