@@ -101,13 +101,11 @@ public class UserDataDAO extends AbstractDAO {
      * @return the User object for the given userId.
      */
 	public List<UserDataRow> manageUserSearch(String userId, String fName, String lName) {
-		String query = SQL_SelectAllColumns +
-						"WHERE ";
+		String query = SQL_SelectAllColumns;
 
 		List<String> list = new ArrayList<String>();
-		if (StringUtil.isEmpty(userId) && StringUtil.isEmpty(fName) && StringUtil.isEmpty(lName)) {
-			query += COL_USER_ID + " = ? ";
-			list.add(User.getActiveUser().getUserId());
+		if ( !StringUtil.isEmpty(userId) || !StringUtil.isEmpty(fName) || !StringUtil.isEmpty(lName)) {
+			query += "WHERE ";
 		}
 		if (!StringUtil.isEmpty(userId)) {
 			query += COL_USER_ID + " = ? ";
