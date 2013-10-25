@@ -15,6 +15,12 @@
 </div>
 <button id="maskbutton">Mask</button>
 <button id="unmaskbutton">UnMask</button>
+<hr/>
+<form action="#" id="validatortestform">
+	input required: <input type="text" id="userid"/>
+
+</form><button id="validatetestbtn">Validate</button>
+
 
 <script type="text/javascript">
     fui.ready(function() {
@@ -59,6 +65,18 @@
 			  }
 			}
 		);
+
+		var validator = fui.query('#validatortestform').validate(
+			{
+				rules: {
+						userid: "required"
+						}
+			});
+
+		fui.query('#validatetestbtn').button()
+		.click(function(){
+			fui.query('#validatortestform').valid();
+		});
 	}
             );
 </script>

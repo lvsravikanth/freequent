@@ -63,5 +63,30 @@ fui.ui.manageusers = {
             };
             var usersgrid = fui.query("#fui-workspace-search-results-container").pqGrid(obj);*/
         };
-    }    
+    },
+
+	edit: function(userid) {
+		var requestData = {
+			content: { userid: userid ? userid : "" }
+			};
+		var editConfig = {
+			type: fui.ui.type.USER,
+			id: userid,
+			ACTION_KEY: fui.ui.manageusers.ACTION_KEY,
+			validate: this.validate //validate function for to validate the form
+		};
+		fui.ui.editor.edit(editConfig, requestData);
+	},
+
+	/**
+	 * validates the user edit form.
+	 *
+	 * @param editor
+	 * @param data
+	 * @param requestData
+	 */
+	validate: function(editor, data, requestData) {
+		var isValid = fui.query('#'+editor.formId).valid();
+		return isValid;
+	}
 };

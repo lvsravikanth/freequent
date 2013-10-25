@@ -66,7 +66,7 @@
         });
 		fui.query("#newuser").button()
 			.click( function(event) {
-			fui.ui.grid.manageusers.edit(null);
+			fui.ui.manageusers.edit(null);
 		});
 		fui.query("#reset").button();
 

@@ -57,7 +57,7 @@ fui.notification = {
 	 * @param autoClose the autoclose time; can be null
 	 */
 	show: function(cls, msg, autoClose) {
-        var config = {text: msg};
+        var config = {text: msg, layout: 'top'};
         if (autoClose) {
             config.timeout = autoClose;
         }
@@ -69,7 +69,7 @@ fui.notification = {
             config.type = 'error';
         }
 
-        fui.query.noty(config);
+        noty(config);
 	}
 };
 

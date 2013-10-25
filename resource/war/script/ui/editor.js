@@ -33,6 +33,7 @@ fui.ui.editor = {
 			id: id,
 			fullscreen: editConfig.fullscreen,
 			checkers: editConfig.checkers,
+			collectors: editConfig.collectors,
 			saveHandlers: saveHandlers,
 			closeHandlers: editConfig.closeHandlers,
 			saveCallback: editConfig.saveCallback || fui.ui.workspace.editorSaveCallback,
@@ -46,7 +47,8 @@ fui.ui.editor = {
 			skipToolbar: editConfig.skipToolbar,
 			skipType: editConfig.skipType,
 			//extraSetup: customizeIcon,
-			ACTION_KEY: editConfig.ACTION_KEY
+			ACTION_KEY: editConfig.ACTION_KEY,
+			validate: editConfig.validate
 		};
 
 		fui.editor.edit(rootEditConfig, requestData);
