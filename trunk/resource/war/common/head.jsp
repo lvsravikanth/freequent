@@ -80,6 +80,7 @@
 		<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/validate/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/pqgrid/pqgrid.min.js"></script>
         <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/noty/jquery.noty.js"></script>
+        <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/noty/themes/default.js"></script>
         <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/noty/layouts/top.js"></script>
         <%--<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/jquery-loadmask-0.4/jquery.loadmask.fix.jquery.ui.js"></script>--%>
         <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/jquery-loadmask-0.4/jquery.loadmask.js"></script>

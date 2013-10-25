@@ -204,7 +204,8 @@ fui.loader.internal = {
 		}
 
 		setTimeout(function() {
-			fui.html.set(fui.loader.internal.LOADER_NODE_ID, data, true, true, true);
+			//fui.html.set(fui.loader.internal.LOADER_NODE_ID, data, true, true, true);
+			fui.query("#"+fui.loader.internal.LOADER_NODE_ID).html(data);
 
 			fui.publish(fui.loader.event.TOPIC, new fui.loader.Event({type: fui.loader.event.FINISH}));
 

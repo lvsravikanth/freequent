@@ -333,6 +333,8 @@ fui.editor = {
 		
 		editor = new fui.editor.Editor({
 			id: editConfig.id || (cloneId ? fui.editor.getCloneEditorId() : fui.editor.getNewEditorId()),
+			collectors: editConfig.collectors,
+			checkers: editConfig.checkers,
 			saveHandlers: editConfig.saveHandlers,
 			closeHandlers: editConfig.closeHandlers,
 			initialData: editConfig.initialData,
@@ -453,11 +455,18 @@ fui.editor.Editor = function() {
 	this.width = "650";
 	this.type = "";
 	this.ACTION_KEY = fui.editor.DEFAULT_ACTION_KEY;
+	this.formId = null;
 
 	if ( (arguments.length == 1) && (typeof arguments[0] == "object") ) {
 		fui.combine(this, arguments[0]);
 	}
 
+	if (!fui.query.isArray(this.collectors)) {
+		this.collectors = (this.collectors ? [this.collectors] : []);
+	}
+	if (!fui.query.isArray(this.checkers)) {
+		this.checkers = (this.checkers ? [this.checkers] : []);
+	}
 	if (!fui.query.isArray(this.saveHandlers)) {
 		this.saveHandlers = (this.saveHandlers ? [this.saveHandlers] : []);
 	}
@@ -710,6 +719,15 @@ fui.extend(fui.editor.Editor,
 			}
 
 			return fui.errorHandler(message, rootMessage);
+		});
+
+		var orgAuthHandler = requestData.authorizationHandler;
+		requestData.authorizationHandler = fui.scope(this, function(response) {
+			this.clearBlock();
+			if (orgAuthHandler) {
+				return orgAuthHandler(response);
+			}
+			return fui.authorizationHandler(response);
 		});
 
 		this.showBlock();
@@ -1018,25 +1036,23 @@ fui.extend(fui.editor.Editor,
 		var scrolled = false;
 		var groupsToMark = [];
 		var groupWidgets = [];
-		
-		// Clean up tabs
-		var tabCleaner = function(panel, index) {
-			var el = fui.ext.get(this.tabs.id + this.tabs.idDelimiter + panel.id);
-			if ( el ) {
-				el.removeCls('fui-editor-tab-error');
+
+		// validate the editor data
+		if (this.editConfig.validate) {
+			if (!bypassValidators && !this.editConfig.validate(this, data, requestData)) {
+				validData = false;
 			}
-			
-			return true;
-		};
-		
-		if ( this.tabs ) {
-			this.tabs.items.each(tabCleaner, this);
 		}
-		
-		// Scroll to helper function
-		var scrollTo = fui.scope(this, function(w) {
-			//todo
-		});
+
+		// If there are collectors, let them do some work
+		for ( var i = 0 ; !bypassCollectors && i < this.collectors.length ; ++i ) {
+			data = this.collectors[i](this, data, requestData);
+			if ( !data ) {
+				// Flag as bad and allow to continue to catch all bad cases
+				validData = false;
+				data = this.data;
+			}
+		}
 
 		// Make sure we had valid data
 		if ( !validData ) {
@@ -1217,6 +1233,14 @@ fui.extend(fui.editor.Editor,
 	 */
 	isReadOnly: function(){
 		return this.readOnly || (this.object && this.object.editorReadOnly);	
+	},
+
+	/**
+	 * sets the formId value for this editor.
+	 * @param formId
+	 */
+	setFormId: function(formId) {
+		this.formId = formId;
 	}
 });
 
