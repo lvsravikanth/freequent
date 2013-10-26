@@ -10,6 +10,7 @@ import com.scalar.freequent.util.StringUtil;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -94,30 +95,30 @@ public class UserDataDAO extends AbstractDAO {
 	/**
      * Returns the User object for the given userId or first name or last name.
      *
-     * @param userId
-	 * @param fName
-	 * @param lName
+     * @param searchParams search query parameters
      *
      * @return the User object for the given userId.
      */
-	public List<UserDataRow> manageUserSearch(String userId, String fName, String lName) {
+	public List<UserDataRow> getUsers(Map<String, String> searchParams) {
 		String query = SQL_SelectAllColumns;
-
+		String userId = searchParams.get(User.USER_ID);
+		String fName = searchParams.get(User.FIRST_NAME);
+		String lName = searchParams.get(User.LAST_NAME);
 		List<String> list = new ArrayList<String>();
 		if ( !StringUtil.isEmpty(userId) || !StringUtil.isEmpty(fName) || !StringUtil.isEmpty(lName)) {
 			query += "WHERE ";
 		}
 		if (!StringUtil.isEmpty(userId)) {
-			query += COL_USER_ID + " = ? ";
-			list.add(userId);
+			query += COL_USER_ID + " like ? ";
+			list.add(userId + "%");
 		}
 		if (!StringUtil.isEmpty(fName)) {
 			query += COL_FIRST_NAME + " = ? ";
-			list.add(fName);
+			list.add(fName + "%");
 		}
 		if (!StringUtil.isEmpty(lName)) {
 			query += COL_LAST_NAME + " = ? ";
-			list.add(lName);
+			list.add(lName + "%");
 		}
 
 		return getJdbcTemplate().query(query, list.toArray(),

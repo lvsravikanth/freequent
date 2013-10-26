@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.scalar.core.service.AbstractService;
 import com.scalar.core.ScalarServiceException;
-import com.scalar.core.request.Request;
 import com.scalar.core.jdbc.DAOFactory;
 import com.scalar.freequent.auth.User;
 import com.scalar.freequent.dao.UserDataDAO;
@@ -12,6 +11,7 @@ import com.scalar.freequent.dao.UserDataRow;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -37,10 +37,9 @@ public class UserServiceImpl extends AbstractService implements UserService {
 	 *
 	 * @return the user object for the given search parameters.
 	 */
-	public List<User> manageUserSearch() throws ScalarServiceException {
-		Request request = getRequest();
-		UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, request);
-		List<UserDataRow> userRows = userDataDAO.manageUserSearch(request.getParameter("userid"), request.getParameter("firstname"), request.getParameter("lastname"));
+	public List<User> getUsers(Map<String, String> searchParam) throws ScalarServiceException {
+		UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
+		List<UserDataRow> userRows = userDataDAO.getUsers(searchParam);
 		List<User> users = new ArrayList<User>(userRows.size());
 		for (UserDataRow row: userRows) {
 			users.add (UserDataDAO.rowToData(row));

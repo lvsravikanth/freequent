@@ -4,6 +4,7 @@ import com.scalar.freequent.auth.User;
 import com.scalar.core.ScalarServiceException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -13,5 +14,5 @@ import java.util.List;
 public interface UserService {
     public List<User> getAllUsers() throws ScalarServiceException;
 
-	public List<User> manageUserSearch() throws ScalarServiceException;
+	public List<User> getUsers(Map<String, String> searchParams) throws ScalarServiceException;
 }

@@ -19,7 +19,6 @@
                         Login
                         <img src=""/>
                     </h2>
-
                     <div class="site_signin_table">
                         <form id="site_signin_form" action="<%=request.getContextPath()%>/auth/authenticate"
                               method="post">
@@ -30,8 +29,7 @@
                                             </label>
 										</span>
 										<span class="site_signin_cell">
-											<input id="site_signin_username_input" size="24"
-                                                   style="padding-bottom: 10px;" type="text" name="username"/>
+											<input id="site_signin_username_input" type="text" name="username"/>
 										</span>
                             </div>
                             <div class="site_signin_row">
@@ -41,13 +39,11 @@
                                                 </label>
 											</span>
 											<span class="site_signin_cell">
-												<input id="site_signin_password_input" type="password" size="24"
-                                                       style="padding-bottom: 10px;" name="password"/>
+												<input id="site_signin_password_input" type="password" name="password"/>
 											</span>
                             </div>
                             <div class="site_signin_row site_signin_align">
-									<span class="site_signin_cell">
-									</span>
+									<span class="site_signin_cell"></span>
 									<span class="site_signin_cell site_signin_cell_padding site_signin_button_padding">
 										<button id="site_signin_button" class="site_signin_button">Signin</button>
 									</span>
@@ -59,5 +55,4 @@
             </div>
         </div>
     </div>
-
 </div>
