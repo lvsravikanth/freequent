@@ -1,5 +1,3 @@
-#body {
-}
 .frq_main_container {
     max-height: 290px;
     max-width: 290px;
@@ -10,7 +8,6 @@
 	margin: 0 auto;
 	padding : 0;
 }
-
 
 #site_signin_container .ui-widget-overlay {
 	position : relative;
@@ -34,7 +31,6 @@
     position: absolute;
     width: 300px;
 }
-
 
 .frq_signin_container_box.ui-widget-shadow {
     background: none repeat scroll 0 0 transparent;
@@ -70,28 +66,55 @@
 }
 
 /* Start Admin menu Manage user*/
-.fui-workspace-search-table {
-	display: table;
-	line-height: 2;
-	width: 100%;
-	max-width: 1139px;
-	border: 1px solid #a6c9e2;
-	font-size: 13px;
-	border-radius: 5px;}
-
-.fui-workspace-search-table-row {
-    display: table-row;}
-
-.fui-workspace-search-table-cell {
-	display: table-cell;
-	padding: 10px;}
-
-.fui-workspace-header-search{
-	float: right;}
-
 .fui-actions-button {
 	height: 20px;
 	width: 30px;
+}
+
+.fui-workspace-search-table {
+	border: 1px solid #A6C9E2;
+	border-radius: 5px 5px 5px 5px;
+	box-shadow: 4px 2px 5px #C4C4C2;
+	display: table;
+	font-size: 13px;
+	line-height: 2;
+	width: 100%;}
+
+.fui-workspace-search-table-row {
+	display: table-row;}
+
+.fui-workspace-search-table-cell {
+	display: table-cell;
+	font-size: 13px;
+	font-weight: bold;
+	padding: 10px 15px 30px 10px;}
+
+.fui-workspace-footer-search-newuser{
+	float: right;
+	padding: 5px 0 5px 10px;}
+
+.fui-workspace-footer-search {
+	background: #A2C0EF -moz-linear-gradient(bottom center,  rgba(255,255,255,0.05) 28%, rgba(255,255,255,0.07) 49%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.17) 51%, rgba(255,255,255,0.9) 100%) repeat-x scroll 0 0; /* FF3.6+ */
+	background: #A2C0EF -webkit-gradient(linear, left bottom, left top, color-stop(28%, rgba(255,255,255,0.05)), color-stop(49%, rgba(255,255,255,0.07)), color-stop(50%, rgba(255,255,255,0.25)), color-stop(51%,rgba(255,255,255,0.17)), color-stop(100%,rgba(255,255,255,0.73))) repeat-x scroll 0 0; /* Chrome,Safari4+ */
+	background: #A2C0EF -webkit-linear-gradient(bottom center,  rgba(255,255,255,0.05) 28%, rgba(255,255,255,0.07) 49%, rgba(255,255,255,0.25) 50%, rbga(255,255,255,0.17) 51%, rgba(255,255,255,0.9) 100%) repeat-x scroll 0 0; /* Chrome10+,Safari5.1+ */
+	background: #A2C0EF -o-linear-gradient(bottom center,  rgba(255,255,255,0.05) 28%, rgba(255,255,255,0.07) 49%, rgba(255,255,255,0.17) 50%, rgba(255,255,255,0.25) 51%,rgba(255,255,255,0.9) 100%) repeat-x scroll 0 0; /* Opera 11.10+ */
+	background: #A2C0EF -ms-linear-gradient(bottom center,  rgba(255,255,255,0.05) 28%, rgba(255,255,255,0.07) 49%, rgba(255,255,255,0.25) 50%, rbga(255,255,255,0.17) 51%, rgba(255,255,255,0.9) 100%) repeat-x scroll 0 0; /* IE10+ */
+	background: #A2C0EF linear-gradient(bottom center,  rgba(255,255,255,0.05) 28%, rgba(255,255,255,0.07) 49%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.17) 51%, rgba(255,255,255,0.73) 100%) repeat-x scroll 0 0; /* W3C */
+	border-top: 1px solid #C3C3C3;
+	width: 100%;
+}
+
+.fui-workspace-grid {
+	box-shadow: 4px 2px 5px #C4C4C2;
+	margin: 20px 0;
+}
+.fui-workspace-container {
+	margin: 5px 10px 8px 5px;
+}
+
+.fui-workspace-search-container {
+	margin-top: 20px;
+	padding: 0 20px;
 }
 /* End Admin menu Manage user*/
 label.error {
