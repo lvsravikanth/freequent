@@ -30,7 +30,14 @@ public class User {
 		}
     };
 
-    private String userId;
+	public static final String USER_ID = "userid";
+	public static final String FIRST_NAME = "firstname";
+	public static final String LAST_NAME = "lastname";
+	public static final String MIDDLE_NAME = "middlename";
+	public static final String DISABLED = "disabled";
+	public static final String EXPIRESON = "expireson";
+
+	private String userId;
     private String password;
     private String firstName;
     private String middleName;

@@ -21,51 +21,21 @@ fui.ui.demo = {
 	 */
 	DEMO_SIMPLE_JSON: "simpleJson",
 
-    TEST_EXCEPTION: "testexception",
-
     getSimpleJson: function(requestData){
 		if ( fui.log.isDebug() ) { fui.log.debug("Reading simpleJson method data " ); }
 
 		requestData = requestData || {};
 		requestData.content = requestData.content || {};
+		requestData.method = requestData.method || this.DEMO_SIMPLE_JSON;
 		var c = fui.ui.content;
-		c.internal.sendAPI(this, this.DEMO_SIMPLE_JSON, requestData);
+		c.internal.sendAPI(this, requestData.method, requestData);
 	},
 
     testSimpleJson: function() {
         var requestData = {};
         requestData.sync = true;
-        requestData.handler = function(data) {
-            alert("json string:" + fui.json.stringify(data)); 
-        };
+        requestData.handler = function(data) { alert(data); };
         fui.ui.demo.getSimpleJson(requestData);
-    },
-
-    testException: function() {
-       var requestData = {};
-       requestData.handler = function(data) {
-            alert("json string:" + fui.json.stringify(data));
-        };
-        var c = fui.ui.content;
-		c.internal.sendAPI(this, this.TEST_EXCEPTION, requestData);
-    },
-
-    testauthorization: function() {
-       var requestData = {};
-       requestData.handler = function(data) {
-            alert("json string:" + fui.json.stringify(data));
-        };
-        var c = fui.ui.content;
-		c.internal.sendAPI(this, "testauthorization", requestData);
-    },
-
-    testtemplate: function(handler) {
-       var requestData = {};
-       requestData.handler = handler || function(data) {
-            alert("json string:" + fui.json.stringify(data));
-        };
-        var c = fui.ui.content;
-		c.internal.sendAPI(this, "demotemplate", requestData);
     }
 };
 

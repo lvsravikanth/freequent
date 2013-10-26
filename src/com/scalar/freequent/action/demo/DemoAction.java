@@ -10,6 +10,8 @@ import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.response.Response;
 
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -25,9 +27,23 @@ public class DemoAction  extends AbstractActionController {
     }
 
     public void simpleJson (Request request, Object command, Map<String, Object> data) throws ScalarActionException {
-        data.put ("jsonKey1", "jsonValue1");
+		List list = new ArrayList();
+		list.add("apples");
+		list.add("banana");
+		list.add("graphes");
+		list.add("aaaa");
+		list.add("xxxx");
+		list.add("ZZZZZ");
+		data.put ("jsonKey1", "jsonValue1");
         data.put ("jsonKey2", "jsonValue2");
-    }
+		data.put ("jsonKey3", "jsonValue3");
+		data.put ("Combo", list);
+
+		List<Map<String, Object>> lsNew = new ArrayList<Map<String, Object>>();
+
+		lsNew.add(data);
+
+	}
 
 	public void demotemplate (Request request, Object command, Map<String, Object> data) throws ScalarActionException {
 		data.put (Response.TEMPLATE_ATTRIBUTE, "demo/demotemplate");

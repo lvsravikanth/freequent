@@ -36,8 +36,12 @@ public class ManageUsersAction  extends AbstractActionController {
     public void runsearch(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
         UserService userService = ServiceFactory.getService(UserService.class, request);
         List<User> users = null;
-        try {
-			users = userService.manageUserSearch();
+		Map<String, String> paramMap = new HashMap<String, String>();
+		try {
+			paramMap.put(User.USER_ID, request.getParameter(User.USER_ID));
+			paramMap.put(User.FIRST_NAME, request.getParameter(User.FIRST_NAME));
+			paramMap.put(User.LAST_NAME, request.getParameter(User.LAST_NAME));
+			users = userService.getUsers(paramMap);
         } catch (ScalarServiceException e) {
             throw ScalarActionException.create(e.getMsgObject(), e);
         }
@@ -60,13 +64,14 @@ public class ManageUsersAction  extends AbstractActionController {
     private List<HashMap<String,Object>> convertToMap(List<User> users) {
         List<HashMap<String,Object>> items = new ArrayList<HashMap<String,Object>>();
         for (User user: users) {
-            HashMap<String, Object> usermap = new HashMap<String,Object>();
-            usermap.put("userid", user.getUserId());
-            usermap.put("firstname", user.getFirstName());
-            usermap.put("middlename", user.getMiddleName());
-            usermap.put("lastname", user.getLastName());
-
-            items.add(usermap);
+            HashMap<String, Object> userMap = new HashMap<String,Object>();
+            userMap.put(User.USER_ID, user.getUserId());
+            userMap.put(User.FIRST_NAME, user.getFirstName());
+            userMap.put(User.MIDDLE_NAME, user.getMiddleName());
+            userMap.put(User.LAST_NAME, user.getLastName());
+			userMap.put(User.DISABLED, user.isDisabled());
+			userMap.put(User.EXPIRESON, user.getExpiresOn());
+			items.add(userMap);
         }
 
         return items;
