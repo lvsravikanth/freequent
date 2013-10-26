@@ -22,10 +22,14 @@
 .fui-html textarea.x-form-field{
 	padding: 2px 3px;}
 
-.fui-html input.x-form-text {
-	height: 18px;
-	padding: 2px 0;
-	text-indent: 3px;}
+.fui-html input {
+	border: 1px solid #C3C3C3;
+	border-radius: 3px 3px 3px 3px;
+	padding: 5px 8px;
+	text-indent: 2px;
+	width: 166px;
+	font-weight: normal;
+	font-size: 13px;}
 
 .fui-html .x-grid-row .x-grid-cell {
 	background-color: transparent !important;}
