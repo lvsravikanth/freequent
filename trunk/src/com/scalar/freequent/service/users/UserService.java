@@ -15,4 +15,7 @@ public interface UserService {
     public List<User> getAllUsers() throws ScalarServiceException;
 
 	public List<User> getUsers(Map<String, String> searchParams) throws ScalarServiceException;
+
+	public User findById(String userId) throws ScalarServiceException;
+
 }

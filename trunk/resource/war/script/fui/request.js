@@ -11,8 +11,8 @@ fui.request = {
 		handler = handler || fui.handler.build(requestData);
 		requestData.handler = handler;
 
-		//context = context || fui.context.build(requestData);
-		//requestData.context = context;
+		context = context || fui.context.build(requestData);
+		requestData.context = context;
 
 		var request = new fui.Request();
 		fui.lang.combine(request, requestData, { precedent: "right", combineAs: "intersection", clone: false });

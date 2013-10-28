@@ -5,9 +5,12 @@ import org.apache.commons.logging.LogFactory;
 import com.scalar.freequent.web.spring.controller.AbstractActionController;
 import com.scalar.freequent.service.users.UserService;
 import com.scalar.freequent.auth.User;
+import com.scalar.freequent.util.StringUtil;
+import com.scalar.freequent.l10n.ServiceResource;
 import com.scalar.core.request.Request;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.ScalarServiceException;
+import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.response.Response;
 
@@ -29,7 +32,17 @@ public class ManageUsersAction  extends AbstractActionController {
 	 */
 	public static final String TOTAL_ATTRIBUTE = "total";
 
+	/**
+	 * Represents the user id value for to create new user.
+	 */
+	public static final String NEW_USER_ID = "fui-new-user";
+
+	public static final String ATTR_USER_ID = "userId";
+
+	public static final String ATTR_USER = "user";
+
     public void defaultProcess(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
+
         data.put (Response.TEMPLATE_ATTRIBUTE, "user/manageusers");
     }
 
@@ -58,6 +71,25 @@ public class ManageUsersAction  extends AbstractActionController {
 	 * @throws ScalarActionException
 	 */
 	public void load(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
+		String userId = request.getParameter(ATTR_USER_ID);
+		if (StringUtil.isEmpty(userId)) {
+			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.USER_ID_REQUIRED), null);
+		}
+		if (NEW_USER_ID.equals(userId)) {
+			data.put(ATTR_USER, new User());
+		} else {
+			// load user
+			UserService userService = ServiceFactory.getService(UserService.class, request);
+			try {
+				User user = userService.findById(userId);
+				if (user == null) {
+					throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_FIND_USER, userId), null);
+				}
+				data.put(ATTR_USER, user);
+			} catch (ScalarServiceException e) {
+				throw ScalarActionException.create(e.getMsgObject(), e);
+			}
+		}
 		data.put(Response.TEMPLATE_ATTRIBUTE, "user/usertemplate"); 
 	}
 

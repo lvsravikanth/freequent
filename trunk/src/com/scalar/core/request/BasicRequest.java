@@ -70,6 +70,16 @@ public class BasicRequest extends AbstractRequest implements Request {
      */
     protected Object wrappedObject;
 
+	/**
+	 * The <code>Context</code> for this <code>Request</code>.
+	 */
+	protected Context context = new BasicContext();
+
+	/**
+	 * The properties for this <code>Request</code>.
+	 */
+	protected Properties properties = new Properties();
+
     /**
      * Constructs a new <code>BasicRequest</code> object. This is the default constructor.
      */
@@ -246,5 +256,21 @@ public class BasicRequest extends AbstractRequest implements Request {
 		attributes.put(ID, getId());
 
 		return attributes;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+	public Context getContext() {
+		return context;
+	}
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
+
+	public Properties getProperties() {
+		return properties;
 	}
 }

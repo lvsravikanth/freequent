@@ -3,10 +3,7 @@ package com.scalar.core.request;
 import com.scalar.freequent.auth.User;
 
 import java.io.Serializable;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.Enumeration;
+import java.util.*;
 
 /**
  * User: Sujan Kumar Suppala
@@ -236,4 +233,36 @@ public interface Request extends Serializable {
 	 * @return the output attributes
 	 */
 	public Map<String, String> getOutputAttributes();
+
+	/**
+	 * Sets the context for this <code>Request</code>.
+	 *
+	 * @param context the context
+	 * @see #getContext()
+	 */
+	public void setContext(Context context);
+
+	/**
+	 * Returns the context for this <code>Request</code>.
+	 *
+	 * @return the context
+	 * @see #setContext(Context)
+	 */
+	public Context getContext();
+
+	/**
+	 * Set the request properties.
+	 *
+	 * @param properties the properties.
+	 * @see #getProperties()
+	 */
+	public void setProperties(Properties properties);
+
+	/**
+	 * Returns the request properties.
+	 *
+	 * @return the request properties
+	 * @see #setProperties(Properties)
+	 */
+	public Properties getProperties();
 }
