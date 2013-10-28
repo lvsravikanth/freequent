@@ -6,7 +6,9 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 import org.springframework.web.servlet.mvc.multiaction.MethodNameResolver;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +27,7 @@ import com.scalar.core.util.TimeZoneUtil;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.ScalarLoggedException;
 import com.scalar.core.ScalarAuthException;
+import com.scalar.core.ScalarValidationException;
 import com.scalar.freequent.web.session.SessionParameters;
 import com.scalar.freequent.web.util.ErrorInfoUtil;
 import com.scalar.freequent.l10n.MessageResource;
@@ -155,5 +158,104 @@ public abstract class AbstractActionController extends AbstractController implem
     public Capability[] getRequiredCapabilities(Request request) {
         return new Capability[0];
     }
+
+	/**
+	 * Create a new binder instance for the given command and request.
+	 * <p>Called by {@link #bindAndValidate}. Can be overridden to plug in
+	 * custom ServletRequestDataBinder instances.
+	 * <p>The default implementation creates a standard ServletRequestDataBinder
+	 * and invokes {@link #prepareBinder} and {@link #initBinder}.
+	 * <p>Note that neither {@link #prepareBinder} nor {@link #initBinder} will
+	 * be invoked automatically if you override this method! Call those methods
+	 * at appropriate points of your overridden method.
+	 * @param request current HTTP request
+	 * @param command the command to bind onto
+	 * @return the new binder instance
+	 * @throws Exception in case of invalid state or arguments
+	 * @see #bindAndValidate
+	 * @see #prepareBinder
+	 * @see #initBinder
+	 */
+	protected final ServletRequestDataBinder createBinder(HttpServletRequest request, Object command)
+	    throws ScalarActionException {
+
+		ServletRequestDataBinder binder = new ServletRequestDataBinder(command, "command");
+		initBinder(request, binder);
+		return binder;
+	}
+
+	/**
+	 * Override this method to initialize the binder with any custom editors.
+	 *
+	 * @param request
+	 * @param binder
+	 * @throws Exception
+	 */
+	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws ScalarActionException {
+
+	}
+
+	/**
+	 * Callback for custom post-processing in terms of binding.
+	 * Called on each submit, after standard binding but before validation.
+	 * <p>The default implementation delegates to {@link #onBind(HttpServletRequest, Object)}.
+	 * @param request current HTTP request
+	 * @param command the command object to perform further binding on
+	 * @param errors validation errors holder, allowing for additional
+	 * custom registration of binding errors
+	 * @throws Exception in case of invalid state or arguments
+	 */
+	protected void onBind(HttpServletRequest request, Object command, BindException errors) throws ScalarActionException {
+
+	}
+
+	/**
+	 * Callback for custom post-processing in terms of binding and validation.
+	 * Called on each submit, after standard binding and validation,
+	 * but before error evaluation.
+	 * <p>The default implementation is empty.
+	 * @param request current HTTP request
+	 * @param command the command object, still allowing for further binding
+	 * @param errors validation errors holder, allowing for additional
+	 * custom validation
+	 * @throws Exception in case of invalid state or arguments
+	 * @see #bindAndValidate
+	 * @see org.springframework.validation.Errors
+	 */
+	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors)
+			throws ScalarActionException {
+	}
+
+	/**
+	 * Bind the parameters of the given request to the given command object.
+	 * @param request current HTTP request
+	 * @param command the command to bind onto
+	 * @return the ServletRequestDataBinder instance for additional custom validation
+	 * @throws Exception in case of invalid state or arguments
+	 */
+	protected final ServletRequestDataBinder bindAndValidate(Object command, HttpServletRequest request) throws ScalarActionException, ScalarValidationException {
+		ServletRequestDataBinder binder = createBinder(request, command);
+		initBinder(request, binder);
+		binder.bind(request);
+		BindException errors = new BindException(binder.getBindingResult());
+		onBind(request, command, errors);
+		validate(command, errors);
+		onBindAndValidate(request, command, errors);
+
+		return binder;
+	}
+
+	/**
+	 * Validation method which will be called upon calling bindAndValidate method.
+	 *
+	 * @param command
+	 * @param errors
+	 * @throws ScalarValidationException
+	 *
+	 * @see #bindAndValidate(Object, javax.servlet.http.HttpServletRequest)
+	 */
+	protected void validate(Object command, BindException errors) throws ScalarValidationException {
+
+	}
 }
 

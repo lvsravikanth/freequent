@@ -16,6 +16,8 @@ public final class Constants {
 	 */
 	public static final String EDITOR_ID_ATTRIBUTE = ".fui.editor.id";
 
+	public static final String NEW_EDITOR_ID_VALUE = "fui-editor-object-new-";
+
 	public static final String FORM = "form";
 
 	private Constants() {}

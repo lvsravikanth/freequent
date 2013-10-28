@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.scalar.core.service.AbstractService;
 import com.scalar.core.ScalarServiceException;
+import com.scalar.core.ScalarException;
 import com.scalar.core.jdbc.DAOFactory;
 import com.scalar.freequent.auth.User;
 import com.scalar.freequent.dao.UserDataDAO;
@@ -52,5 +53,30 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
 		UserDataRow userDataRow = userDataDAO.findByPrimaryKey(userId);
 		return UserDataDAO.rowToData(userDataRow);
+	}
+
+	public boolean exists(String userId) throws ScalarServiceException {
+		UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
+		return userDataDAO.exists(userId);
+	}
+
+	public boolean insertOrUpdate(User user, boolean insert, boolean updatedPwd) throws ScalarServiceException {
+		UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
+		if (insert) {
+			try {
+				userDataDAO.insert(UserDataDAO.dataToRow(user, false, false));
+			} catch (ScalarException e) {
+				throw ScalarServiceException.create(e.getMsgObject(), e);
+			}
+		} else {
+			// update user
+			try {
+				userDataDAO.update(UserDataDAO.dataToRow(user, !updatedPwd, true));
+			} catch (ScalarException e) {
+				throw ScalarServiceException.create(e.getMsgObject(), e);
+			}
+		}
+
+		return true;
 	}
 }

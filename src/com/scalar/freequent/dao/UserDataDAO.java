@@ -59,7 +59,13 @@ public class UserDataDAO extends AbstractDAO {
         return getJdbcTemplate().queryForInt(query, username, password) != 0;
     }
 
-    /**
+	public boolean exists (String userId) {
+		String query = "SELECT COUNT(*) FROM " + TABLE_NAME
+                            + " WHERE " + COL_USER_ID + " = ? ";
+		return getJdbcTemplate().queryForInt(query, userId) != 0;
+	}
+
+	/**
      * Returns the User object for the given userId.
      *
      * @param userId
@@ -171,7 +177,7 @@ public class UserDataDAO extends AbstractDAO {
         });
     }
 
-    public void insert (UserDataRow row) {
+    public int insert (UserDataRow row) {
         StringBuilder query = new StringBuilder();
 		String sep = "";
         query.append ("insert into " + TABLE_NAME + " (");
@@ -186,7 +192,7 @@ public class UserDataDAO extends AbstractDAO {
 		query.append(sep).append(COL_CREATEDON);
 		query.append(") values (?, ?, ?, ?, ?, ? ,? ,? ,?)");
 
-		getJdbcTemplate().update(query.toString(),
+		return getJdbcTemplate().update(query.toString(),
                 row.getUserId(),
                 row.getPassword(),
                 row.getFirstName(),
@@ -199,7 +205,7 @@ public class UserDataDAO extends AbstractDAO {
 		);
     }
 
-    public void update (UserDataRow row) {
+    public int update (UserDataRow row) {
         StringBuilder query = new StringBuilder();
         String sep = "";
         query.append ("update " + TABLE_NAME + " set ");
@@ -224,7 +230,7 @@ public class UserDataDAO extends AbstractDAO {
 		args.add ("CURRENT_TIMESTAMP");
 		args.add (row.getUserId());
 
-        getJdbcTemplate().update(query.toString(), args);
+        return getJdbcTemplate().update(query.toString(), args);
     }
 
     public static User rowToData (UserDataRow row) {

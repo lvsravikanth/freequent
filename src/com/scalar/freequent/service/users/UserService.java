@@ -18,4 +18,8 @@ public interface UserService {
 
 	public User findById(String userId) throws ScalarServiceException;
 
+	public boolean exists (String userId) throws ScalarServiceException;
+
+	public boolean insertOrUpdate (User user, boolean insert, boolean updatedPwd) throws ScalarServiceException;
+
 }

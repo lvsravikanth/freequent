@@ -2,18 +2,23 @@ package com.scalar.freequent.action;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.validation.BindException;
 import com.scalar.freequent.web.spring.controller.AbstractActionController;
 import com.scalar.freequent.service.users.UserService;
 import com.scalar.freequent.auth.User;
 import com.scalar.freequent.util.StringUtil;
+import com.scalar.freequent.util.Constants;
 import com.scalar.freequent.l10n.ServiceResource;
+import com.scalar.freequent.l10n.ActionResource;
 import com.scalar.core.request.Request;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.ScalarServiceException;
+import com.scalar.core.ScalarValidationException;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.response.Response;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
@@ -93,7 +98,66 @@ public class ManageUsersAction  extends AbstractActionController {
 		data.put(Response.TEMPLATE_ATTRIBUTE, "user/usertemplate"); 
 	}
 
-    private List<HashMap<String,Object>> convertToMap(List<User> users) {
+	/**
+	 * Action method to save the user data.
+	 *
+	 * @param request
+	 * @param command
+	 * @param data
+	 * @throws ScalarActionException
+	 */
+	public void save(Request request, Object command, Map<String, Object> data) throws ScalarActionException, ScalarValidationException {
+		User user = new User();
+		bindAndValidate(user, (HttpServletRequest)request.getWrappedObject());
+		UserService userService = ServiceFactory.getService(UserService.class, request);
+
+		// check whether the request is from new editor
+		String editorId = request.getParameter(Constants.EDITOR_ID_ATTRIBUTE);
+		if (editorId.startsWith(Constants.NEW_EDITOR_ID_VALUE)) {
+			// creating a new user
+			// check whether the new userId already exists
+			try {
+				if (userService.exists(user.getUserId())) {
+					throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.USERID_ALREADY_EXISTS, user.getUserId()), null);
+				} else {
+					userService.insertOrUpdate(user, true, true);
+				}
+			} catch (ScalarServiceException e) {
+				throw ScalarActionException.create(e.getMsgObject(), e);
+			}
+		} else {
+			// update user
+			try {
+				if (!userService.exists(user.getUserId())) {
+					throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.USERID_DOES_NOT_EXISTS, user.getUserId()), null);
+				} else {
+					User oldUser = userService.findById(user.getUserId());
+					boolean passwordUpdated = !oldUser.getPassword().equals(user.getPassword());
+					userService.insertOrUpdate(user, false, passwordUpdated);
+				}
+			} catch (ScalarServiceException e) {
+				throw ScalarActionException.create(e.getMsgObject(), e);
+			}
+		}
+
+		try {
+			user = userService.findById(user.getUserId());
+			data.put(ATTR_USER, user);
+		} catch (ScalarServiceException e) {
+			throw ScalarActionException.create(e.getMsgObject(), e);
+		}
+	}
+
+	protected void validate(Object command, BindException errors) throws ScalarValidationException {
+		super.validate(command, errors);
+		User user = (User)command;
+
+		if (StringUtil.isEmpty(user.getUserId())) {
+			throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.USER_ID_REQUIRED), null);
+		}
+	}
+
+	private List<HashMap<String,Object>> convertToMap(List<User> users) {
         List<HashMap<String,Object>> items = new ArrayList<HashMap<String,Object>>();
         for (User user: users) {
             HashMap<String, Object> userMap = new HashMap<String,Object>();
