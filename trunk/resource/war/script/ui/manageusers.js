@@ -8,6 +8,8 @@ fui.ui.manageusers = {
 
     ID_ATTRIBUTE: "id",
 
+	NEW_USER_ID: "fui-new-user",
+
 	/**
 	 * The action key
 	 */
@@ -65,13 +67,14 @@ fui.ui.manageusers = {
         };
     },
 
-	edit: function(userid) {
+	edit: function(userId) {
 		var requestData = {
-			content: { userId: userid ? userid : "" }
+			content: { userId: userId ? userId : "" }
 			};
+		var editorId = (userId && userId === this.NEW_USER_ID) ? null : userId;
 		var editConfig = {
 			type: fui.ui.type.USER,
-			id: userid,
+			id: editorId,
 			ACTION_KEY: fui.ui.manageusers.ACTION_KEY,
 			validate: this.validate //validate function for to validate the form
 		};
