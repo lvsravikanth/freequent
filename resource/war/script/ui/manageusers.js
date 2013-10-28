@@ -67,7 +67,7 @@ fui.ui.manageusers = {
 
 	edit: function(userid) {
 		var requestData = {
-			content: { userid: userid ? userid : "" }
+			content: { userId: userid ? userid : "" }
 			};
 		var editConfig = {
 			type: fui.ui.type.USER,

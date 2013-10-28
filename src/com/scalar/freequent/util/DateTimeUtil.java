@@ -3,11 +3,13 @@ package com.scalar.freequent.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.Date;
-import java.util.Calendar;
+import java.util.*;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import com.scalar.core.request.Context;
+import com.scalar.core.util.LocaleUtil;
+import com.scalar.core.util.TimeZoneUtil;
 
 /**
  * The <code>DateTimeUtil</code> class provides utility methods for working with date and time.
@@ -19,6 +21,12 @@ import java.text.DateFormat;
 public class DateTimeUtil {
 
     protected static final Log logger = LogFactory.getLog(DateTimeUtil.class);
+
+	public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
+
+	public static final String DEFAULT_TIME_FORMAT = "hh:mm:ss a";
+
+	public static final String DEFAULT_DATE_TIME_FORMAT =  DEFAULT_DATE_FORMAT + " " + DEFAULT_TIME_FORMAT;
 
 	/**
 	 * Constant used to define the number of milliseconds in a day.
@@ -60,7 +68,8 @@ public class DateTimeUtil {
 	 * @return localized <code>DateFormat</code>
 	 */
 	public static DateFormat getDateFormat(Locale locale) {
-		return DateFormat.getDateInstance(DateFormat.SHORT, locale);
+		//return DateFormat.getDateInstance(DateFormat.SHORT, locale);
+		return new SimpleDateFormat(DEFAULT_DATE_FORMAT, locale);
 	}
 
 	/**
@@ -71,7 +80,13 @@ public class DateTimeUtil {
 	 * @return <code>DateFormat</code> object which formats and parses dates or time in a language-independent manner.
 	 */
 	public static DateFormat getDateTimeFormat(Locale locale) {
-		return DateFormat.getDateInstance(DateFormat.SHORT, locale);
+		//return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
+		return new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT, locale);
+	}
+
+	public static DateFormat getTimeFormat(Locale locale) {
+		//return DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		return new SimpleDateFormat(DEFAULT_TIME_FORMAT, locale);
 	}
 
 	/**
@@ -121,6 +136,69 @@ public class DateTimeUtil {
 		calendar.set(Calendar.MILLISECOND, 0);
 
 		return calendar.getTime();
+	}
+
+	/**
+	 * Returns the date pattern for this context.
+	 *
+	 * @param ctx
+	 * @return
+	 */
+	public static String getDatePattern(Context ctx) {
+		String datePattern = null;
+		if (ctx != null) {
+			Object format = ctx.get(Context.FORMAT_KEY);
+			if (format instanceof Map) {
+				datePattern = (String)((Map)format).get(Context.FORMAT_DATE_KEY);
+			}
+		}
+
+		return datePattern==null ? DEFAULT_DATE_FORMAT : datePattern;
+	}
+
+	/**
+	 * Returns the time pattern for this context.
+	 *
+	 * @param ctx
+	 * @return
+	 */
+	public static String getTimePattern(Context ctx) {
+		String timePattern = null;
+		if (ctx != null) {
+			Object format = ctx.get(Context.FORMAT_KEY);
+			if (format instanceof Map) {
+				timePattern = (String)((Map)format).get(Context.FORMAT_TIME_KEY);
+			}
+		}
+
+		return timePattern==null ? DEFAULT_TIME_FORMAT : timePattern;
+	}
+
+	/**
+	 * Returns the datetime pattern for this context.
+	 *
+	 * @param ctx
+	 * @return
+	 */
+	public static String getDateTimePattern(Context ctx) {
+		String dateTimePattern = null;
+		if (ctx != null) {
+			Object format = ctx.get(Context.FORMAT_KEY);
+			if (format instanceof Map) {
+				dateTimePattern = (String)((Map)format).get(Context.FORMAT_DATE_TIME_KEY);
+			}
+		}
+
+		return dateTimePattern==null ? DEFAULT_DATE_TIME_FORMAT : dateTimePattern;
+	}
+
+	public static DateFormat getDateFormatter(Context ctx) {
+		Locale locale = LocaleUtil.getLocale(ctx);
+		TimeZone timeZone = TimeZoneUtil.getTimeZone(ctx);
+		DateFormat dateFormatter = getDateFormat(locale);
+		dateFormatter.setTimeZone(timeZone);
+
+		return dateFormatter;
 	}
 }
 

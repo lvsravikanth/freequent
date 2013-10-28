@@ -11,6 +11,11 @@ import com.scalar.freequent.web.spring.controller.AbstractControllerUtil;
 import com.scalar.freequent.web.session.SessionParameters;
 import com.scalar.freequent.auth.User;
 import com.scalar.core.response.Response;
+import com.scalar.core.ScalarActionException;
+
+import java.util.Properties;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -65,5 +70,37 @@ public class RequestUtil {
 
     public static StringBuffer getRequestURL(Request request) {
 		return ((HttpServletRequest)request.getWrappedObject()).getRequestURL();
+	}
+
+	/**
+	 * Returns the properties from the request.
+	 *
+	 * @param request the current <code>RequestService</code>
+	 * @param context the context
+	 * @return the properties from the request
+	 * @throws ScalarActionException if there is a problem getting the properties
+	 */
+	public static Properties getProperties(Request request, Context context)  throws ScalarActionException {
+		if ( logger.isDebugEnabled() ) {
+			logger.debug("Building request properties");
+		}
+
+		// Create the attributes
+		Properties properties = new Properties();
+		Enumeration<?> enumeration = request.getParameterNames();
+		while ( enumeration.hasMoreElements() ) {
+			String name = (String)enumeration.nextElement();
+			String value = request.getParameter(name);
+			if ( name.startsWith(Context.PREFIX) ) {
+				context.put(name.substring(Context.PREFIX_LENGTH), value);
+			} else {
+				properties.setProperty(name, value);
+			}
+		}
+
+		// Sanitize the context
+		context.sanitize();
+
+		return properties;
 	}
 }

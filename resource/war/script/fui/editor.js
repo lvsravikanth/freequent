@@ -718,7 +718,7 @@ fui.extend(fui.editor.Editor,
 				return orgErrorHandler(message, rootMessage);
 			}
 
-			return fui.errorHandler(message, rootMessage);
+			return fui.ui.errorHandler(message, rootMessage);
 		});
 
 		var orgAuthHandler = requestData.authorizationHandler;
@@ -727,7 +727,7 @@ fui.extend(fui.editor.Editor,
 			if (orgAuthHandler) {
 				return orgAuthHandler(response);
 			}
-			return fui.authorizationHandler(response);
+			return fui.ui.authorizationHandler(response);
 		});
 
 		this.showBlock();

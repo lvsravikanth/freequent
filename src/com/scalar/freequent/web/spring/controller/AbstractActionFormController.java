@@ -14,11 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.lang.reflect.Method;
@@ -32,14 +28,15 @@ import com.scalar.freequent.l10n.FrameworkResource;
 import com.scalar.freequent.auth.Capability;
 import com.scalar.freequent.auth.User;
 import com.scalar.freequent.util.StringUtil;
-import com.scalar.core.request.Request;
-import com.scalar.core.request.BasicRequest;
-import com.scalar.core.request.RequestUtil;
+import com.scalar.freequent.util.DateTimeUtil;
+import com.scalar.core.request.*;
 import com.scalar.core.response.Response;
 import com.scalar.core.response.BasicResponse;
 import com.scalar.core.response.ResponseFactory;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
+import com.scalar.core.util.LocaleUtil;
+import com.scalar.core.util.TimeZoneUtil;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.ScalarLoggedException;
 import com.scalar.core.ScalarAuthException;
@@ -73,6 +70,14 @@ public abstract class AbstractActionFormController extends SimpleFormController 
         } else {
 
             Request request = RequestUtil.prepareRequest(httpServletRequest);
+			// The context
+			Context context = new BasicContext();
+
+			// Get properties
+			Properties properties = RequestUtil.getProperties(request, context);
+
+			request.setProperties(properties);
+
             HashMap<String, Object> data = new HashMap<String, Object>();
             if (logger.isDebugEnabled()) {
                 logger.debug("================METHOD NAME=" + request.getMethod());
@@ -95,8 +100,31 @@ public abstract class AbstractActionFormController extends SimpleFormController 
                         throw ScalarAuthException.create (msgObject, null);
                     }
                 }
+
+				// Get the locale and time zone preferences values
+				String localeId = LocaleUtil.getUserLocaleId(request);
+				String timeZone = TimeZoneUtil.getUserTimeZoneId(request);
+				String datePattern = ((SimpleDateFormat) DateTimeUtil.getDateFormat(LocaleUtil.getLocale(localeId))).toPattern();
+				String timePattern = ((SimpleDateFormat)DateTimeUtil.getTimeFormat(LocaleUtil.getLocale(localeId))).toPattern();
+				String dateTimePattern = ((SimpleDateFormat)DateTimeUtil.getDateTimeFormat(LocaleUtil.getLocale(localeId))).toPattern();
+
+
+				Context ctx = request.getContext();
+				ctx.put(Context.LOCALE_KEY, localeId);
+				ctx.put(Context.TIME_ZONE_KEY, timeZone);
+				Map<String,String> formatsMap = null;//(Map)ctx.get(Context.FORMAT_KEY);
+				if (formatsMap == null) {
+					formatsMap = new HashMap<String, String>();
+					ctx.put(Context.FORMAT_KEY, formatsMap);
+				}
+				formatsMap.put(Context.FORMAT_DATE_KEY, datePattern);
+				formatsMap.put(Context.FORMAT_TIME_KEY, timePattern);
+				formatsMap.put(Context.FORMAT_DATE_TIME_KEY, dateTimePattern);
+				// Push the context into data
+				data.put(Context.CONTEXT_ATTRIBUTE, request.getContext());
+
                 // delegate to action method
-                AbstractControllerUtil.getInstance().invokeNamedMethod(this, request.getMethod(), request, null, data);
+                AbstractControllerUtil.getInstance().invokeNamedMethod(this, request.getMethod(), request, command, data);
                 Response response = ResponseFactory.createResponse(request.getResponseDataFormat(), request, data);
                 response.setWrappedObject(httpServletResponse);
                 response.load(data);

@@ -57,10 +57,11 @@ fui.provide("fui.resource.internal");
 fui.resource.internal = {
 	catalog: {},
 	getCatalog: function(basename) {
+		var catalog;
 		var handler = function(messageMap) {
-
-			fui.resource.setMessages(basename, fui.secure_eval(messageMap));
-			return messageMap;
+			messageMap = fui.secure_eval(messageMap);
+			fui.resource.setMessages(basename, messageMap);
+			catalog = messageMap;
 		};
 
 		var requestData = requestData || {};
@@ -74,5 +75,7 @@ fui.resource.internal = {
 
 		var request = fui.request.build(requestData);
 		fui.io.api(request);
+
+		return catalog;
 	}
 };

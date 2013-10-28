@@ -129,9 +129,6 @@ label.error {
 }
 .fui-form-block-container{
 	position:relative;
-	/*padding-bottom:1.5em;*/
-}
-.fui-form-block-container div{
 	padding-bottom:0.5em;
 }
 .fui-form-block-container label {

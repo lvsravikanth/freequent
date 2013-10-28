@@ -1,6 +1,7 @@
 <%@ page import="com.scalar.core.ContextUtil" %>
 <%@ page import="com.scalar.core.request.Request" %>
 <%@ page import="com.scalar.freequent.l10n.WorkspaceResource" %>
+<%@ page import="com.scalar.freequent.action.ManageUsersAction" %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -67,7 +68,7 @@
         });
 		fui.query("#newuser").button()
 			.click( function(event) {
-			fui.ui.manageusers.edit(null);
+			fui.ui.manageusers.edit("<%=ManageUsersAction.NEW_USER_ID%>");
 		});
 		fui.query("#reset").button();
 

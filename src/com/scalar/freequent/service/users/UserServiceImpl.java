@@ -47,4 +47,10 @@ public class UserServiceImpl extends AbstractService implements UserService {
 
 		return users;
     }
+
+	public User findById(String userId) throws ScalarServiceException {
+		UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
+		UserDataRow userDataRow = userDataDAO.findByPrimaryKey(userId);
+		return UserDataDAO.rowToData(userDataRow);
+	}
 }
