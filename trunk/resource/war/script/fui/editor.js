@@ -757,6 +757,14 @@ fui.extend(fui.editor.Editor,
 			requestData.ajaxMethod = 'POST';
 		}
 
+		if (this.ACTION_KEY) {
+			requestData.actionKey = this.ACTION_KEY;
+		}
+
+		if (this.formId) {
+			requestData.formId = this.formId;
+		}
+
 		var data = this.getData(requestData);
 		if ( !data ) {
 			return;
@@ -1075,7 +1083,7 @@ fui.extend(fui.editor.Editor,
 	hasChanged: function() {
 		//todo check whether the form is dirty, if form is available
 
-		return false;
+		return true;
 	},
 
 	/**
@@ -1419,7 +1427,7 @@ fui.editor.internal = {
 		requestData.content[e.TYPE_ATTRIBUTE] = type;
 		requestData.content[e.ID_ATTRIBUTE] = id;
 
-		requestData.actionKey = e.ACTION_KEY;
+		requestData.actionKey = requestData.actionKey || e.ACTION_KEY;
 		requestData.method = e.SAVE;
 
 		var request = fui.request.build(requestData);

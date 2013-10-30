@@ -11,6 +11,7 @@ import com.scalar.freequent.util.StringUtil;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Calendar;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -179,6 +180,7 @@ public class UserDataDAO extends AbstractDAO {
 
     public int insert (UserDataRow row) {
         StringBuilder query = new StringBuilder();
+		Calendar now = Calendar.getInstance();
 		String sep = "";
         query.append ("insert into " + TABLE_NAME + " (");
         query.append(sep).append (COL_USER_ID); sep = ",";
@@ -190,7 +192,9 @@ public class UserDataDAO extends AbstractDAO {
 		query.append(sep).append(COL_EXPIRESON);
 		query.append(sep).append(COL_CREATEDBY);
 		query.append(sep).append(COL_CREATEDON);
-		query.append(") values (?, ?, ?, ?, ?, ? ,? ,? ,?)");
+		query.append(sep).append(COL_MODIFIEDBY);
+		query.append(sep).append(COL_MODIFIEDON);
+		query.append(") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 		return getJdbcTemplate().update(query.toString(),
                 row.getUserId(),
@@ -200,14 +204,17 @@ public class UserDataDAO extends AbstractDAO {
                 row.getLastName(),
 				row.getDisabled(),
 				row.getExpiresOn(),
-				row.getUserId(),
-				"CURRENT_TIMESTAMP"
+				row.getCreatedBy(),
+				now.getTime(),
+				row.getCreatedBy(),
+				now.getTime()
 		);
     }
 
     public int update (UserDataRow row) {
         StringBuilder query = new StringBuilder();
-        String sep = "";
+		Calendar now = Calendar.getInstance();
+		String sep = "";
         query.append ("update " + TABLE_NAME + " set ");
         if( row.modPassword() ){ query.append(sep).append(COL_PASSWORD).append(" = ?"); sep = ","; }
         if( row.modFirstName() ){ query.append(sep).append(COL_FIRST_NAME).append(" = ?"); sep = ","; }
@@ -227,7 +234,7 @@ public class UserDataDAO extends AbstractDAO {
         if (row.modDisabled()) args.add (row.getDisabled());
         if (row.modExpiresOn()) args.add (row.getExpiresOn());
         if (row.modModifiedBy()) args.add (row.getUserId());
-		args.add ("CURRENT_TIMESTAMP");
+		args.add (now.getTime());
 		args.add (row.getUserId());
 
         return getJdbcTemplate().update(query.toString(), args);
