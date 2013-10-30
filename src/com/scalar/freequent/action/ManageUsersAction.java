@@ -3,14 +3,19 @@ package com.scalar.freequent.action;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import com.scalar.freequent.web.spring.controller.AbstractActionController;
+import com.scalar.freequent.web.spring.propertyeditor.CustomPrimitiveNumberEditor;
 import com.scalar.freequent.service.users.UserService;
 import com.scalar.freequent.auth.User;
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.Constants;
+import com.scalar.freequent.util.DateTimeUtil;
 import com.scalar.freequent.l10n.ServiceResource;
 import com.scalar.freequent.l10n.ActionResource;
 import com.scalar.core.request.Request;
+import com.scalar.core.request.Context;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.ScalarServiceException;
 import com.scalar.core.ScalarValidationException;
@@ -23,6 +28,9 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * User: Sujan Kumar Suppala
@@ -172,4 +180,12 @@ public class ManageUsersAction  extends AbstractActionController {
 
         return items;
     }
+
+	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws ScalarActionException {
+		super.initBinder(request, binder);
+		binder.registerCustomEditor(java.lang.Integer.TYPE, new CustomPrimitiveNumberEditor(java.lang.Integer.class, null, null));
+		Request fRequest = (Request)request.getAttribute(Request.REQUEST_ATTRIBUTE);
+		DateFormat df = DateTimeUtil.getDateFormatter(fRequest.getContext());
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
+	}
 }

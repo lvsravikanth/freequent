@@ -64,14 +64,18 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
 		if (insert) {
 			try {
-				userDataDAO.insert(UserDataDAO.dataToRow(user, false, false));
+				UserDataRow row = UserDataDAO.dataToRow(user, !updatedPwd, updatedPwd);
+				row.setCreatedBy(User.getActiveUser().getUserId());
+				userDataDAO.insert(row);
 			} catch (ScalarException e) {
 				throw ScalarServiceException.create(e.getMsgObject(), e);
 			}
 		} else {
 			// update user
 			try {
-				userDataDAO.update(UserDataDAO.dataToRow(user, !updatedPwd, true));
+				UserDataRow row = UserDataDAO.dataToRow(user, !updatedPwd, updatedPwd);
+				row.setModifiedBy(User.getActiveUser().getUserId());
+				userDataDAO.update(row);
 			} catch (ScalarException e) {
 				throw ScalarServiceException.create(e.getMsgObject(), e);
 			}

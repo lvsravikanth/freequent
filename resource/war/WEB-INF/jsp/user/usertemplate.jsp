@@ -18,7 +18,7 @@
 	Request fRequest = (Request)request.getAttribute(Request.REQUEST_ATTRIBUTE);
 	String context = ContextUtil.getContextPath(request);
 	String editorId = request.getParameter(Constants.EDITOR_ID_ATTRIBUTE);
-	String formId = request.getParameter(Constants.EDITOR_ID_ATTRIBUTE) + Constants.FORM;
+	String formId = request.getParameter(Constants.EDITOR_ID_ATTRIBUTE) + "-" + Constants.FORM;
 	Context ctx = fRequest.getContext();
 	Locale locale = LocaleUtil.getLocale(ctx);
 	TimeZone timeZone = TimeZoneUtil.getTimeZone(ctx);
