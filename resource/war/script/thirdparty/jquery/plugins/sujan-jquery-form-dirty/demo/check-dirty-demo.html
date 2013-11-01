@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Demo: Are You Sure? - a dirty forms jQuery Plugin</title>
+
+    <!-- 
+
+    We'll use an old version of jQuery to show we're backwards compatible. In 
+    production we recommend using a later version. e.g.
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+
+    -->
+
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="../jquery.sujan-form-dirty.js"></script>
+    <script>
+
+  
+	  function checkDirty() {
+		var isDirty = $('#testdirty').checkDirty();
+		alert("isDirty="+isDirty);
+	  }
+
+    </script>
+
+    <style type="text/css">
+      body {
+        font-family: myriad-pro-1, myriad-pro-2, 'Lucida Grande', 'Arial', sans-serif;
+        margin: 25px;
+      }
+
+      form {
+        width: 350px;
+        border: 1px solid #AA5303;
+        padding: 10px 20px;
+        background-image: -webkit-linear-gradient(top, rgba(170,83,3, 0.1), rgba(170,83,3, 0.5));
+        background-image: -moz-linear-gradient(top, rgba(170,83,3, 0.1), rgba(170,83,3, 0.5));
+        background-image: -ms-linear-gradient(top, rgba(170,83,3, 0.1), rgba(170,83,3, 0.5));
+        background-image: -o-linear-gradient(top, rgba(170,83,3, 0.1), rgba(170,83,3, 0.5));
+        background-image: linear-gradient(top, rgba(170,83,3, 0.1), rgba(170,83,3, 0.5));
+        border-radius: 5px;
+      }
+
+      /* A bit of custom styling on example 3 */
+      #example-3-form.dirty, #example-4-form.dirty {
+        box-shadow: 0 0 8px rgba(255, 0, 0, 1);
+        -webkit-box-shadow: 0 0 8px rgba(255, 0, 0, 1); 
+        -moz-box-shadow: 0 0 8px rgba(255, 0, 0, 1);
+        border:1px solid rgba(255,0,0, 0.8);
+      }
+
+      form h2 {
+        font-size: 22px;
+      }
+
+      form > div {
+        padding: 8px;
+        font-size: 12px;
+      }
+      form > div  input[type="text"],
+      form > div  textarea,
+      form > div  select,
+      form > div button {
+        float: right;
+        width: 200px;
+      }
+      
+      form > div  input[type="radio"],
+      form > div  input[type="checkbox"] {
+        display: inline-block;
+        margin-left: 130px;
+      }
+
+      form > div input[type="submit"] {
+        float: right;
+      }
+      form > div.buttons {
+        clear: both;
+        padding-bottom: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>jQuery Plugin Demo: checkDirty</h1>
+	<form id="testdirty">
+	
+		<input type="text" placeholder="type to make it dirty" name="t1" id="t1" value="defaultValue"/>
+		<select name="s1" id="s1">
+			<option value="one" selected>One</option>
+			<option value="two">Two</option>
+		</select>
+		<input type="file" name="f1"/>
+		<input type="checkbox" name="ch1"/>
+		<input type="radio" name="r1" value="r1"/> Radio 1
+		<input type="radio" name="r1" value="r2"/> Radio 2
+		
+		<input type="button" onclick="checkDirty()" value="check dirty"/>
+	</form>
+
+  </body>
+</html>
