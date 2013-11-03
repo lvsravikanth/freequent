@@ -84,6 +84,7 @@
         <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/noty/layouts/top.js"></script>
         <%--<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/jquery-loadmask-0.4/jquery.loadmask.fix.jquery.ui.js"></script>--%>
         <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/jquery-loadmask-0.4/jquery.loadmask.js"></script>
+        <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/sujan-jquery-form-dirty/jquery.sujan-form-dirty.js"></script>
 
 		<script type="text/javascript">
 			<%-- Configure VUI --%>

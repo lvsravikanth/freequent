@@ -21,7 +21,7 @@ fui.ui.workspace = {
 		var action = fui.workspace.getMessage(messageType);
 
 		var doneHandler = function() {
-			var w = fui.ui.workspace;
+			var w = fui.workspace;
 			if (data.object) {
 
 				var msg = w.getMessage("message.success.single");
@@ -29,7 +29,7 @@ fui.ui.workspace = {
 				var type = '';
 
 				name = fui.html.escape(data.object.name);
-				type = fui.html.escape(data.object.displayname);//fui.grid.getObjectTypeDisplayName(data.object));
+				type = fui.html.escape(data.type);//fui.grid.getObjectTypeDisplayName(data.object));
 
 				// show success msg
 				fui.notification.message(fui.string.replace(msg, {
@@ -40,12 +40,12 @@ fui.ui.workspace = {
 
 				// Content event
 				var contentEvent = new fui.ui.content.Event({
-					type: data.isNew? fui.content.event.CREATE : fui.content.event.UPDATE,
+					type: data.isNew? fui.ui.content.event.CREATE : fui.ui.content.event.UPDATE,
 							objects: [data.object]
 				});
 
 				// Publish it
-				fui.publish(fui.content.event.TOPIC, contentEvent);
+				fui.publish(fui.ui.content.event.TOPIC, contentEvent);
 			}
 		};
 		

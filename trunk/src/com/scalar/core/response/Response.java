@@ -65,6 +65,11 @@ public interface Response {
 	 */
 	public static final String ITEMS_ATTRIBUTE = "items";
 
+	/**
+	 * Constant used to identify the item attribute.
+	 */
+	public static final String ITEM_ATTRIBUTE = "item";
+
 
     public void setWrappedObject(Object wrappedObject);
 

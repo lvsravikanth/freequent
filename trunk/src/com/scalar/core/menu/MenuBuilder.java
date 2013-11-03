@@ -129,58 +129,14 @@ public class MenuBuilder {
             {
                 MenuType mainMenu = mainMenuList.get(i);
                 Menu userMainMenu = new Menu();
-                buildUserMenuFromXmlMenu(mainMenu, userMainMenu);
+                buildUserMenuFromXmlMenu(mainMenu, userMainMenu, user);
                 userMainMenuList.add(userMainMenu);
-                boolean hasCapability;
-                try {
-                    user.checkCapability(userMainMenu.getCapability());
-                    hasCapability = true;
-                } catch (ScalarAuthException e) {
-                    hasCapability = false;
-                }
-                if (userMainMenu.isEnabled() && hasCapability) {
-
-
-                    List<Menu> menuItemsList = userMainMenu.getMenuItems();
-                    int size = (menuItemsList != null) ? menuItemsList.size() : 0;
-                    for (int j = 0; j < size; j++) { //main menu items iterator
-                        Menu menuItem = menuItemsList.get(j);
-                        try {
-                            user.checkCapability(menuItem.getCapability());
-                            hasCapability = true;
-                        } catch (ScalarAuthException e) {
-                            hasCapability = false;
-                        }
-                        if (menuItem.isEnabled() && hasCapability) {
-                            List<Menu> subMenuItemsList = menuItem.getMenuItems();
-                            int subMenuItemsSize = (subMenuItemsList != null) ? subMenuItemsList.size() : 0;
-                            for (int k = 0; k < subMenuItemsSize; k++) {
-                                Menu subMenuItem = subMenuItemsList.get(k);
-                                try {
-                                    user.checkCapability(subMenuItem.getCapability());
-                                    hasCapability = true;
-                                } catch (ScalarAuthException e) {
-                                    hasCapability = false;
-                                }
-                                if (subMenuItem.isEnabled() && hasCapability) {
-                                    //keep enabled
-                                } else {
-                                    subMenuItem.setEnabled(false);
-                                }
-                            }
-                        } else {
-                            menuItem.setEnabled(false);
-                        }
-                    }
-                } else { //disable menu for this user
-                    mainMenu.setEnabled(false);
-                }
             }
         }
         return userMainMenuList;
     }
 
-    private void buildUserMenuFromXmlMenu(MenuType xmlMenu, Menu userMenu) {
+    private void buildUserMenuFromXmlMenu(MenuType xmlMenu, Menu userMenu, User user) {
         userMenu.setDisplay(xmlMenu.isDisplay());
         userMenu.setEnabled(xmlMenu.isEnabled());
         CapabilityType capabilityType = xmlMenu.getCapability();
@@ -198,21 +154,33 @@ public class MenuBuilder {
         userMenu.setId(xmlMenu.getId());
         userMenu.setLink(xmlMenu.getLink());
         userMenu.setName(xmlMenu.getName());
-        MenuItemsType menuItemsType = xmlMenu.getMenuItems();
-        if (menuItemsType != null) {
-            List<MenuType> xmlMenuItemsList = menuItemsType.getMenu();
-            if (xmlMenuItemsList != null) {
-                int size = xmlMenuItemsList.size();
-                List<Menu> userMenuItemsList = new ArrayList<Menu>(size);
-                for (int i = 0; i < size; i++) {
-                    MenuType xmlMenuItem = xmlMenuItemsList.get(i);
-                    Menu userMenuItem = new Menu();
-                    buildUserMenuFromXmlMenu(xmlMenuItem, userMenuItem);
-                    userMenuItemsList.add(userMenuItem);
-                }
-                userMenu.setMenuItems(userMenuItemsList);
-            }
-        }
+		if (user != null) {
+			boolean hasCapability;
+			try {
+				user.checkCapability(userMenu.getCapability());
+				hasCapability = true;
+			} catch (ScalarAuthException e) {
+				hasCapability = false;
+			}
+			userMenu.setEnabled(hasCapability);
+		}
+		if (userMenu.isEnabled()) {
+			MenuItemsType menuItemsType = xmlMenu.getMenuItems();
+			if (menuItemsType != null) {
+				List<MenuType> xmlMenuItemsList = menuItemsType.getMenu();
+				if (xmlMenuItemsList != null) {
+					int size = xmlMenuItemsList.size();
+					List<Menu> userMenuItemsList = new ArrayList<Menu>(size);
+					for (int i = 0; i < size; i++) {
+						MenuType xmlMenuItem = xmlMenuItemsList.get(i);
+						Menu userMenuItem = new Menu();
+						buildUserMenuFromXmlMenu(xmlMenuItem, userMenuItem, user);
+						userMenuItemsList.add(userMenuItem);
+					}
+					userMenu.setMenuItems(userMenuItemsList);
+				}
+			}
+		}
     }
 
     public String getMenuId(String menuUri) throws JAXBException {
@@ -226,7 +194,7 @@ public class MenuBuilder {
             {
                 MenuType mainMenu = mainMenuList.get(i);
                 Menu userMainMenu = new Menu();
-                buildUserMenuFromXmlMenu(mainMenu, userMainMenu);
+                buildUserMenuFromXmlMenu(mainMenu, userMainMenu, null);
                 if (menuUri.equalsIgnoreCase(userMainMenu.getLink())) {
                     return userMainMenu.getId();
                 } else {

@@ -13,6 +13,8 @@
 <%@ page import="com.scalar.freequent.util.DateTimeUtil" %>
 <%@ page import="com.scalar.freequent.action.ManageUsersAction" %>
 <%@ page import="java.text.DateFormat" %>
+<%@ page import="com.scalar.freequent.auth.UserCapability" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
 	Request fRequest = (Request)request.getAttribute(Request.REQUEST_ATTRIBUTE);
@@ -78,17 +80,75 @@
 		<div class="fui-form-item-validation"><div id="expiresOn-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
 	</div>
+	<div id="capabilities-accordian">
+	  <h3>User Capabilities</h3>
+	  <div id="capabilities-content">
+			<table>
+				<thead>
+					<tr>
+						<th>Capability</th>
+						<th>Read</th>
+						<th>Write</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+				<%
+					Map<String, UserCapability> userCapabilityMap = user.getUserCapabilitiesMap();
+				%>
+					<c:forEach items="${capabilities}" var="capability" varStatus="loop">
+						<c:set var="capabilityName">${capability.name}</c:set>
+						<%
+							UserCapability userCapability = userCapabilityMap.get(pageContext.getAttribute("capabilityName"));
+							String hasRead = "";
+							String hasWrite = "";
+							String hasDelete = "";
+							if (userCapability != null) {
+								hasRead = userCapability.isHasRead() ? "checked" : "";
+								hasWrite = userCapability.isHasWrite() ? "checked" : "";
+								hasDelete = userCapability.isHasDelete() ? "checked" : "";
+							}
+						%>
+						<tr>
+							<td>
+								${capability.name}
+								<input type="hidden" value="${capability.name}" name="userCapabilities[${loop.index}].capabilityName" />
+							</td>
+							<td>
+								<c:if test="${capability.supportsRead}">
+									<input type="checkbox" name="userCapabilities[${loop.index}].hasRead" value="true" <%=hasRead%> />
+								</c:if>
+							</td>
+							<td>
+								<c:if test="${capability.supportsWrite}">
+									<input type="checkbox" name="userCapabilities[${loop.index}].hasWrite" value="true" <%=hasWrite%>/>
+								</c:if>
+							</td>
+							<td>
+								<c:if test="${capability.supportsDelete}">
+									<input type="checkbox" name="userCapabilities[${loop.index}].hasDelete" value="true" <%=hasDelete%>/>
+								</c:if>
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+	  </div>
+	</div>
 </div>
 </form>
 <script type="text/javascript">
 	fui.ready(function() {
 		fui.editor.find('<%=editorId%>').setFormId('<%=formId%>');
+
 		fui.query( "#expiresOn" ).datepicker({
 			dateFormat: fui.context.getContext()[fui.context.FORMAT_KEY].date,
 			showOn: "button",
       		buttonImage: "<%=context%>/theme/corporate/icon/calendar.gif",
       		buttonImageOnly: true
 		});
+
+		 fui.query( "#capabilities-accordian" ).accordion({ collapsible: true });
 
 		fui.query("#<%=formId%>").validate({
 			rules: {

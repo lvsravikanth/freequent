@@ -20,5 +20,11 @@ public final class Constants {
 
 	public static final String FORM = "form";
 
+	/**
+	 * consttant used to identify the item name.
+	 */
+	public static final String ITEM_NAME_ATTRIBUTE = "name";
+	public static final String CAPABILITIES_ATTRIBUTE = "capabilities";
+
 	private Constants() {}
 }

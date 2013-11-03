@@ -543,7 +543,7 @@ fui.extend(fui.editor.Editor,
 
 		// Mask
 		if ( this.ui) {
-			this.ui.mask(msg);
+			this.ui.parent().mask(msg);
         } else {
 			fui.query("body").mask(msg);
 		}
@@ -638,7 +638,7 @@ fui.extend(fui.editor.Editor,
 		// Unmask
 		if ( this.ui && !this.fullscreen ) {
 			if (this.ui) {  // TODO: fix this for the editor save scenario
-				this.ui.unmask();
+				this.ui.parent().unmask();
 			}
 		} else {
 			var body = fui.query("body");
@@ -1081,7 +1081,9 @@ fui.extend(fui.editor.Editor,
 	 * @public
 	 */
 	hasChanged: function() {
-		//todo check whether the form is dirty, if form is available
+		if (this.formId) {
+			return fui.query('#'+this.formId).checkDirty();
+		}
 
 		return true;
 	},
