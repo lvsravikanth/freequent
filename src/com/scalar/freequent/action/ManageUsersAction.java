@@ -9,16 +9,21 @@ import com.scalar.freequent.web.spring.controller.AbstractActionController;
 import com.scalar.freequent.web.spring.propertyeditor.CustomPrimitiveNumberEditor;
 import com.scalar.freequent.service.users.UserService;
 import com.scalar.freequent.auth.User;
+import com.scalar.freequent.auth.Capability;
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.Constants;
 import com.scalar.freequent.util.DateTimeUtil;
 import com.scalar.freequent.l10n.ServiceResource;
 import com.scalar.freequent.l10n.ActionResource;
+import com.scalar.freequent.dao.CapabilityInfoDAO;
+import com.scalar.freequent.dao.CapabilityInfoRow;
+import com.scalar.freequent.dao.UserCapabilityInfoDAO;
 import com.scalar.core.request.Request;
 import com.scalar.core.request.Context;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.ScalarServiceException;
 import com.scalar.core.ScalarValidationException;
+import com.scalar.core.jdbc.DAOFactory;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.response.Response;
@@ -103,6 +108,14 @@ public class ManageUsersAction  extends AbstractActionController {
 				throw ScalarActionException.create(e.getMsgObject(), e);
 			}
 		}
+		CapabilityInfoDAO capabilityInfoDAO = DAOFactory.getDAO(CapabilityInfoDAO.class, request);
+		List<CapabilityInfoRow> capabilityRows = capabilityInfoDAO.findAll();
+		List<Capability> capabilities = new ArrayList<Capability>();
+		for (CapabilityInfoRow capabilityRow: capabilityRows) {
+			capabilities.add (CapabilityInfoDAO.rowToData(capabilityRow));
+		}
+		data.put(Constants.CAPABILITIES_ATTRIBUTE, capabilities);
+
 		data.put(Response.TEMPLATE_ATTRIBUTE, "user/usertemplate"); 
 	}
 
@@ -150,7 +163,7 @@ public class ManageUsersAction  extends AbstractActionController {
 
 		try {
 			user = userService.findById(user.getUserId());
-			data.put(ATTR_USER, user);
+			data.put(Response.ITEM_ATTRIBUTE, convertToMap(user));
 		} catch (ScalarServiceException e) {
 			throw ScalarActionException.create(e.getMsgObject(), e);
 		}
@@ -168,18 +181,24 @@ public class ManageUsersAction  extends AbstractActionController {
 	private List<HashMap<String,Object>> convertToMap(List<User> users) {
         List<HashMap<String,Object>> items = new ArrayList<HashMap<String,Object>>();
         for (User user: users) {
-            HashMap<String, Object> userMap = new HashMap<String,Object>();
-            userMap.put(User.USER_ID, user.getUserId());
-            userMap.put(User.FIRST_NAME, user.getFirstName());
-            userMap.put(User.MIDDLE_NAME, user.getMiddleName());
-            userMap.put(User.LAST_NAME, user.getLastName());
-			userMap.put(User.DISABLED, user.isDisabled());
-			userMap.put(User.EXPIRESON, user.getExpiresOn());
+            HashMap<String, Object> userMap = convertToMap(user);
 			items.add(userMap);
         }
 
         return items;
     }
+
+	private HashMap<String, Object> convertToMap(User user) {
+		HashMap<String, Object> userMap = new HashMap<String,Object>();
+		userMap.put(User.USER_ID, user.getUserId());
+		userMap.put(User.FIRST_NAME, user.getFirstName());
+		userMap.put(User.MIDDLE_NAME, user.getMiddleName());
+		userMap.put(User.LAST_NAME, user.getLastName());
+		userMap.put(User.DISABLED, user.isDisabled());
+		userMap.put(User.EXPIRESON, user.getExpiresOn());
+		userMap.put(Constants.ITEM_NAME_ATTRIBUTE, user.getFirstName());
+		return userMap;
+	}
 
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws ScalarActionException {
 		super.initBinder(request, binder);
@@ -187,5 +206,16 @@ public class ManageUsersAction  extends AbstractActionController {
 		Request fRequest = (Request)request.getAttribute(Request.REQUEST_ATTRIBUTE);
 		DateFormat df = DateTimeUtil.getDateFormatter(fRequest.getContext());
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(df, true));
+	}
+
+	@Override
+	 public Capability[] getRequiredCapabilities(Request request) {
+		if ("load".equals(request.getMethod())) {
+			return new Capability[]{Capability.USER_READ};
+		} else if ("save".equals(request.getMethod())) {
+			return new Capability[]{Capability.USER_WRITE};
+		}
+
+		return new Capability[0];
 	}
 }

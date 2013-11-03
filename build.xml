@@ -246,6 +246,7 @@
             <fileset file="${commons-pool.jar}" />
             <fileset file="${commons-collections.jar}" />
             <fileset file="${commons-digester.jar}" />
+            <fileset file="${commons-lang.jar}" />
 			<fileset file="${tiles-api.jar}" />
         	<fileset file="${tiles-core.jar}" />
         	<fileset file="${tiles-jsp.jar}" />

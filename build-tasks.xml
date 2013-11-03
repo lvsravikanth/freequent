@@ -262,6 +262,7 @@
 		<fileset file="${commons-beanutils.jar}"/>
 		<fileset file="${commons-fileupload.jar}"/>
 		<fileset file="${commons-io.jar}"/>
+		<fileset file="${commons-lang.jar}"/>
 		<fileset file="${mysql-connector.jar}"/>
 		<fileset file="${jta.jar}"/>
         <fileset file="${dom4j.jar}"/>

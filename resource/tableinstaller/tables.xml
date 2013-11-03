@@ -62,6 +62,16 @@
 				<item column="MODIFIEDON" value="2013-10-16 00.00.00" />
 			</row>
 		</rowset>
+
+		<rowset table="ftCapabilityInfo">
+			<row>
+				<item column="name" value="USER"/>
+				<item column="supportsRead" value="true"/>
+				<item column="supportsWrite" value="true"/>
+				<item column="supportsDelete" value="true"/>
+			</row>
+		</rowset>
+
 	</tablegroup>
 
 </schema>

@@ -29,7 +29,7 @@ public class CapabilityInfoDAO extends AbstractDAO {
                     COL_NAME + "," +
                     COL_SUPPORTS_READ + "," +
                     COL_SUPPORTS_WRITE + "," +
-                    COL_SUPPORTS_DELETE + "," +
+                    COL_SUPPORTS_DELETE  +
                 " from " + TABLE_NAME + " ";
 
     public List<CapabilityInfoRow> findAll () {

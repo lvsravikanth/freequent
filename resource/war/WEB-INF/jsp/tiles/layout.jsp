@@ -14,9 +14,8 @@
 	Context ctx = (Context)request.getAttribute(Context.CONTEXT_ATTRIBUTE);
     String context = ContextUtil.getContextPath(request);
 	boolean loggedIn = (null != fRequest.getActiveUser());
-	Locale locale = LocaleUtil.getLocale(ctx);
-	TimeZone timeZone = TimeZoneUtil.getTimeZone(ctx);
-	Map<String, String> formatsMap = (Map)ctx.get(Context.FORMAT_KEY);
+	Locale locale = ctx != null ? LocaleUtil.getLocale(ctx) : (request.getLocale());
+	TimeZone timeZone = ctx != null ? TimeZoneUtil.getTimeZone(ctx) : TimeZone.getDefault();
 	String datePattern = DateTimeUtil.getDatePattern(ctx);//formatsMap.get(Context.FORMAT_DATE_KEY);
 	String timePattern = DateTimeUtil.getTimePattern(ctx);//formatsMap.get(Context.FORMAT_TIME_KEY);
 	String dateTimePattern = DateTimeUtil.getDateTimePattern(ctx);//formatsMap.get(Context.FORMAT_DATE_TIME_KEY);

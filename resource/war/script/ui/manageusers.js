@@ -75,6 +75,7 @@ fui.ui.manageusers = {
 		var editConfig = {
 			type: fui.ui.type.USER,
 			id: editorId,
+			idAttribute: 'userid',
 			ACTION_KEY: fui.ui.manageusers.ACTION_KEY,
 			validate: this.validate //validate function for to validate the form
 		};

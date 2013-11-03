@@ -2,18 +2,17 @@ package com.scalar.freequent.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.jdbc.core.RowMapper;
 import com.scalar.core.jdbc.AbstractDAO;
 import com.scalar.core.ScalarException;
 import com.scalar.freequent.auth.User;
 import com.scalar.freequent.util.StringUtil;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Calendar;
+import java.util.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  * User: Sujan Kumar Suppala
@@ -51,6 +50,21 @@ public class UserDataDAO extends AbstractDAO {
 		COL_MODIFIEDON +
 		" from " + TABLE_NAME + " ";
 
+	public static final Map<String, Integer> COL_SQL_TYPES = new HashMap<String, Integer>();
+
+	static {
+		COL_SQL_TYPES.put (COL_USER_ID, Types.VARCHAR);
+		COL_SQL_TYPES.put (COL_FIRST_NAME, Types.VARCHAR);
+		COL_SQL_TYPES.put (COL_MIDDLE_NAME, Types.VARCHAR);
+		COL_SQL_TYPES.put (COL_LAST_NAME, Types.VARCHAR);
+		COL_SQL_TYPES.put (COL_PASSWORD, Types.VARCHAR);
+		COL_SQL_TYPES.put (COL_DISABLED, Types.BIT);
+		COL_SQL_TYPES.put (COL_EXPIRESON, Types.DATE);
+		COL_SQL_TYPES.put (COL_CREATEDBY, Types.VARCHAR);
+		COL_SQL_TYPES.put (COL_CREATEDON, Types.DATE);
+		COL_SQL_TYPES.put (COL_MODIFIEDBY, Types.VARCHAR);
+		COL_SQL_TYPES.put (COL_MODIFIEDON, Types.DATE);
+	}
 
     public boolean checkUserCredentials (String username, String password) {
         String query = "SELECT COUNT(*) FROM " + TABLE_NAME
@@ -227,17 +241,18 @@ public class UserDataDAO extends AbstractDAO {
 		query.append(" where ").append(COL_USER_ID).append(" = ?");
 
 		List<Object> args = new ArrayList<Object>();
-        if (row.modPassword()) args.add (row.getPassword());
-        if (row.modFirstName()) args.add (row.getFirstName());
-        if (row.modMiddleName()) args.add (row.getMiddleName());
-        if (row.modLastName()) args.add (row.getLastName());
-        if (row.modDisabled()) args.add (row.getDisabled());
-        if (row.modExpiresOn()) args.add (row.getExpiresOn());
-        if (row.modModifiedBy()) args.add (row.getUserId());
-		args.add (now.getTime());
-		args.add (row.getUserId());
+		List<Integer> argTypes = new ArrayList<Integer>();
+        if (row.modPassword()) { args.add (row.getPassword()); argTypes.add(COL_SQL_TYPES.get(COL_PASSWORD)); }
+        if (row.modFirstName()) { args.add (row.getFirstName()); argTypes.add(COL_SQL_TYPES.get(COL_FIRST_NAME)); }
+        if (row.modMiddleName()) { args.add (row.getMiddleName()); argTypes.add(COL_SQL_TYPES.get(COL_MIDDLE_NAME)); }
+        if (row.modLastName()) { args.add (row.getLastName()); argTypes.add(COL_SQL_TYPES.get(COL_LAST_NAME)); }
+        if (row.modDisabled()) { args.add (row.getDisabled()); argTypes.add(COL_SQL_TYPES.get(COL_DISABLED)); }
+        if (row.modExpiresOn()) { args.add (row.getExpiresOn()); argTypes.add(COL_SQL_TYPES.get(COL_EXPIRESON)); }
+        if (row.modModifiedBy()) { args.add (row.getUserId()); argTypes.add(COL_SQL_TYPES.get(COL_MODIFIEDBY)); }
+		args.add (now.getTime()); argTypes.add(COL_SQL_TYPES.get(COL_MODIFIEDON));
+		args.add (row.getUserId()); argTypes.add(COL_SQL_TYPES.get(COL_USER_ID));
 
-        return getJdbcTemplate().update(query.toString(), args);
+        return getJdbcTemplate().update(query.toString(), args.toArray(new Object[args.size()]), ArrayUtils.toPrimitive(argTypes.toArray(new Integer[argTypes.size()])));
     }
 
     public static User rowToData (UserDataRow row) {

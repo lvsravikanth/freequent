@@ -24,7 +24,7 @@ fui.grid = {
 
     DEFAULT_DATA_TYPE: "JSON",
 
-    WIDTH: "98%",
+    WIDTH: "100%",
 
     HEIGHT: "400",
 

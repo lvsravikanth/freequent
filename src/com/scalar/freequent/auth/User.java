@@ -137,18 +137,6 @@ public class User {
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
-	
-
-	public Map<String, UserCapability> getCapabilitiesMap() {
-        List<UserCapability> userCapabilities = getUserCapabilities();
-        Map<String, UserCapability> capabilitiesMap = new HashMap<String, UserCapability>();
-        if (userCapabilities != null) {
-            for (UserCapability userCapability: userCapabilities) {
-                capabilitiesMap.put(userCapability.getCapabilityName(), userCapability);
-            }
-        }
-        return capabilitiesMap;
-    }
 
     public static void setActiveUser(User user) {
         userThreadLocal.set(user);
@@ -170,6 +158,18 @@ public class User {
         this.userCapabilities = userCapabilities;
     }
 
+	private Map<String, UserCapability> userCapabilitiesMap = null;
+	public Map<String, UserCapability> getUserCapabilitiesMap() {
+		if (userCapabilitiesMap == null) {
+			userCapabilitiesMap = new HashMap<String, UserCapability>();
+			for (UserCapability userCapability: userCapabilities) {
+				userCapabilitiesMap.put (userCapability.getCapabilityName(), userCapability);
+			}
+		}
+
+		return userCapabilitiesMap;
+	}
+
     public void checkCapabilities (Capability[] capabilities) throws ScalarAuthException {
         if (StringUtil.isEmpty(capabilities)) {
             return ;
@@ -181,7 +181,7 @@ public class User {
     }
 
     public void checkCapability ( Capability capability ) throws ScalarAuthException {
-        if (capability == null) {
+        if (capability == null || StringUtil.isEmpty(capability.getName())) {
             return;
         }
 
@@ -191,7 +191,7 @@ public class User {
         }
 
         boolean isAuthorized =  false;
-        Map<String, UserCapability> capabilitiesMap = getCapabilitiesMap();
+        Map<String, UserCapability> capabilitiesMap = getUserCapabilitiesMap();
         if ( capabilitiesMap != null) {
                 UserCapability cap = capabilitiesMap.get( capability.getName() );
                 if ( cap != null ) {//USER HAS THIS FUNCTIONALITY

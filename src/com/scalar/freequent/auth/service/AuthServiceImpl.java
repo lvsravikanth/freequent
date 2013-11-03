@@ -19,11 +19,13 @@ import com.scalar.freequent.dao.UserCapabilityInfoRow;
 import com.scalar.freequent.auth.User;
 import com.scalar.freequent.auth.UserCapability;
 import com.scalar.freequent.l10n.ServiceResource;
+import com.scalar.freequent.service.users.UserService;
 import com.scalar.core.ScalarServiceException;
 import com.scalar.core.ScalarException;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.service.AbstractService;
+import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.jdbc.DAOFactory;
 
 import java.sql.Connection;
@@ -76,11 +78,8 @@ public class AuthServiceImpl extends AbstractService implements ApplicationConte
     }
 
     public User getUser(String username) throws ScalarServiceException {
-        UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
-        UserDataRow row = userDataDAO.findByPrimaryKey(username);
-        User user = UserDataDAO.rowToData(row);
-
-        return user;
+		UserService userService = ServiceFactory.getService(UserService.class, getRequest());
+        return userService.findById(username);
     }
 
     @Transactional

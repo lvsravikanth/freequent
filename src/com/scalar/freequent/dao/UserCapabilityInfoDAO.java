@@ -33,7 +33,7 @@ public class UserCapabilityInfoDAO extends AbstractDAO {
                     COL_HAS_READ + "," +
                     COL_HAS_WRITE + "," +
                     COL_HAS_DELETE + "," +
-                    COL_USER_ID + "," +
+                    COL_USER_ID + 
                 " from " + TABLE_NAME + " ";
 
     public List<UserCapabilityInfoRow> findAll () {
@@ -62,7 +62,7 @@ public class UserCapabilityInfoDAO extends AbstractDAO {
         new RowMapper<UserCapabilityInfoRow>() {
             public UserCapabilityInfoRow mapRow(ResultSet rs, int rowNum) throws SQLException {
                 UserCapabilityInfoRow row = new UserCapabilityInfoRow();
-                row.setCapabilityName(COL_CAPABILITY_NAME);
+                row.setCapabilityName(rs.getString(COL_CAPABILITY_NAME));
                 row.setHasRead(rs.getInt(COL_HAS_READ));
                 row.setHasWrite(rs.getInt(COL_HAS_WRITE));
                 row.setHasDelete(rs.getInt(COL_HAS_DELETE));

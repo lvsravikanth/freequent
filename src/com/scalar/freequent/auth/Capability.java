@@ -24,6 +24,11 @@ public class Capability {
     public static final String WRITE_TYPE = "write";
     public static final String DELETE_TYPE = "delete";
 
+	public static final String USER_CAPABILITY = "USER";
+	public static final Capability USER_READ = new Capability(USER_CAPABILITY, true, false, false);
+	public static final Capability USER_WRITE = new Capability(USER_CAPABILITY, false, true, false);
+	public static final Capability USER_DELETE = new Capability(USER_CAPABILITY, false, false, true);
+
     public Capability() {
     }
 
