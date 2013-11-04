@@ -162,8 +162,10 @@ public class User {
 	public Map<String, UserCapability> getUserCapabilitiesMap() {
 		if (userCapabilitiesMap == null) {
 			userCapabilitiesMap = new HashMap<String, UserCapability>();
-			for (UserCapability userCapability: userCapabilities) {
-				userCapabilitiesMap.put (userCapability.getCapabilityName(), userCapability);
+			if (userCapabilities != null) {
+				for (UserCapability userCapability: userCapabilities) {
+					userCapabilitiesMap.put (userCapability.getCapabilityName(), userCapability);
+				}
 			}
 		}
 

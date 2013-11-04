@@ -11,13 +11,6 @@ import org.apache.commons.logging.LogFactory;
 public final class Constants {
 	protected static final Log logger = LogFactory.getLog(Constants.class);
 
-	/**
-	 * Constant used to identify the editor id attribute.
-	 */
-	public static final String EDITOR_ID_ATTRIBUTE = ".fui.editor.id";
-
-	public static final String NEW_EDITOR_ID_VALUE = "fui-editor-object-new-";
-
 	public static final String FORM = "form";
 
 	/**

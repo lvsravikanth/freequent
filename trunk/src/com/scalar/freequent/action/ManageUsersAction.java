@@ -13,13 +13,12 @@ import com.scalar.freequent.auth.Capability;
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.Constants;
 import com.scalar.freequent.util.DateTimeUtil;
+import com.scalar.freequent.util.EditorUtils;
 import com.scalar.freequent.l10n.ServiceResource;
 import com.scalar.freequent.l10n.ActionResource;
 import com.scalar.freequent.dao.CapabilityInfoDAO;
 import com.scalar.freequent.dao.CapabilityInfoRow;
-import com.scalar.freequent.dao.UserCapabilityInfoDAO;
 import com.scalar.core.request.Request;
-import com.scalar.core.request.Context;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.ScalarServiceException;
 import com.scalar.core.ScalarValidationException;
@@ -35,7 +34,6 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 /**
  * User: Sujan Kumar Suppala
@@ -49,13 +47,6 @@ public class ManageUsersAction  extends AbstractActionController {
 	 * Constant used to identify the total attribute.
 	 */
 	public static final String TOTAL_ATTRIBUTE = "total";
-
-	/**
-	 * Represents the user id value for to create new user.
-	 */
-	public static final String NEW_USER_ID = "fui-new-user";
-
-	public static final String ATTR_USER_ID = "userId";
 
 	public static final String ATTR_USER = "user";
 
@@ -89,11 +80,11 @@ public class ManageUsersAction  extends AbstractActionController {
 	 * @throws ScalarActionException
 	 */
 	public void load(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
-		String userId = request.getParameter(ATTR_USER_ID);
+		String userId = request.getParameter(EditorUtils.EDITOR_ID_ATTRIBUTE);
 		if (StringUtil.isEmpty(userId)) {
 			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.USER_ID_REQUIRED), null);
 		}
-		if (NEW_USER_ID.equals(userId)) {
+		if (EditorUtils.isNewEditorId(userId)) {
 			data.put(ATTR_USER, new User());
 		} else {
 			// load user
@@ -133,8 +124,8 @@ public class ManageUsersAction  extends AbstractActionController {
 		UserService userService = ServiceFactory.getService(UserService.class, request);
 
 		// check whether the request is from new editor
-		String editorId = request.getParameter(Constants.EDITOR_ID_ATTRIBUTE);
-		if (editorId.startsWith(Constants.NEW_EDITOR_ID_VALUE)) {
+		String editorId = request.getParameter(EditorUtils.EDITOR_ID_ATTRIBUTE);
+		if (editorId.startsWith(EditorUtils.NEW_EDITOR_ID_VALUE)) {
 			// creating a new user
 			// check whether the new userId already exists
 			try {

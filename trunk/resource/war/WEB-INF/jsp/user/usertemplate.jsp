@@ -15,12 +15,13 @@
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="com.scalar.freequent.auth.UserCapability" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="com.scalar.freequent.util.EditorUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
 	Request fRequest = (Request)request.getAttribute(Request.REQUEST_ATTRIBUTE);
 	String context = ContextUtil.getContextPath(request);
-	String editorId = request.getParameter(Constants.EDITOR_ID_ATTRIBUTE);
-	String formId = request.getParameter(Constants.EDITOR_ID_ATTRIBUTE) + "-" + Constants.FORM;
+	String editorId = request.getParameter(EditorUtils.EDITOR_ID_ATTRIBUTE);
+	String formId = editorId + "-" + Constants.FORM;
 	Context ctx = fRequest.getContext();
 	Locale locale = LocaleUtil.getLocale(ctx);
 	TimeZone timeZone = TimeZoneUtil.getTimeZone(ctx);
@@ -75,21 +76,21 @@
 	</div>
 
 	<div class="fui-form-block-container">
-		<label for="expiresOn" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.EXPIRES_ON%>"/>(<%=datePattern%>)</label><br>
+		<label for="expiresOn" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.EXPIRES_ON%>"/>&nbsp;(<%=datePattern%>)</label><br>
 		<div class="fui-form-inline-input"><input type="text" class="fui-input fui-input-text" name="expiresOn" id="expiresOn" value="<%=user.getExpiresOn() == null ? "" : dateFormatter.format(user.getExpiresOn())%>"/></div>
 		<div class="fui-form-item-validation"><div id="expiresOn-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
 	</div>
 	<div id="capabilities-accordian">
-	  <h3>User Capabilities</h3>
+	  <h3><fmt:message key="<%=WorkspaceResource.USER_CAPABILITIES%>"/></h3>
 	  <div id="capabilities-content">
 			<table>
 				<thead>
 					<tr>
-						<th>Capability</th>
-						<th>Read</th>
-						<th>Write</th>
-						<th>Delete</th>
+						<th><fmt:message key="<%=WorkspaceResource.CAPABILITY%>"/></th>
+						<th><fmt:message key="<%=WorkspaceResource.READ%>"/></th>
+						<th><fmt:message key="<%=WorkspaceResource.WRITE%>"/></th>
+						<th><fmt:message key="<%=WorkspaceResource.DELETE%>"/></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -140,6 +141,12 @@
 <script type="text/javascript">
 	fui.ready(function() {
 		fui.editor.find('<%=editorId%>').setFormId('<%=formId%>');
+
+		<%
+		if (!EditorUtils.isNewEditorId(editorId)) {
+		%>
+			fui.query('#userId').prop("readonly",true);
+		<%}%>
 
 		fui.query( "#expiresOn" ).datepicker({
 			dateFormat: fui.context.getContext()[fui.context.FORMAT_KEY].date,

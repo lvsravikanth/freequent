@@ -68,7 +68,7 @@
         });
 		fui.query("#newuser").button()
 			.click( function(event) {
-			fui.ui.manageusers.edit("<%=ManageUsersAction.NEW_USER_ID%>");
+			fui.ui.manageusers.edit();
 		});
 		fui.query("#reset").button();
 
