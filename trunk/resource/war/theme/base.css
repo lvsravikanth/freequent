@@ -22,14 +22,16 @@
 .fui-html textarea.x-form-field{
 	padding: 2px 3px;}
 
+.fui-html .fui-input-text{
+    font-size: 13px;}
+
 .fui-html input {
 	border: 1px solid #C3C3C3;
 	border-radius: 3px 3px 3px 3px;
-	padding: 5px 8px;
 	text-indent: 2px;
 	margin: 0;
 	width: 166px;
-	height: 20px;
+	padding: 5px 8px;
 	font-weight: normal;
 	font-size: 13px;}
 
