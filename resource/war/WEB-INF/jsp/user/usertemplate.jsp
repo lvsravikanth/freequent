@@ -140,6 +140,10 @@
 </form>
 <script type="text/javascript">
 	fui.ready(function() {
+        var userInputEl = fui.query("#userId");
+		if (userInputEl.val()) {
+			userInputEl.prop("disabled", true);
+		}
 		fui.editor.find('<%=editorId%>').setFormId('<%=formId%>');
 
 		<%
