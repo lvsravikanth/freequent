@@ -15,6 +15,12 @@
                 <display>true</display>
                 <capability type="read"><name>USER</name></capability>
             </menu>
+			<menu name="Manage Items" id="1.2">
+                <link>manageitems</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>MANAGE_ITEMS</name></capability>
+            </menu>
         </menuItems>
     </menu>
     <menu name="Demo" id="demo">
