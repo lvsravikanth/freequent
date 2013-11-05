@@ -48,6 +48,56 @@
                      rule="cascade"/>
         </table>
 
+		<table name="ftItem">
+			<column name="id" no-nulls="true" size="40" type="varchar"/>
+			<column name="name" no-nulls="true" size="80" type="varchar" />
+			<column name="code" no-nulls="true" size="40" type="varchar" />
+			<column name="groupName" no-nulls="false" size="20" type="varchar" />
+			<column name="price" no-nulls="true" size="10" type="decimal"  decimal-places="3"/>
+			<column name="priceQty" no-nulls="false" type="integer"/>  <!-- the price is for how much qty? -->
+			<column name="unit" no-nulls="true" type="varchar" size="20"/>
+			<column name="category" no-nulls="false" type="varchar" size="80"/>
+			<index name="PK_ftItem_id" columns="id" primary-key="true" />
+			<index name="IDX_ftItem_name" columns="name" unique="true"/>
+			<index name="IDX_ftItem_code" columns="code" unique="true"/>
+			<key-ref name="FK_ftItem_groupName" columns="groupName" table="ftGroup"
+                     references="name" rule="cascade"/>
+			<key-ref name="FK_ftItem_unit" columns="unit" table="ftUnit"
+                     references="name" rule="cascade"/>
+			<key-ref name="FK_ftItem_category" columns="category" table="ftCategory"
+                     references="name" rule="cascade"/>
+		</table>
+
+		<table name="ftUnit">
+			<column name="id" no-nulls="true" size="40" type="varchar"/>
+			<column name="name" no-nulls="true" size="20" type="varchar"/>
+			<column name="description" no-nulls="false" size="1024" type="varchar"/>
+			<index name="PK_ftUnit_id" columns="id" primary-key="true" />
+			<index name="IDX_ftUnit_name" columns="name" unique="true"/>
+		</table>
+
+		<table name="ftGroup">
+			<column name="id" no-nulls="true" size="40" type="varchar"/>
+			<column name="name" no-nulls="true" size="20" type="varchar"/>
+			<column name="description" no-nulls="false" size="1024" type="varchar"/>
+			<index name="PK_ftGroup_id" columns="id" primary-key="true" />
+			<index name="IDX_ftGroup_name" columns="name" unique="true"/>
+		</table>
+
+		<table name="ftCategory">
+			<column name="id" no-nulls="true" size="40" type="varchar"/>
+			<column name="name" no-nulls="true" size="80" type="varchar"/>
+			<column name="description" no-nulls="false" size="1024" type="varchar"/>
+			<index name="PK_ftCategory_id" columns="id" primary-key="true" />
+			<index name="IDX_ftCategory_name" columns="name" unique="true"/>
+		</table>
+
+		<table name="ftCategoryAssoc">
+			<column name="objId" no-nulls="true" size="40" type="varchar"/>
+			<column name="categoryId" no-nulls="true" size="40" type="varchar"/>
+			<index name="IDX_ftCategoryAssoc_objId_catId" columns="objId, categoryId" unique="true"/>
+		</table>
+
         <!-- master data -->
         <rowset table="FTUSERS">
 			<row>
@@ -70,8 +120,53 @@
 				<item column="supportsWrite" value="true"/>
 				<item column="supportsDelete" value="true"/>
 			</row>
+			<row>
+				<item column="name" value="MANAGE_ITEMS"/>
+				<item column="supportsRead" value="true"/>
+				<item column="supportsWrite" value="true"/>
+				<item column="supportsDelete" value="true"/>
+			</row>
 		</rowset>
 
+		<rowset table="ftUnit">
+			<row>
+				<item column="id" value="U-pcs-000000000000000000000000000000UNIT"/>
+				<item column="name" value="pcs"/>
+			</row>
+		</rowset>
+
+		<rowset table="ftGroup">
+			<row>
+				<item column="id" value="G-soups-0000000000000000000000000000GRUP"/>
+				<item column="name" value="SOUPS"/>
+			</row>
+			<row>
+				<item column="id" value="G-raita-0000000000000000000000000000GRUP"/>
+				<item column="name" value="RAITA"/>
+			</row>
+			<row>
+				<item column="id" value="G-rice-00000000000000000000000000000GRUP"/>
+				<item column="name" value="RICE"/>
+			</row>
+			<row>
+				<item column="id" value="G-muttonmusti-0000000000000000000000GRUP"/>
+				<item column="name" value="MUTTON MUSTI"/>
+			</row>
+			<row>
+				<item column="id" value="G-biryani-00000000000000000000000000GRUP"/>
+				<item column="name" value="BIRYANI"/>
+			</row>
+		</rowset>
+		<rowset table="ftCategory">
+			<row>
+				<item column="id" value="C-veg-000000000000000000000000000000CTGR"/>
+				<item column="name" value="veg"/>
+			</row>
+			<row>
+				<item column="id" value="C-non-veg-00000000000000000000000000CTGR"/>
+				<item column="name" value="non-veg"/>
+			</row>
+		</rowset>
 	</tablegroup>
 
 </schema>

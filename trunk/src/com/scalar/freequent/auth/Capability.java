@@ -29,6 +29,11 @@ public class Capability {
 	public static final Capability USER_WRITE = new Capability(USER_CAPABILITY, false, true, false);
 	public static final Capability USER_DELETE = new Capability(USER_CAPABILITY, false, false, true);
 
+	public static final String MANAGE_ITEMS_CAPABILITY = "MANAGE_ITEMS";
+	public static final Capability MANAGE_ITEMS_READ = new Capability(MANAGE_ITEMS_CAPABILITY, true, false, false);
+	public static final Capability MANAGE_ITEMS_WRITE = new Capability(MANAGE_ITEMS_CAPABILITY, false, true, false);
+	public static final Capability MANAGE_ITEMS_DELETE = new Capability(MANAGE_ITEMS_CAPABILITY, false, false, true);
+
     public Capability() {
     }
 
