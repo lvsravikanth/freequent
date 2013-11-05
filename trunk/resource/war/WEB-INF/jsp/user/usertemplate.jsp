@@ -34,28 +34,28 @@
 <form id="<%=formId%>" action="#" class="fui-form">
 <div class="fui-form-container">
 	<div class="fui-form-block-container">
-		<label for="userId" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.USERID%>"/></label><br>
+		<label for="userId" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.USERID%>"/>&nbsp;*</label><br>
 		<div class="fui-form-inline-input"><input type="text" class="fui-input fui-input-text" name="userId" id="userId" value="<c:out value="${user.userId}"/>"/></div>
 		<div class="fui-form-item-validation"><div id="userId-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
 	</div>
 
 	<div class="fui-form-block-container">
-		<label for="password" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.PASSWORD%>"/></label><br>
+		<label for="password" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.PASSWORD%>"/>&nbsp;*</label><br>
 		<div class="fui-form-inline-input"><input type="password" class="fui-input fui-input-text" name="password" id="password" value="<c:out value="${user.password}"/>"/></div>
 		<div class="fui-form-item-validation"><div id="password-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
 	</div>
 
 	<div class="fui-form-block-container">
-		<label for="confirmPassword" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.CONFIRM_PASSWORD%>"/></label><br>
+		<label for="confirmPassword" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.CONFIRM_PASSWORD%>"/>&nbsp;*</label><br>
 		<div class="fui-form-inline-input"><input type="password" class="fui-input fui-input-text" name="confirmPassword" id="confirmPassword" value="<c:out value="${user.password}"/>"/></div>
 		<div class="fui-form-item-validation"><div id="confirmPassword-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
 	</div>
 
 	<div class="fui-form-block-container">
-		<label for="firstName" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.FIRST_NAME%>"/></label><br>
+		<label for="firstName" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.FIRST_NAME%>"/>&nbsp;*</label><br>
 		<div class="fui-form-inline-input"><input type="text" class="fui-input fui-input-text" name="firstName" id="firstName" value="<c:out value="${user.firstName}"/>"/></div>
 		<div class="fui-form-item-validation"><div id="firstName-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
@@ -69,14 +69,14 @@
 	</div>
 
 	<div class="fui-form-block-container">
-		<label for="lastName" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.LAST_NAME%>"/></label><br>
+		<label for="lastName" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.LAST_NAME%>"/>&nbsp;*</label><br>
 		<div class="fui-form-inline-input"><input type="text" class="fui-input fui-input-text" name="lastName" id="lastName" value="<c:out value="${user.lastName}"/>"/></div>
 		<div class="fui-form-item-validation"><div id="lastName-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
 	</div>
 
 	<div class="fui-form-block-container">
-		<label for="expiresOn" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.EXPIRES_ON%>"/>&nbsp;(<%=datePattern%>)</label><br>
+		<label for="expiresOn" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.EXPIRES_ON%>"/>&nbsp;(<%=datePattern%>)&nbsp;*</label><br>
 		<div class="fui-form-inline-input"><input type="text" class="fui-input fui-input-text" name="expiresOn" id="expiresOn" value="<%=user.getExpiresOn() == null ? "" : dateFormatter.format(user.getExpiresOn())%>"/></div>
 		<div class="fui-form-item-validation"><div id="expiresOn-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
@@ -140,10 +140,6 @@
 </form>
 <script type="text/javascript">
 	fui.ready(function() {
-        var userInputEl = fui.query("#userId");
-		if (userInputEl.val()) {
-			userInputEl.prop("disabled", true);
-		}
 		fui.editor.find('<%=editorId%>').setFormId('<%=formId%>');
 
 		<%
