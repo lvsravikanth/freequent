@@ -176,11 +176,15 @@
 	top: -25px;
 	right: -15px;
 }
-
+/*** Start Editor ***/
 .fui-editor .ui-dialog-titlebar {
-	height: 25px;
-}
+	height: 25px; }
 
 .fui-editor .ui-dialog-buttonpane {
-	padding: 0 !important;
-}
+	padding: 0 !important; }
+
+.fui-editor .fui-editor-content.ui-dialog-content {
+    width: 95.5% !important;
+    overflow: auto; }
+
+/*** End Editor css***/
