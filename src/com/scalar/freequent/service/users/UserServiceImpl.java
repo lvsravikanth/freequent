@@ -2,6 +2,7 @@ package com.scalar.freequent.service.users;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.transaction.annotation.Transactional;
 import com.scalar.core.service.AbstractService;
 import com.scalar.core.ScalarServiceException;
 import com.scalar.core.ScalarException;
@@ -75,6 +76,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		return userDataDAO.exists(userId);
 	}
 
+	@Transactional
 	public boolean insertOrUpdate(User user, boolean insert, boolean updatedPwd) throws ScalarServiceException {
 		UserDataDAO userDataDAO = DAOFactory.getDAO(UserDataDAO.class, getRequest());
 		if (insert) {

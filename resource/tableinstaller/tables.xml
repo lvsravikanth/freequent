@@ -98,6 +98,18 @@
 			<index name="IDX_ftCategoryAssoc_objId_catId" columns="objId, categoryId" unique="true"/>
 		</table>
 
+		<table name="ftRecord">
+			<column name="recordId" no-nulls="true" size="40" type="varchar"/>
+			<column name="objectId" no-nulls="true" size="40" type="varchar"/>
+			<column name="objectType" no-nulls="true" size="40" type="varchar"/>
+			<column name="createdBy" no-nulls="true" size="40" type="varchar"/>
+			<column name="createdOn" no-nulls="true" type="timestamp"/>
+			<column name="modifiedBy" no-nulls="true" size="40" type="varchar"/>
+			<column name="modifiedOn" no-nulls="true" type="timestamp"/>
+			<index name="PK_ftRecord_recordId" columns="recordId" primary-key="true" />
+			<index name="IDX_ftRecord_objectId" columns="objectId" unique="true"/>
+		</table>
+
         <!-- master data -->
         <rowset table="FTUSERS">
 			<row>
