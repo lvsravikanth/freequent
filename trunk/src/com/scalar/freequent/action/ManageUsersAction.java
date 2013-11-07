@@ -43,11 +43,6 @@ import java.text.DateFormat;
 public class ManageUsersAction  extends AbstractActionController {
     protected static final Log logger = LogFactory.getLog(ManageUsersAction.class);
 
-    /**
-	 * Constant used to identify the total attribute.
-	 */
-	public static final String TOTAL_ATTRIBUTE = "total";
-
 	public static final String ATTR_USER = "user";
 
     public void defaultProcess(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
@@ -68,7 +63,7 @@ public class ManageUsersAction  extends AbstractActionController {
             throw ScalarActionException.create(e.getMsgObject(), e);
         }
         data.put(Response.ITEMS_ATTRIBUTE, convertToMap(users));
-        data.put(TOTAL_ATTRIBUTE, users.size()+"");
+        data.put(Response.TOTAL_ATTRIBUTE, users.size()+"");
     }
 
 	/**

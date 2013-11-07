@@ -248,7 +248,7 @@ public class UserDataDAO extends AbstractDAO {
         if (row.modLastName()) { args.add (row.getLastName()); argTypes.add(COL_SQL_TYPES.get(COL_LAST_NAME)); }
         if (row.modDisabled()) { args.add (row.getDisabled()); argTypes.add(COL_SQL_TYPES.get(COL_DISABLED)); }
         if (row.modExpiresOn()) { args.add (row.getExpiresOn()); argTypes.add(COL_SQL_TYPES.get(COL_EXPIRESON)); }
-        if (row.modModifiedBy()) { args.add (row.getUserId()); argTypes.add(COL_SQL_TYPES.get(COL_MODIFIEDBY)); }
+        if (row.modModifiedBy()) { args.add (row.getModifiedBy()); argTypes.add(COL_SQL_TYPES.get(COL_MODIFIEDBY)); }
 		args.add (now.getTime()); argTypes.add(COL_SQL_TYPES.get(COL_MODIFIEDON));
 		args.add (row.getUserId()); argTypes.add(COL_SQL_TYPES.get(COL_USER_ID));
 

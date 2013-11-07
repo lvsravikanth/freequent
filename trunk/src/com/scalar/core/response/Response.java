@@ -69,9 +69,13 @@ public interface Response {
 	 * Constant used to identify the item attribute.
 	 */
 	public static final String ITEM_ATTRIBUTE = "item";
+	/**
+	 * Constant used to identify the total attribute.
+	 */
+	String TOTAL_ATTRIBUTE = "total";
 
 
-    public void setWrappedObject(Object wrappedObject);
+	public void setWrappedObject(Object wrappedObject);
 
     public Object getWrappedObject();
 
