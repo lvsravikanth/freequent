@@ -452,7 +452,7 @@ fui.editor.Editor = function() {
 	this.editConfig = {}; // stores the editor config
 	this.requestContent = {}; // stores the request content
 	this.height = "auto";
-	this.width = "650";
+	this.width = "800";
 	this.type = "";
 	this.ACTION_KEY = fui.editor.DEFAULT_ACTION_KEY;
 	this.formId = null;
@@ -495,7 +495,7 @@ fui.extend(fui.editor.Editor,
 	getContentSize: function() {
 		var content = this.getContentComponent();
 		if ( !content ) {
-			return { width: "650", height: "auto" };
+			return { width: "800", height: "auto" };
 		}
 
 		return content.getSize(true); //todo

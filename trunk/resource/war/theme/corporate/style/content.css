@@ -132,24 +132,49 @@ label.error {
 	padding-bottom:0.5em;
 }
 .fui-form-block-container label {
-font-weight: bold;
+    font-weight: bold;
 }
 .fui-form-block-container > div {
-/*padding-bottom: 0.75em;*/
-overflow: hidden;
+    /*padding-bottom: 0.75em;*/
+    overflow: hidden;
 }
 .fui-label-text {
-font-size: 14px;
-font-weight: bold;
-line-height: 1.5em;
-display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.5em;
+    display: inline-block;
 }
 .fui-form-inline-input {
-min-width: 150px;
-padding-right: 2px;
+    min-width: 150px;
+    padding-right: 2px;
 }
 .fui-layout-end {
-height: 1px;
-line-height: 1px;
-clear: both;
+    height: 1px;
+    line-height: 1px;
+    clear: both;
+}
+
+.fui-editor .fui-editor-content.ui-dialog-content {
+    width: 95.5% !important;
+    overflow: auto; }
+
+.ui-accordion .ui-accordion-content.fui-editor-capabilities-content{
+	padding: 0px;
+	width: 100%;
+	border: 1px solid #4297d7;
+	font-size: 15px;
+	font-weight: normal;
+}
+
+.fui-editor-inner-header {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.fui-editor-header-inner-text {
+	margin: .5em 1em .5em 0.5em;
+}
+
+.fui-editor-capablilities-column-text{
+	padding: .5em .5em .5em 1em;
 }

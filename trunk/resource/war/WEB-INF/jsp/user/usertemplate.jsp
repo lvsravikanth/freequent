@@ -81,12 +81,12 @@
 		<div class="fui-form-item-validation"><div id="expiresOn-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
 	</div>
-	<div id="capabilities-accordian">
-	  <h3><fmt:message key="<%=WorkspaceResource.USER_CAPABILITIES%>"/></h3>
-	  <div id="capabilities-content">
-			<table>
-				<thead>
-					<tr>
+    <div class="fui-editor-inner-header">
+          <h5 class="fui-editor-header-inner-text"><fmt:message key="<%=WorkspaceResource.USER_CAPABILITIES%>"/></h5>
+          <div id="capabilities-accordian">
+                <table class="fui-editor-capabilities-content">
+                    <thead class="ui-widget-header">
+						<tr>
 						<th><fmt:message key="<%=WorkspaceResource.CAPABILITY%>"/></th>
 						<th><fmt:message key="<%=WorkspaceResource.READ%>"/></th>
 						<th><fmt:message key="<%=WorkspaceResource.WRITE%>"/></th>
@@ -94,47 +94,49 @@
 					</tr>
 				</thead>
 				<tbody>
-				<%
-					Map<String, UserCapability> userCapabilityMap = user.getUserCapabilitiesMap();
-				%>
-					<c:forEach items="${capabilities}" var="capability" varStatus="loop">
-						<c:set var="capabilityName">${capability.name}</c:set>
-						<%
-							UserCapability userCapability = userCapabilityMap.get(pageContext.getAttribute("capabilityName"));
-							String hasRead = "";
-							String hasWrite = "";
-							String hasDelete = "";
-							if (userCapability != null) {
-								hasRead = userCapability.isHasRead() ? "checked" : "";
-								hasWrite = userCapability.isHasWrite() ? "checked" : "";
-								hasDelete = userCapability.isHasDelete() ? "checked" : "";
-							}
-						%>
-						<tr>
-							<td>
-								${capability.name}
-								<input type="hidden" value="${capability.name}" name="userCapabilities[${loop.index}].capabilityName" />
-							</td>
-							<td>
-								<c:if test="${capability.supportsRead}">
-									<input type="checkbox" name="userCapabilities[${loop.index}].hasRead" value="true" <%=hasRead%> />
-								</c:if>
-							</td>
-							<td>
-								<c:if test="${capability.supportsWrite}">
-									<input type="checkbox" name="userCapabilities[${loop.index}].hasWrite" value="true" <%=hasWrite%>/>
-								</c:if>
-							</td>
-							<td>
-								<c:if test="${capability.supportsDelete}">
-									<input type="checkbox" name="userCapabilities[${loop.index}].hasDelete" value="true" <%=hasDelete%>/>
-								</c:if>
-							</td>
-						</tr>
-					</c:forEach>
+                    <div id="capabilities-content">
+                        <%
+                            Map<String, UserCapability> userCapabilityMap = user.getUserCapabilitiesMap();
+                        %>
+                            <c:forEach items="${capabilities}" var="capability" varStatus="loop">
+                                <c:set var="capabilityName">${capability.name}</c:set>
+                                <%
+                                    UserCapability userCapability = userCapabilityMap.get(pageContext.getAttribute("capabilityName"));
+                                    String hasRead = "";
+                                    String hasWrite = "";
+                                    String hasDelete = "";
+                                    if (userCapability != null) {
+                                        hasRead = userCapability.isHasRead() ? "checked" : "";
+                                        hasWrite = userCapability.isHasWrite() ? "checked" : "";
+                                        hasDelete = userCapability.isHasDelete() ? "checked" : "";
+                                    }
+                                %>
+                                <tr>
+                                    <td class="fui-editor-capablilities-column-text">
+                                        ${capability.name}
+                                        <input type="hidden" value="${capability.name}" name="userCapabilities[${loop.index}].capabilityName" />
+                                    </td>
+                                    <td>
+                                        <c:if test="${capability.supportsRead}">
+                                            <input type="checkbox" name="userCapabilities[${loop.index}].hasRead" value="true" <%=hasRead%> />
+                                        </c:if>
+                                    </td>
+                                    <td>
+                                        <c:if test="${capability.supportsWrite}">
+                                            <input type="checkbox" name="userCapabilities[${loop.index}].hasWrite" value="true" <%=hasWrite%>/>
+                                        </c:if>
+                                    </td>
+                                    <td>
+                                        <c:if test="${capability.supportsDelete}">
+                                            <input type="checkbox" name="userCapabilities[${loop.index}].hasDelete" value="true" <%=hasDelete%>/>
+                                        </c:if>
+                                    </td>
+                                </tr>
+                           </c:forEach>
+                    </div>
 				</tbody>
 			</table>
-	  </div>
+           </div>
 	</div>
 </div>
 </form>
