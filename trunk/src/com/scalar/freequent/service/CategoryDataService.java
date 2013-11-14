@@ -1,0 +1,20 @@
+package com.scalar.freequent.service;
+
+import com.scalar.core.ScalarServiceException;
+import com.scalar.freequent.common.CategoryData;
+import com.scalar.freequent.common.GroupData;
+
+import java.util.List;
+
+/**
+ * User: Sujan Kumar Suppala
+ * Date: Nov 14, 2013
+ * Time: 8:24:49 PM
+ */
+public interface CategoryDataService {
+	List<CategoryData> findAll();
+	CategoryData findByName(String name);
+	boolean insertOrUpdate(CategoryData categoryData) throws ScalarServiceException;
+	boolean removeByName(String name);
+	boolean remove(String id);
+}
