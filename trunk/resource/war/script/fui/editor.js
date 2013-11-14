@@ -272,6 +272,10 @@ fui.editor = {
 				draggable: true,
 				height: editor.height,
 				width: editor.width,
+                minWidth: editor.minWidth,
+                maxWidth: editor.maxWidth,
+                minHeight: editor.minHeight,
+                maxHeight: editor.maxHeight,
 				hide: "explode",
 				modal: true,
 				resizable: true,
@@ -453,6 +457,10 @@ fui.editor.Editor = function() {
 	this.requestContent = {}; // stores the request content
 	this.height = "auto";
 	this.width = "800";
+    this.minWidth = 300;
+    this.maxWidth = "auto"
+    this.minHeight = 200;
+    this.maxHeight = "auto";
 	this.type = "";
 	this.ACTION_KEY = fui.editor.DEFAULT_ACTION_KEY;
 	this.formId = null;

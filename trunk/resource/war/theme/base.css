@@ -184,7 +184,16 @@
 	padding: 0 !important; }
 
 .fui-editor .fui-editor-content.ui-dialog-content {
-    width: 95.5% !important;
+    padding-right: 2%;
+    width: 98% !important; 
     overflow: auto; }
+
+.fui-widget-required-flag {
+    color: #BA1414;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 0.005em;
+    vertical-align: middle;
+}
 
 /*** End Editor css***/

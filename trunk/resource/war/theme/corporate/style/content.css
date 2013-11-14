@@ -154,11 +154,7 @@ label.error {
     clear: both;
 }
 
-.fui-editor .fui-editor-content.ui-dialog-content {
-    width: 95.5% !important;
-    overflow: auto; }
-
-.ui-accordion .ui-accordion-content.fui-editor-capabilities-content{
+.ui-accordion .fui-editor-capabilities-content {
 	padding: 0px;
 	width: 100%;
 	border: 1px solid #4297d7;
