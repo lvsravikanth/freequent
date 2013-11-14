@@ -98,6 +98,30 @@ public class CategoryDataDAO extends AbstractDAO {
         return categories.get(0);
     }
 
+	public List<CategoryDataRow> findByIds(String[] categoryIds) {
+        StringBuilder query = new StringBuilder();
+		query.append (SQL_SelectAllColumns).append(" WHERE ").append(COL_ID).append(" IN ( ");
+		String sep = "";
+		for (String categoryId: categoryIds) {
+			query.append (sep).append("?"); sep = ", ";
+		}
+		query.append (")");
+
+        List<CategoryDataRow> categories = getJdbcTemplate().query(query.toString(), categoryIds,
+        new RowMapper<CategoryDataRow>() {
+            public CategoryDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+                CategoryDataRow row = new CategoryDataRow();
+                row.setId(new GUID(rs.getString(COL_ID)));
+                row.setName(rs.getString(COL_NAME));
+                row.setDescription(rs.getString(COL_DESCRIPTION));
+				row.clean();
+                return row;
+            }
+        });
+
+        return categories;
+    }
+
 	/**
      * Returns all the users in the system.
      *

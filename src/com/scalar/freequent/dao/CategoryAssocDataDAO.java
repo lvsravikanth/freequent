@@ -139,7 +139,7 @@ public class CategoryAssocDataDAO extends AbstractDAO {
 	 * @return
 	 * @throws ScalarException
 	 */
-	public int removeByObjectId(String objectId) throws ScalarException {
+	public int removeByObjectId(String objectId) {
 		String query = "delete from " + TABLE_NAME + " where " + COL_OBJECT_ID + " = ?";
 
 		return getJdbcTemplate().update(query, objectId);
