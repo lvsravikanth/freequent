@@ -196,6 +196,18 @@ public class ItemDataDAO extends AbstractDAO {
         return getJdbcTemplate().update(query.toString(), args.toArray(new Object[args.size()]), ArrayUtils.toPrimitive(argTypes.toArray(new Integer[argTypes.size()])));
     }
 
+	public int removeByName(String name) {
+		String query = "delete from " + TABLE_NAME + " where " + COL_NAME + " = ?";
+
+		return getJdbcTemplate().update(query, name);
+	}
+
+	public int removeById(String id) {
+		String query = "delete from " + TABLE_NAME + " where " + COL_ID + " = ?";
+
+		return getJdbcTemplate().update(query, id);
+	}
+
     public static Item rowToData (ItemDataRow row) {
 		Item itemData = new Item();
         itemData.setId(row.getId().toString());
