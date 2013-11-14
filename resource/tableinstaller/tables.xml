@@ -56,15 +56,12 @@
 			<column name="price" no-nulls="true" size="10" type="decimal"  decimal-places="3"/>
 			<column name="priceQty" no-nulls="false" type="integer"/>  <!-- the price is for how much qty? -->
 			<column name="unit" no-nulls="true" type="varchar" size="20"/>
-			<column name="category" no-nulls="false" type="varchar" size="80"/>
 			<index name="PK_ftItem_id" columns="id" primary-key="true" />
 			<index name="IDX_ftItem_name" columns="name" unique="true"/>
 			<index name="IDX_ftItem_code" columns="code" unique="true"/>
 			<key-ref name="FK_ftItem_groupName" columns="groupName" table="ftGroup"
                      references="name" rule="cascade"/>
 			<key-ref name="FK_ftItem_unit" columns="unit" table="ftUnit"
-                     references="name" rule="cascade"/>
-			<key-ref name="FK_ftItem_category" columns="category" table="ftCategory"
                      references="name" rule="cascade"/>
 		</table>
 

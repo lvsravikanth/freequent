@@ -6,7 +6,9 @@ import org.apache.commons.lang.ArrayUtils;
 import org.springframework.jdbc.core.RowMapper;
 import com.scalar.core.jdbc.AbstractDAO;
 import com.scalar.core.util.GUID;
+import com.scalar.core.ScalarException;
 import com.scalar.freequent.common.CategoryData;
+import com.scalar.freequent.common.ObjectType;
 
 import java.util.*;
 import java.sql.Types;
@@ -117,7 +119,8 @@ public class CategoryDataDAO extends AbstractDAO {
         });
     }
 
-	public int insert (CategoryDataRow row) {
+	public int insert (CategoryDataRow row) throws ScalarException {
+		insertRecord(row.getId(), ObjectType.CATEGORY);
         StringBuilder query = new StringBuilder();
 		String sep = "";
         query.append ("insert into " + TABLE_NAME + " (");
@@ -133,7 +136,8 @@ public class CategoryDataDAO extends AbstractDAO {
 		);
     }
 
-    public int update (CategoryDataRow row) {
+    public int update (CategoryDataRow row) throws ScalarException {
+		updateRecord(row.getId());
         StringBuilder query = new StringBuilder();
 		String sep = "";
         query.append ("update " + TABLE_NAME + " set ");
@@ -149,6 +153,18 @@ public class CategoryDataDAO extends AbstractDAO {
 
         return getJdbcTemplate().update(query.toString(), args.toArray(new Object[args.size()]), ArrayUtils.toPrimitive(argTypes.toArray(new Integer[argTypes.size()])));
     }
+
+	public int removeByName(String name) {
+		String query = "delete from " + TABLE_NAME + " where " + COL_NAME + " = ?";
+
+		return getJdbcTemplate().update(query, name);
+	}
+
+	public int removeById(String id) {
+		String query = "delete from " + TABLE_NAME + " where " + COL_ID + " = ?";
+
+		return getJdbcTemplate().update(query, id);
+	}
 
     public static CategoryData rowToData (CategoryDataRow row) {
 		CategoryData CategoryData = new CategoryData();
