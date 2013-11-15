@@ -147,7 +147,7 @@ fui.msg.internal = {
 				});
 			}
 		}
-		var dialogCls = 'fui-dialog fui-dialog-' + type +' fui-editor-no-native-close';
+		var dialogCls = 'fui-alert fui-alert-' + type +' fui-editor-no-native-close';
 		var config = {
 			modal: true,
 			autoOpen: true,
