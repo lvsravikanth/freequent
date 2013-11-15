@@ -33,6 +33,7 @@
         <link rel="stylesheet" type="text/css" href="<%=context%>/script/thirdparty/jquery/css/start/jquery-ui-1.10.3.custom.css"/>
         <link rel="stylesheet" type="text/css" href="<%=context%>/script/thirdparty/jquery/plugins/pqgrid/pqgrid.min.css"/>
         <link rel="stylesheet" type="text/css" href="<%=context%>/script/thirdparty/jquery/plugins/jquery-loadmask-0.4/jquery.loadmask.css"/>
+        <link rel="stylesheet" type="text/css" href="<%=context%>/script/thirdparty/jquery/plugins/select2-3.4.5/select2.css"/>
 
 		<%-- vExt CSS
 
@@ -85,6 +86,7 @@
         <%--<script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/jquery-loadmask-0.4/jquery.loadmask.fix.jquery.ui.js"></script>--%>
         <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/jquery-loadmask-0.4/jquery.loadmask.js"></script>
         <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/sujan-jquery-form-dirty/jquery.sujan-form-dirty.js"></script>
+        <script type="text/javascript" src="<%= context %>/script/thirdparty/jquery/plugins/select2-3.4.5/select2.min.js"></script>
 
 		<script type="text/javascript">
 			<%-- Configure VUI --%>

@@ -8,7 +8,8 @@
 <script type="text/javascript">
     fui.ready(function() {
         fui.query("#site_signin_button").button();
-    });
+		fui.query("input:text:visible:first").focus();
+	});
 </script>
 <div id="login_container" class="frq_main_container frq_main_content">
     <div id="site_signin_wrapper" class="frq_signin_container">

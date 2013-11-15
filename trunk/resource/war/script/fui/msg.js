@@ -154,12 +154,14 @@ fui.msg.internal = {
 			dialogClass: dialogCls,
 			buttons: buttons,
 			title: title,
+			width: 400,
+			resizable: false,
 			close: function(event, ui) {
 				fui.query(this).dialog('destroy').remove();
 			}
 		}
 
-		fui.query("<div>"+msg+"</div>").dialog(config);
+		fui.query('<div/>').html(msg).dialog(config);
 	},
 	buildButtonHandler : function(button, handler) {
 		return function() {

@@ -17,7 +17,7 @@
 <button id="unmaskbutton">UnMask</button>
 <hr/>
 <form action="#" id="validatortestform">
-	input required: <input type="text" id="userid"/>
+	input required: <input type="text" id="userid" name="userid"/>
 
 </form><button id="validatetestbtn">Validate</button>
 

@@ -27,14 +27,14 @@ fui.ui = {
 		}
 
 		if (message) {
-			message = fui.html.escape(message);
+			//message = fui.html.escape(message);
 			if (rootMessage) {
-				rootMessage = fui.html.escape(rootMessage);
+				//rootMessage = fui.html.escape(rootMessage);
 				message += '<br/>' + rootMessage;
 			}
 
 			//fui.vext.msg.alert(fui.ui.workspace.getMessage('error'), message);
-			alert("ERROR:" + message); //todo
+			fui.msg.alert(fui.workspace.getMessage("error"), message);
 		}
 
 		return true;
@@ -51,7 +51,7 @@ fui.ui = {
 		if ( fui.log.isInfo() ) { fui.log.info(message); }
 		if ( message ) {
 			//fui.ui.notification.message(message);
-			alert("Message:" + message); //todo
+			fui.msg.alert(fui.workspace.getMessage("message"), message);
 		}
 		return true;
 	},
