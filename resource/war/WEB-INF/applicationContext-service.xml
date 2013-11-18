@@ -13,6 +13,10 @@
 
 	<bean id="com.scalar.freequent.auth.service.AuthService" class="com.scalar.freequent.auth.service.AuthServiceImpl" scope="prototype"/>
 	<bean id="com.scalar.freequent.service.users.UserService" class="com.scalar.freequent.service.users.UserServiceImpl" scope="prototype"/>
+	<bean id="com.scalar.freequent.service.ItemDataService" class="com.scalar.freequent.service.ItemDataServiceImpl" scope="prototype"/>
+	<bean id="com.scalar.freequent.service.CategoryDataService" class="com.scalar.freequent.service.CategoryDataServiceImpl" scope="prototype"/>
+	<bean id="com.scalar.freequent.service.UnitDataService" class="com.scalar.freequent.service.UnitDataServiceImpl" scope="prototype"/>
+	<bean id="com.scalar.freequent.service.GroupDataService" class="com.scalar.freequent.service.GroupDataServiceImpl" scope="prototype"/>
 
 
     <bean id="com.scalar.freequent.dao.UserDataDAO" class="com.scalar.freequent.dao.UserDataDAO" scope="prototype">
@@ -22,6 +26,24 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 	<bean id="com.scalar.freequent.dao.CapabilityInfoDAO" class="com.scalar.freequent.dao.CapabilityInfoDAO" scope="prototype">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	<bean id="com.scalar.freequent.dao.CategoryAssocDataDAO" class="com.scalar.freequent.dao.CategoryAssocDataDAO" scope="prototype">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	<bean id="com.scalar.freequent.dao.CategoryDataDAO" class="com.scalar.freequent.dao.CategoryDataDAO" scope="prototype">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	<bean id="com.scalar.freequent.dao.GroupDataDAO" class="com.scalar.freequent.dao.GroupDataDAO" scope="prototype">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	<bean id="com.scalar.freequent.dao.ItemDataDAO" class="com.scalar.freequent.dao.ItemDataDAO" scope="prototype">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	<bean id="com.scalar.freequent.dao.RecordDataDAO" class="com.scalar.freequent.dao.RecordDataDAO" scope="prototype">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	<bean id="com.scalar.freequent.dao.UnitDataDAO" class="com.scalar.freequent.dao.UnitDataDAO" scope="prototype">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 </beans>

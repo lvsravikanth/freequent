@@ -45,11 +45,20 @@ public class ItemDataServiceImpl extends AbstractService implements ItemDataServ
 		return null;
 	}
 
+	/**
+	 *
+	 * @param name
+	 *
+	 * @return null if not found.
+	 */
 	public Item findByName(String name) {
 		ItemDataDAO itemDataDAO = DAOFactory.getDAO(ItemDataDAO.class, getRequest());
 		ItemDataRow itemRow = itemDataDAO.findByName(name);
-		Item item = ItemDataDAO.rowToData(itemRow);
-		setCategoryAssocDataList(item);
+		Item item = null;
+		if (itemRow != null) {
+			item = ItemDataDAO.rowToData(itemRow);
+			setCategoryAssocDataList(item);
+		}
 
 		return item;
 	}
@@ -96,7 +105,7 @@ public class ItemDataServiceImpl extends AbstractService implements ItemDataServ
 		String[] categoryIds = new String[categoryAssocDataList.size()];
 		int i = 0;
 		for (CategoryAssocData categoryAssocData: categoryAssocDataList) {
-			categoryIds[i++] = categoryAssocData.getId();
+			categoryIds[i++] = categoryAssocData.getCategoryId();
 		}
 		categoryAssocDataDAO.insert(item.getId(), categoryIds);
 
@@ -129,20 +138,9 @@ public class ItemDataServiceImpl extends AbstractService implements ItemDataServ
 		CategoryDataDAO categoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
 		// load category associations
 		List<CategoryAssocDataRow> categoryRows = categoryAssocDataDAO.findByObjectId(item.getId());
-		String[] catIds = new String[categoryRows.size()];
-		int i=0;
+		List<CategoryAssocData> categoryAssocDataList = new ArrayList<CategoryAssocData>(categoryRows.size());
 		for (CategoryAssocDataRow catRow: categoryRows) {
-			catIds[i++]=catRow.getCategoryId().toString();
-		}
-		List<CategoryDataRow> cataDataRows = categoryDataDAO.findByIds(catIds);
-		List<CategoryAssocData> categoryAssocDataList = new ArrayList<CategoryAssocData>(cataDataRows.size());
-		for (CategoryDataRow catRow: cataDataRows) {
-			CategoryAssocData categoryAssocData = new CategoryAssocData();
-			categoryAssocData.setId(catRow.getId().toString());
-			categoryAssocData.setName(catRow.getName());
-			categoryAssocData.setDescription(catRow.getDescription());
-
-			categoryAssocDataList.add (categoryAssocData);
+			categoryAssocDataList.add (CategoryAssocDataDAO.rowToData(catRow));
 		}
 		item.setCategoryAssocDataList(categoryAssocDataList);
 	}

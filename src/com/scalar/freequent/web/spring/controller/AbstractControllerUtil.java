@@ -65,12 +65,14 @@ public final class AbstractControllerUtil {
 
     public void invokeNamedMethod(Object tthis, String methodName, Request request, Object command, Map<String, Object> data) throws Exception {
         ModelAndView modelAndView = null;
-        Method method = tthis.getClass().getMethod(methodName, new Class[]{Request.class,
-                Object.class,
-                Map.class});
-        if (method == null) {
+		Method method = null;
+		try {
+			method = tthis.getClass().getMethod(methodName, new Class[]{Request.class,
+					Object.class,
+					Map.class});
+		} catch (NoSuchMethodException e) {
             MsgObject authenticationMsg = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.NO_SUCH_METHOD_EXCEPTION, methodName);
-            throw ScalarActionException.create(authenticationMsg, new NoSuchRequestHandlingMethodException(methodName, getClass()));
+            throw ScalarActionException.create(authenticationMsg, e);
         }
         List<Object> params = new ArrayList<Object>(4);
         params.add(request);

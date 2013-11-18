@@ -87,7 +87,7 @@ public class Record {
 		this.modifiedOn = modifiedOn;
 	}
 
-	public Map<String, Object> convertToMap () {
+	public Map<String, Object> toMap() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put (RECORD_ID, getRecordId());
 		map.put (OBJECT_ID, getObjectId());

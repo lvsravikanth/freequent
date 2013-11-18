@@ -3,6 +3,7 @@ package com.scalar.freequent.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import com.scalar.core.util.GUID;
+import com.scalar.freequent.common.CategoryAssocData;
 
 /**
  * User: Sujan Kumar Suppala
