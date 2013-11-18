@@ -1,5 +1,7 @@
 package com.scalar.freequent.common;
 
+import java.util.Map;
+
 /**
  * User: Sujan Kumar Suppala
  * Date: Nov 7, 2013
@@ -7,4 +9,5 @@ package com.scalar.freequent.common;
  */
 public interface HasRecord {
 	Record getRecord();
+	Map<String, Object> toMap();
 }

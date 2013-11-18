@@ -10,7 +10,7 @@ import java.util.List;
  * Date: Nov 14, 2013
  * Time: 8:24:49 PM
  */
-public interface UnitService {
+public interface UnitDataService {
 	List<UnitData> findAll();
 	UnitData findByName(String name);
 	boolean insertOrUpdate(UnitData unitData) throws ScalarServiceException;

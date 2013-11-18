@@ -24,8 +24,8 @@ import java.util.ArrayList;
  * Date: Nov 14, 2013
  * Time: 8:28:44 PM
  */
-public class UnitServiceImpl extends AbstractService implements UnitService{
-	protected static final Log logger = LogFactory.getLog(UnitServiceImpl.class);
+public class UnitDataServiceImpl extends AbstractService implements UnitDataService {
+	protected static final Log logger = LogFactory.getLog(UnitDataServiceImpl.class);
 
 	public List<UnitData> findAll() {
 		UnitDataDAO unitDataDAO = DAOFactory.getDAO(UnitDataDAO.class, getRequest());

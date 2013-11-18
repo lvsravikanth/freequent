@@ -10,6 +10,8 @@ fui.ui.type = {
 	DEMO: 'demo',
 
     MANAGEUSERS: 'manageusers',
+    MANAGEITEMS: 'manageitems',
 
-	USER: 'user'
+	USER: 'user',
+	ITEM: "item"
 };

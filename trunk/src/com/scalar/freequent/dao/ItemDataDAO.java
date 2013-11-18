@@ -101,7 +101,7 @@ public class ItemDataDAO extends AbstractDAO {
     public ItemDataRow findByName(String itemName) {
         String query = SQL_SelectAllColumns +
                         " WHERE " + COL_NAME + " = ? ";
-        List<ItemDataRow> groups = getJdbcTemplate().query(query,
+        List<ItemDataRow> items = getJdbcTemplate().query(query,
         new RowMapper<ItemDataRow>() {
             public ItemDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
                 ItemDataRow row = new ItemDataRow();
@@ -117,7 +117,7 @@ public class ItemDataDAO extends AbstractDAO {
             }
         }, itemName);
 
-        return groups.get(0);
+        return items.size()>0 ? items.get(0) : null;
     }
 
 	/**

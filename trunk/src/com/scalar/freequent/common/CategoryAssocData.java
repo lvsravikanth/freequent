@@ -3,6 +3,9 @@ package com.scalar.freequent.common;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  * User: Sujan Kumar Suppala
  * Date: Nov 6, 2013
@@ -11,31 +14,30 @@ import org.apache.commons.logging.LogFactory;
 public class CategoryAssocData {
 	protected static final Log logger = LogFactory.getLog(CategoryAssocData.class);
 
-	private String id;
-	private String name;
-	private String description;
+	private String objectId;
+	private String categoryId;
 
-	public String getId() {
-		return id;
+	public String getObjectId() {
+		return objectId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
 	}
 
-	public String getName() {
-		return name;
+	public String getCategoryId() {
+		return categoryId;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
 	}
 
-	public String getDescription() {
-		return description;
-	}
+	public Map<String, Object> toMap() {
+		HashMap<String,Object> map = new HashMap<String, Object>();
+		map.put ("objectId", objectId);
+		map.put ("categoryId", categoryId);
 
-	public void setDescription(String description) {
-		this.description = description;
+		return map;
 	}
 }

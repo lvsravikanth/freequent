@@ -3,6 +3,7 @@ package com.scalar.freequent.dao;
 import com.scalar.core.ScalarException;
 import com.scalar.core.jdbc.AbstractDAO;
 import com.scalar.core.util.GUID;
+import com.scalar.freequent.common.CategoryAssocData;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -145,5 +146,13 @@ public class CategoryAssocDataDAO extends AbstractDAO {
 		return getJdbcTemplate().update(query, objectId);
 	}
 
+
+	public static CategoryAssocData rowToData(CategoryAssocDataRow row) {
+		CategoryAssocData assocData = new CategoryAssocData();
+		assocData.setObjectId(row.getObjectId().toString());
+		assocData.setCategoryId(row.getCategoryId().toString());
+
+		return assocData;
+	}
 
 }

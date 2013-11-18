@@ -2,6 +2,7 @@
 <%@ page import="com.scalar.core.request.Request" %>
 <%@ page import="com.scalar.freequent.l10n.WorkspaceResource" %>
 <%@ page import="com.scalar.freequent.action.ManageUsersAction" %>
+<%@ page import="com.scalar.freequent.common.Item" %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -22,22 +23,22 @@
 			<div class="fui-workspace-search-container">
 					<div class="fui-workspace-search-table-row">
 						<span class="fui-workspace-search-table-cell">
-							<span for="userid"><fmt:message key="<%=WorkspaceResource.USERID%>"/></span>
+							<span for="<%=Item.PARAM_NAME%>"><fmt:message key="<%=WorkspaceResource.ITEM_NAME%>"/></span>
 						</span>
 						<span class="fui-workspace-search-table-cell">
-							<input type="text" name="userid" id="userid">
+							<input type="text" name="<%=Item.PARAM_NAME%>" id="<%=Item.PARAM_NAME%>">
 						</span>
 						<span class="fui-workspace-search-table-cell">
-							<span for="firstname"><fmt:message key="<%=WorkspaceResource.FIRST_NAME%>"/></span>
+							<span for="<%=Item.PARAM_GROUP%>"><fmt:message key="<%=WorkspaceResource.GROUP%>"/></span>
 						</span>
 						<span class="fui-workspace-search-table-cell">
-							<input type="text" name="firstname" id="firstname">
+							<input type="text" name="<%=Item.PARAM_GROUP%>" id="<%=Item.PARAM_GROUP%>">
 						</span>
 						<span class="fui-workspace-search-table-cell">
-							<span for="lastname"><fmt:message key="<%=WorkspaceResource.LAST_NAME%>"/></span>
+							<span for="<%=Item.PARAM_CATEGORY%>"><fmt:message key="<%=WorkspaceResource.CATEGORY%>"/></span>
 						</span>
 						<span class="fui-workspace-search-table-cell">
-							<input type="text" name="lastname" id="lastname">
+							<input type="text" name="<%=Item.PARAM_CATEGORY%>" id="<%=Item.PARAM_CATEGORY%>">
 						</span>
 						<div class="fui-workspace-search-actions-container fui-workspace-search-table-cell">
 							<button type="button" id="search"><fmt:message key="<%=WorkspaceResource.SEARCH%>"/></button>
@@ -46,7 +47,7 @@
 				</div>
 				<div class="fui-workspace-footer-search">
 					<div class="fui-workspace-footer-search-newuser">
-						<button type="button" id="newuser"><fmt:message key="<%=WorkspaceResource.NEWUSER%>"/></button>
+						<button type="button" id="newitem"><fmt:message key="<%=WorkspaceResource.NEW_ITEM%>"/></button>
 					</div>
 				</div>
 			</div>
@@ -60,24 +61,24 @@
         fui.query("#search").button()
                 .click( function(event) {
             var params = {};
-            params.userid = fui.byId("userid").value;
-            params.firstname = fui.byId("firstname").value;
-            params.lastname = fui.byId("lastname").value;
-            fui.ui.manageusers.runSearch(params);
+            params.name = fui.byId("name").value;
+            params.group = fui.byId("group").value;
+            params.category = fui.byId("category").value;
+            fui.ui.manageitems.runSearch(params);
 
         });
-		fui.query("#newuser").button()
+		fui.query("#newitem").button()
 			.click( function(event) {
-			fui.ui.manageusers.edit();
+			fui.ui.manageitems.edit();
 		});
 		fui.query("#reset").button();
 
         //Register grid
-        fui.grid.register(fui.ui.type.MANAGEUSERS, fui.ui.grid.manageusers.get());
+        fui.grid.register(fui.ui.type.ITEM, fui.ui.grid.manageitems.get());
 
         //build grid
         var config = {
-            type: fui.ui.type.MANAGEUSERS
+            type: fui.ui.type.ITEM
         };
         fui.workspace.load(config);
     });
