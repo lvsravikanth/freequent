@@ -6,8 +6,19 @@
 <button id="testauthorization" onclick="javascript: fui.ui.demo.testauthorization();">Test Authorization</button>
 <button id="testtemplate">Test Template</button>
 <div id="template-container">Click 'Test Template' button to see the template</div>
-	<div id="dialog" title="Dialog Title">I'm a dialog</div>
+<div id="dialog" title="Dialog Title">
+	I'm a dialog
+	<hr/>
+	Text: <input type="text" name="name" id="name"/>
+	Select2:
+	<select id="groupData">
+		<option>Group1</option>
+		<option>Group2</option>
+		<option>Group3</option>
+	</select>
+
 </div>
+<button id="opener">Click to Open The Dialog</button>
 <div id="testmask">
 	click mask to mask me.
 	<div style="heigh:100px">what's up?</div>
@@ -20,10 +31,10 @@
 	input required: <input type="text" id="userid" name="userid"/>
 
 </form><button id="validatetestbtn">Validate</button>
-
-
+</div>
 <script type="text/javascript">
     fui.ready(function() {
+        fui.query('#groupData').select2({dropdownCssClass:"ui-dialog"});
         fui.query('#testexception').button();
         fui.query('#testauthorization').button();
         fui.query('#testtemplate').button()

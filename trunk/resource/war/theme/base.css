@@ -25,6 +25,10 @@
 .fui-html .fui-input-text{
     font-size: 13px;}
 
+.fui-html .fui-input-select {
+	font-size: 13px;
+	width: 166px;
+}
 .fui-html label.error {
     font-size: 12px;
     font-style: normal;

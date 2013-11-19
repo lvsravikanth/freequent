@@ -56,7 +56,7 @@
 	<div class="fui-form-block-container">
 		<label for="unitData" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.UNIT%>"/><span class="fui-widget-required-flag">*</span></label><br>
 		<div class="fui-form-inline-input">
-			<form:select path="unitData.name" id="unitData">
+			<form:select path="unitData.name" id="unitData" cssClass="fui-input-select">
 				<form:options items="${unitDataList}" itemLabel="name" itemValue="name"/>
 			</form:select>
 		</div>
@@ -67,7 +67,7 @@
 	<div class="fui-form-block-container">
 		<label for="groupData" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.GROUP%>"/></label><br>
 		<div class="fui-form-inline-input">
-			<form:select path="groupData.name" id="groupData">
+			<form:select path="groupData.name" id="groupData" cssClass="fui-input-select">
 				<form:options items="${groupDataList}" itemLabel="name" itemValue="name"/>
 			</form:select>
 		</div>
@@ -78,7 +78,7 @@
 	<div class="fui-form-block-container">
 		<label for="categoryAssocData" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.CATEGORY%>"/><span class="fui-widget-required-flag">*</span></label><br>
 		<div class="fui-form-inline-input">
-			<form:select path="categoryId" id="categoryAssocData">
+			<form:select path="categoryId" id="categoryAssocData" cssClass="fui-input-select">
 				<form:options items="${categoryDataList}" itemLabel="name" itemValue="id"/>
 			</form:select>
 		</div>
@@ -90,6 +90,11 @@
 <script type="text/javascript">
 	fui.ready(function() {
 		fui.editor.find('<%=editorId%>').setFormId('<%=formId%>');
+		fui.query("#unitData").select2({dropdownCssClass:"ui-dialog"/*fix for to focus search field. https://github.com/ivaynberg/select2/issues/1246*/,
+									minimumResultsForSearch: 10
+									});
+		fui.query("#groupData").select2({dropdownCssClass:"ui-dialog", minimumResultsForSearch: 10});
+		fui.query("#categoryAssocData").select2({dropdownCssClass:"ui-dialog", minimumResultsForSearch: 10});
 
 		fui.query("#<%=formId%>").validate({
 			rules: {
