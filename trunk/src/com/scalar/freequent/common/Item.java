@@ -19,12 +19,15 @@ public class Item implements HasRecord {
 	private String id;
 	private GroupData groupData = new GroupData();
 	private String name;
+	private String code;
 	private double price;
 	private int priceQty;
 	private UnitData unitData = new UnitData();
 	private String[] categoryId;
 	private List<CategoryAssocData> categoryAssocDataList = new ArrayList<CategoryAssocData>();
 	private Record record;
+	private String description;
+	private boolean taxable = false;
 
 	public static final String PARAM_NAME = "name";
 	public static final String PARAM_UNIT = "unit";
@@ -33,12 +36,14 @@ public class Item implements HasRecord {
 
 	public static final String ATTR_ID = "id";
 	public static final String ATTR_NAME = "name";
+	public static final String ATTR_CODE = "code";
 	public static final String ATTR_GROUP_DATA = "groupData";
 	public static final String ATTR_PRICE = "price";
 	public static final String ATTR_PRICE_QTY = "priceQty";
 	public static final String ATTR_UNIT_DATA = "unitData";
 	public static final String ATTR_CATEGORY_ASSOC_DATA = "categoryAssocData";
-	public static final String ATTR_RECORD = "record";
+	public static final String ATTR_DESCRIPTION = "description";
+	public static final String ATTR_TAXABLE = "taxable";
 
 	public String getId() {
 		return id;
@@ -54,6 +59,14 @@ public class Item implements HasRecord {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public double getPrice() {
@@ -112,6 +125,22 @@ public class Item implements HasRecord {
 		this.record = record;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public boolean getTaxable() {
+		return taxable;
+	}
+
+	public void setTaxable(boolean taxable) {
+		this.taxable = taxable;
+	}
+
 	public Map<String, Object> toMap() {
 		return toMap(this);
 	}
@@ -120,11 +149,14 @@ public class Item implements HasRecord {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put (ATTR_ID, item.getId());
 		map.put (ATTR_NAME, item.getName());
+		map.put (ATTR_CODE, item.getCode());
 		if (item.getGroupData() != null)
 			map.put (ATTR_GROUP_DATA, item.getGroupData().toMap());
 		map.put (ATTR_UNIT_DATA, item.getUnitData().toMap());
 		map.put (ATTR_PRICE, item.getPrice());
 		map.put (ATTR_PRICE_QTY, item.getPriceQty());
+		map.put (ATTR_DESCRIPTION, item.getDescription());
+		map.put (ATTR_TAXABLE, item.getTaxable());
 		map.put (ATTR_RECORD, item.getRecord().toMap());
 		List<CategoryAssocData> categoryAssocDataList = item.getCategoryAssocDataList();
 		if (categoryAssocDataList != null && !categoryAssocDataList.isEmpty()) {

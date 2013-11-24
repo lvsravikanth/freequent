@@ -17,6 +17,7 @@
 	<bean id="com.scalar.freequent.service.CategoryDataService" class="com.scalar.freequent.service.CategoryDataServiceImpl" scope="prototype"/>
 	<bean id="com.scalar.freequent.service.UnitDataService" class="com.scalar.freequent.service.UnitDataServiceImpl" scope="prototype"/>
 	<bean id="com.scalar.freequent.service.GroupDataService" class="com.scalar.freequent.service.GroupDataServiceImpl" scope="prototype"/>
+	<bean id="com.scalar.freequent.service.TaxRateDataService" class="com.scalar.freequent.service.TaxRateDataServiceImpl" scope="prototype"/>
 
 
     <bean id="com.scalar.freequent.dao.UserDataDAO" class="com.scalar.freequent.dao.UserDataDAO" scope="prototype">
@@ -44,6 +45,9 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 	<bean id="com.scalar.freequent.dao.UnitDataDAO" class="com.scalar.freequent.dao.UnitDataDAO" scope="prototype">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	<bean id="com.scalar.freequent.dao.TaxRateDataDAO" class="com.scalar.freequent.dao.TaxRateDataDAO" scope="prototype">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 </beans>

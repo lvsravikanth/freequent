@@ -1,6 +1,10 @@
 package com.scalar.core.service;
 
 import com.scalar.core.request.Request;
+import com.scalar.core.jdbc.DAOFactory;
+import com.scalar.freequent.common.HasRecord;
+import com.scalar.freequent.dao.RecordDataDAO;
+import com.scalar.freequent.dao.RecordDataRow;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,4 +39,10 @@ public class AbstractService implements Service {
     public void setRequest(Request request) {
         this.request = request;
     }
+
+	protected void setRecord(HasRecord hasRecordObj, String objId) {
+		RecordDataDAO recordDataDAO = DAOFactory.getDAO(RecordDataDAO.class, getRequest());
+		RecordDataRow recordDataRow = recordDataDAO.findByObjectId(objId);
+		hasRecordObj.setRecord(RecordDataDAO.rowToData(recordDataRow));
+	}
 }

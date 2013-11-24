@@ -802,10 +802,10 @@ fui.extend(fui.editor.Editor,
 					//For Category type of assets, creation/modification timings may not exist.
 					// Hence bring the isNew value from the config and set it to isNew
 
-					if ( !object.creationTime && !object.lastModificationTime) {
+					if ( !object.record || (!object.record.createdOn && !object.record.modifiedOn)) {
 						isNew = config.isNew;
 					} else {
-						isNew = (object.creationTime == object.lastModificationTime);
+						isNew = (object.record && object.record.createdOn == object.record.modifiedOn);
 					}
 
 

@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -126,6 +127,7 @@ public abstract class AbstractActionController extends AbstractController implem
             ErrorResponse.prepareData(data, ee);
             Response response = ResponseFactory.createResponse(Response.ERROR, request, data);
             response.setWrappedObject(httpServletResponse);
+			httpServletResponse.setStatus(500);
             return AbstractControllerUtil.createResponseModelAndView(response);
         }
     }
@@ -256,6 +258,14 @@ public abstract class AbstractActionController extends AbstractController implem
 	 */
 	protected void validate(Object command, BindException errors) throws ScalarValidationException {
 
+	}
+
+	protected ScalarActionException getActionException(Throwable th) {
+		if (th instanceof ScalarActionException) {
+			return (ScalarActionException)th;
+		}
+		MsgObject msgObject = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.UNABLE_TO_PERFORM_ACTION);
+		return ScalarActionException.create(msgObject, th);
 	}
 }
 

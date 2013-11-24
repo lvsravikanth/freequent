@@ -54,8 +54,10 @@
 			<column name="code" no-nulls="true" size="40" type="varchar" />
 			<column name="groupName" no-nulls="false" size="20" type="varchar" />
 			<column name="price" no-nulls="true" size="10" type="decimal"  decimal-places="3"/>
-			<column name="priceQty" no-nulls="false" type="integer"/>  <!-- the price is for how much qty? -->
+			<column name="priceQty" no-nulls="true" type="integer"/>  <!-- the price is for how much qty? -->
 			<column name="unit" no-nulls="true" type="varchar" size="20"/>
+			<column name="description" no-nulls="false" type="varchar" size="1024"/>
+			<column name="taxable" no-nulls="true" type="bit" default="true" />
 			<index name="PK_ftItem_id" columns="id" primary-key="true" />
 			<index name="IDX_ftItem_name" columns="name" unique="true"/>
 			<index name="IDX_ftItem_code" columns="code" unique="true"/>
@@ -87,6 +89,15 @@
 			<column name="description" no-nulls="false" size="1024" type="varchar"/>
 			<index name="PK_ftCategory_id" columns="id" primary-key="true" />
 			<index name="IDX_ftCategory_name" columns="name" unique="true"/>
+		</table>
+
+		<table name="ftTaxRate">
+			<column name="id" no-nulls="true" size="40" type="varchar"/>
+			<column name="name" no-nulls="true" size="20" type="varchar"/>
+			<column name="percentage" no-nulls="true" size="10" type="decimal"  decimal-places="3"/>
+			<column name="description" no-nulls="false" size="1024" type="varchar"/>
+			<index name="PK_ftTaxRate_id" columns="id" primary-key="true" />
+			<index name="IDX_ftTaxRate_name" columns="name" unique="true"/>
 		</table>
 
 		<table name="ftCategoryAssoc">
@@ -174,6 +185,97 @@
 			<row>
 				<item column="id" value="C-non-veg-00000000000000000000000000CTGR"/>
 				<item column="name" value="non-veg"/>
+			</row>
+		</rowset>
+		<rowset table="ftTaxRate">
+			<row>
+				<item column="id" value="T-VAT-000000000000000000000000000000TAXR"/>
+				<item column="name" value="VAT"/>
+				<item column="percentage" value="14"/>
+				<item column="description" value="value added tax"/>
+			</row>
+		</rowset>
+		<rowset table="ftRecord">
+			<row>
+				<item column="recordId" value="R10000000000000000000000000000000000RCRD"/>
+				<item column="objectId" value="U-pcs-000000000000000000000000000000UNIT"/>
+				<item column="objectType" value="unit"/>
+				<item column="createdBy" value="admin"/>
+				<item column="createdOn" value="2013-11-23 00.00.00" />
+				<item column="modifiedBy" value="admin" />
+				<item column="modifiedOn" value="2013-11-23 00.00.00" />
+			</row>
+			<row>
+				<item column="recordId" value="R20000000000000000000000000000000000RCRD"/>
+				<item column="objectId" value="G-soups-0000000000000000000000000000GRUP"/>
+				<item column="objectType" value="group"/>
+				<item column="createdBy" value="admin"/>
+				<item column="createdOn" value="2013-11-23 00.00.00" />
+				<item column="modifiedBy" value="admin" />
+				<item column="modifiedOn" value="2013-11-23 00.00.00" />
+			</row>
+			<row>
+				<item column="recordId" value="R30000000000000000000000000000000000RCRD"/>
+				<item column="objectId" value="G-raita-0000000000000000000000000000GRUP"/>
+				<item column="objectType" value="group"/>
+				<item column="createdBy" value="admin"/>
+				<item column="createdOn" value="2013-11-23 00.00.00" />
+				<item column="modifiedBy" value="admin" />
+				<item column="modifiedOn" value="2013-11-23 00.00.00" />
+			</row>
+			<row>
+				<item column="recordId" value="R40000000000000000000000000000000000RCRD"/>
+				<item column="objectId" value="G-rice-00000000000000000000000000000GRUP"/>
+				<item column="objectType" value="group"/>
+				<item column="createdBy" value="admin"/>
+				<item column="createdOn" value="2013-11-23 00.00.00" />
+				<item column="modifiedBy" value="admin" />
+				<item column="modifiedOn" value="2013-11-23 00.00.00" />
+			</row>
+			<row>
+				<item column="recordId" value="R50000000000000000000000000000000000RCRD"/>
+				<item column="objectId" value="G-muttonmusti-0000000000000000000000GRUP"/>
+				<item column="objectType" value="group"/>
+				<item column="createdBy" value="admin"/>
+				<item column="createdOn" value="2013-11-23 00.00.00" />
+				<item column="modifiedBy" value="admin" />
+				<item column="modifiedOn" value="2013-11-23 00.00.00" />
+			</row>
+			<row>
+				<item column="recordId" value="R60000000000000000000000000000000000RCRD"/>
+				<item column="objectId" value="G-biryani-00000000000000000000000000GRUP"/>
+				<item column="objectType" value="group"/>
+				<item column="createdBy" value="admin"/>
+				<item column="createdOn" value="2013-11-23 00.00.00" />
+				<item column="modifiedBy" value="admin" />
+				<item column="modifiedOn" value="2013-11-23 00.00.00" />
+			</row>
+			<row>
+				<item column="recordId" value="R70000000000000000000000000000000000RCRD"/>
+				<item column="objectId" value="C-veg-000000000000000000000000000000CTGR"/>
+				<item column="objectType" value="category"/>
+				<item column="createdBy" value="admin"/>
+				<item column="createdOn" value="2013-11-23 00.00.00" />
+				<item column="modifiedBy" value="admin" />
+				<item column="modifiedOn" value="2013-11-23 00.00.00" />
+			</row>
+			<row>
+				<item column="recordId" value="R80000000000000000000000000000000000RCRD"/>
+				<item column="objectId" value="C-non-veg-00000000000000000000000000CTGR"/>
+				<item column="objectType" value="category"/>
+				<item column="createdBy" value="admin"/>
+				<item column="createdOn" value="2013-11-23 00.00.00" />
+				<item column="modifiedBy" value="admin" />
+				<item column="modifiedOn" value="2013-11-23 00.00.00" />
+			</row>
+			<row>
+				<item column="recordId" value="R90000000000000000000000000000000000RCRD"/>
+				<item column="objectId" value="T-VAT-000000000000000000000000000000TAXR"/>
+				<item column="objectType" value="taxrate"/>
+				<item column="createdBy" value="admin"/>
+				<item column="createdOn" value="2013-11-23 00.00.00" />
+				<item column="modifiedBy" value="admin" />
+				<item column="modifiedOn" value="2013-11-23 00.00.00" />
 			</row>
 		</rowset>
 	</tablegroup>

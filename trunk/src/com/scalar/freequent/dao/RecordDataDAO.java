@@ -47,9 +47,9 @@ public class RecordDataDAO extends AbstractDAO {
 		COL_SQL_TYPES.put (COL_OBJECT_ID, Types.VARCHAR);
 		COL_SQL_TYPES.put (COL_OBJECT_TYPE, Types.VARCHAR);
 		COL_SQL_TYPES.put (COL_CREATED_BY, Types.VARCHAR);
-		COL_SQL_TYPES.put (COL_CREATED_ON, Types.DATE);
+		COL_SQL_TYPES.put (COL_CREATED_ON, Types.TIMESTAMP);
 		COL_SQL_TYPES.put (COL_MODIFIED_BY, Types.VARCHAR);
-		COL_SQL_TYPES.put (COL_MODIFIED_ON, Types.DATE);
+		COL_SQL_TYPES.put (COL_MODIFIED_ON, Types.TIMESTAMP);
 	}
 
 	public boolean existByObjectId (String objectId) {
@@ -76,9 +76,9 @@ public class RecordDataDAO extends AbstractDAO {
                 row.setObjectId(new GUID(rs.getString(COL_OBJECT_ID)));
                 row.setObjectType(rs.getString(COL_OBJECT_TYPE));
                 row.setCreatedBy(rs.getString(COL_CREATED_BY));
-                row.setCreatedOn(rs.getDate(COL_CREATED_ON));
+                row.setCreatedOn(rs.getTimestamp(COL_CREATED_ON));
                 row.setModifiedBy(rs.getString(COL_MODIFIED_BY));
-                row.setModifiedOn(rs.getDate(COL_MODIFIED_ON));
+                row.setModifiedOn(rs.getTimestamp(COL_MODIFIED_ON));
 				row.clean();
                 return row;
             }
@@ -179,6 +179,7 @@ public class RecordDataDAO extends AbstractDAO {
 		List<Integer> argTypes = new ArrayList<Integer>();
         if (row.modModifiedBy()) { args.add (row.getModifiedBy()); argTypes.add(COL_SQL_TYPES.get(COL_MODIFIED_BY)); }
         args.add (now.getTime()); argTypes.add(COL_SQL_TYPES.get(COL_MODIFIED_ON));
+		args.add (row.getObjectId()); argTypes.add(COL_SQL_TYPES.get(COL_OBJECT_ID));
 
         return getJdbcTemplate().update(query.toString(), args.toArray(new Object[args.size()]), ArrayUtils.toPrimitive(argTypes.toArray(new Integer[argTypes.size()])));
     }

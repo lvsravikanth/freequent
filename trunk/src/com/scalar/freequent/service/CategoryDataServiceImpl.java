@@ -31,30 +31,34 @@ public class CategoryDataServiceImpl extends AbstractService implements Category
 	protected static final Log logger = LogFactory.getLog(CategoryDataServiceImpl.class);
 
 	public List<CategoryData> findAll() {
-		CategoryDataDAO CategoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
-		List<CategoryDataRow> rows = CategoryDataDAO.findAll();
+		CategoryDataDAO categoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
+		List<CategoryDataRow> rows = categoryDataDAO.findAll();
 		List<CategoryData> units = new ArrayList<CategoryData>(rows.size());
 		for (CategoryDataRow row: rows) {
-			units.add (CategoryDataDAO.rowToData(row));
+			CategoryData categoryData = CategoryDataDAO.rowToData(row);
+			setRecord(categoryData, categoryData.getId());
+			units.add (categoryData);
 		}
 		return units;
 	}
 
 	public CategoryData findByName(String name) {
-		CategoryDataDAO CategoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
-		CategoryDataRow row = CategoryDataDAO.findByName(name);
-		return CategoryDataDAO.rowToData(row);
+		CategoryDataDAO categoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
+		CategoryDataRow row = categoryDataDAO.findByName(name);
+		CategoryData categoryData = CategoryDataDAO.rowToData(row);
+		setRecord(categoryData, categoryData.getId());
+		return categoryData;
 	}
 
 	@Transactional
 	public boolean insertOrUpdate(CategoryData categoryData) throws ScalarServiceException {
 		boolean isNew = categoryData.getId() == null;
-		CategoryDataDAO CategoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
+		CategoryDataDAO categoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
 		if (isNew) {
 			// insert
 			try {
 				categoryData.setId (GUID.generateString(ObjectType.TYPE_CODE_GROUP));
-				CategoryDataDAO.insert(CategoryDataDAO.dataToRow(categoryData));
+				categoryDataDAO.insert(CategoryDataDAO.dataToRow(categoryData));
 			} catch (ScalarException ex) {
 				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_CREATE_CATEGORY, categoryData.getName());
 				throw ScalarServiceException.create(msgObject, ex);
@@ -62,7 +66,7 @@ public class CategoryDataServiceImpl extends AbstractService implements Category
 		} else {
 			// update
 			try {
-				CategoryDataDAO.update(CategoryDataDAO.dataToRow(categoryData));
+				categoryDataDAO.update(CategoryDataDAO.dataToRow(categoryData));
 			} catch (ScalarException ex) {
 				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_UPDATE_CATEGORY, categoryData.getName());
 				throw ScalarServiceException.create(msgObject, ex);

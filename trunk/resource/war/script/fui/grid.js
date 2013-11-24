@@ -322,8 +322,73 @@ fui.extend(fui.Grid,
                 return null;
             },
             updateData: function(data) {
+				this.showBlock();
                 fui.grid.internal.updateData(this, data);
-            }
+				this.clearBlock();
+            },
+			/**
+			 * @function
+			 * @desc Shows an interface block.
+			 *
+			 * @param uiConfig the block UI configuration
+			 * @public
+			 */
+			showBlock: function(uiConfig) {
+				uiConfig = uiConfig || {};
+
+				// Already showing
+				if ( this.blocked++ > 0 ) {
+					return;
+				}
+
+				// Get block message
+				var msg = uiConfig.blockMessage || fui.editor.getMessage('loading');
+
+				// Mask
+				if ( this.ui) {
+					this.ui.parent().mask(msg);
+				} else {
+					fui.query("body").mask(msg);
+				}
+				// Set timer if needed
+				if ( uiConfig.setTimer ) {
+					this.blockTimer = setTimeout(fui.scope(this, function(){
+						this.clearBlock();
+
+						// Allow for callback
+						if ( uiConfig.timeoutHandler ) {
+							uiConfig.timeoutHandler();
+						}
+
+					}), uiConfig.blockTime || 5000);
+				}
+			},
+
+			/**
+			 * @function
+			 * @desc Clears the interface block.
+			 * @public
+			 */
+			clearBlock: function() {
+				if ( (this.blocked === 0) || (--this.blocked > 0) ) {
+					return;
+				}
+
+				if ( this.blockTimer ) {
+					clearInterval(this.blockTimer);
+					this.blockTimer = null;
+				}
+
+				// Unmask
+				if ( this.ui ) {
+					if (this.ui) {  // TODO: fix this for the editor save scenario
+						this.ui.parent().unmask();
+					}
+				} else {
+					var body = fui.query("body");
+					body.unmask();
+				}
+			}
 
 		});
 
