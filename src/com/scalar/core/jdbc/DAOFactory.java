@@ -71,8 +71,8 @@ public class DAOFactory extends AbstractFactory {
         }
 
         // Set request if we can
-        if (Service.class.isInstance(bean)) {
-            Service.class.cast(bean).setRequest(request);
+        if (DAO.class.isInstance(bean)) {
+            DAO.class.cast(bean).setRequest(request);
         }
 
         // Store in cache

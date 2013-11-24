@@ -31,9 +31,9 @@ fui.ui.manageitems = {
 
 		requestData = requestData || {};
 		requestData.content = requestData.content || {};
-		requestData.content.userid = params.userid;
-		requestData.content.firstname = params.firstname;
-		requestData.content.lastname = params.lastname;
+		requestData.content.name = params.name;
+		requestData.content.group = params.group;
+		requestData.content.category = params.category;
         requestData.handler = this.getRunSearchHandler();
 
 		var c = fui.ui.content;

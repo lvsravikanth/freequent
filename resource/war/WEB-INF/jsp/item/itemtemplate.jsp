@@ -40,6 +40,15 @@
 	</div>
 
 	<div class="fui-form-block-container">
+		<label for="code" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.CODE%>"/><span class="fui-widget-required-flag">&nbsp;*</span></label><br>
+		<div class="fui-form-inline-input">
+			<form:input path="code" id="code" cssClass="fui-input fui-input-text" />
+		</div>
+		<div class="fui-form-item-validation"><div id="code-validation-text" class="fui-form-item-validation-text"></div></div>
+		<div class="fui-layout-end"></div>
+	</div>
+
+	<div class="fui-form-block-container">
 		<label for="price" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.PRICE%>"/><span class="fui-widget-required-flag">*</span></label><br>
 		<div class="fui-form-inline-input"><input type="text" class="fui-input fui-input-text" name="price" id="price" value="<c:out value="${itemData.price}"/>"/></div>
 		<div class="fui-form-item-validation"><div id="price-validation-text" class="fui-form-item-validation-text"></div></div>
@@ -76,13 +85,31 @@
 	</div>
 
 	<div class="fui-form-block-container">
-		<label for="categoryAssocData" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.CATEGORY%>"/><span class="fui-widget-required-flag">*</span></label><br>
+		<label for="taxable" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.TAXABLE%>"/></label><br>
+		<div class="fui-form-inline-input">
+			<form:checkbox path="taxable" id="taxable" cssClass="fui-input fui-input-checkbox"/>
+		</div>
+		<div class="fui-form-item-validation"><div id="taxable-validation-text" class="fui-form-item-validation-text"></div></div>
+		<div class="fui-layout-end"></div>
+	</div>
+
+	<div class="fui-form-block-container">
+		<label for="categoryAssocData" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.CATEGORY%>"/></label><br>
 		<div class="fui-form-inline-input">
 			<form:select path="categoryId" id="categoryAssocData" cssClass="fui-input-select">
 				<form:options items="${categoryDataList}" itemLabel="name" itemValue="id"/>
 			</form:select>
 		</div>
 		<div class="fui-form-item-validation"><div id="categoryAssocData-validation-text" class="fui-form-item-validation-text"></div></div>
+		<div class="fui-layout-end"></div>
+	</div>
+
+	<div class="fui-form-block-container">
+		<label for="description" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.DESCRIPTION%>"/></label><br>
+		<div class="fui-form-inline-input">
+			<form:textarea path="description" id="description" cssClass="fui-input fui-input-text" rows="5" cols="80"/>
+		</div>
+		<div class="fui-form-item-validation"><div id="description-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
 	</div>
 </div>

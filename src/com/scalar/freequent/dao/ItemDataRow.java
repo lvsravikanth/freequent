@@ -14,6 +14,7 @@ public class ItemDataRow {
 	
 	private GUID mId;
 	private boolean mModId = false;
+
 	public void setId(GUID x){ mId = x; mModId = true; }
 	public boolean modId(){ return mModId; }
 	public GUID getId(){ return mId; }
@@ -47,12 +48,24 @@ public class ItemDataRow {
 	public void setPriceQty(int x){ mPriceQty = x; mModPriceQty = true; }
 	public boolean modPriceQty(){ return mModPriceQty; }
 	public int getPriceQty(){ return mPriceQty; }
+
+	private String mDescription;
+	private boolean mModDescription = false;
+	public void setDescription(String x){ mDescription = x; mModDescription = true; }
+	public boolean modDescription(){ return mModDescription; }
+	public String getDescription(){ return mDescription; }
 	
 	private String mUnit;
 	private boolean mModUnit = false;
 	public void setUnit(String x){ mUnit = x; mModUnit = true; }
 	public boolean modUnit(){ return mModUnit; }
 	public String getUnit(){ return mUnit; }
+
+	private int mTaxable;
+	private boolean mModTaxable = false;
+	public void setTaxable(int x){ mTaxable = x; mModTaxable = true; }
+	public boolean modTaxable(){ return mModTaxable; }
+	public int getTaxable(){ return mTaxable; }
 	
 	/**
      *  Determine whether any column of the row has been modified.
@@ -68,7 +81,9 @@ public class ItemDataRow {
             mModGroupName ||
             mModPrice ||
             mModPriceQty ||
+            mModDescription ||
             mModUnit ||
+			mModTaxable ||
 			false ){ result = true; }
         return result;
     }
@@ -83,6 +98,8 @@ public class ItemDataRow {
         mModGroupName = false;
         mModPrice = false;
         mModPriceQty = false;
+        mModDescription = false;
         mModUnit = false;
+        mModTaxable = false;
 	}
 }

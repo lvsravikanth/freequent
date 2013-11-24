@@ -6,6 +6,7 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%
     String context = ContextUtil.getContextPath(request);
     Request fRequest = (Request) request.getAttribute(Request.REQUEST_ATTRIBUTE);
@@ -15,7 +16,7 @@
 
 <% %>
 <div class="fui-workspace-container">
-	<form id="manageusers">
+	<form id="manageitems">
 		<div class="fui-workspace-search-table">
 			<div class="fui-workspace-search-table-row">
 				<div class="fui-workspace-header ui-widget-header ui-corner-top"><fmt:message key="<%=WorkspaceResource.MANAGEITEMS_TITLE%>"/></div>
@@ -32,13 +33,23 @@
 							<span for="<%=Item.PARAM_GROUP%>"><fmt:message key="<%=WorkspaceResource.GROUP%>"/></span>
 						</span>
 						<span class="fui-workspace-search-table-cell">
-							<input type="text" name="<%=Item.PARAM_GROUP%>" id="<%=Item.PARAM_GROUP%>">
+							<select name="<%=Item.PARAM_GROUP%>" id="<%=Item.PARAM_GROUP%>" class="fui-inpu fui-input-select">
+								<option value=""><fmt:message key="<%=WorkspaceResource.ALL%>"/></option>
+								<c:forEach items="${groupDataList}" var="groupData" varStatus="loop">
+									<option value="${groupData.name}">${groupData.name}</option>
+								</c:forEach>
+							</select>
 						</span>
 						<span class="fui-workspace-search-table-cell">
 							<span for="<%=Item.PARAM_CATEGORY%>"><fmt:message key="<%=WorkspaceResource.CATEGORY%>"/></span>
 						</span>
 						<span class="fui-workspace-search-table-cell">
-							<input type="text" name="<%=Item.PARAM_CATEGORY%>" id="<%=Item.PARAM_CATEGORY%>">
+							<select name="<%=Item.PARAM_CATEGORY%>" id="<%=Item.PARAM_CATEGORY%>" class="fui-inpu fui-input-select">
+								<option value=""><fmt:message key="<%=WorkspaceResource.ALL%>"/></option>
+								<c:forEach items="${categoryDataList}" var="categoryData" varStatus="loop">
+									<option value="${categoryData.id}">${categoryData.name}</option>
+								</c:forEach>
+							</select>
 						</span>
 						<div class="fui-workspace-search-actions-container fui-workspace-search-table-cell">
 							<button type="button" id="search"><fmt:message key="<%=WorkspaceResource.SEARCH%>"/></button>
@@ -58,6 +69,8 @@
 </div>
 <script type="text/javascript">
     fui.ready(function() {
+		fui.query("#<%=Item.PARAM_GROUP%>").select2({dropdownCssClass:"ui-dialog", minimumResultsForSearch: 10});
+		fui.query("#<%=Item.PARAM_CATEGORY%>").select2({dropdownCssClass:"ui-dialog", minimumResultsForSearch: 10});
         fui.query("#search").button()
                 .click( function(event) {
             var params = {};
@@ -71,7 +84,11 @@
 			.click( function(event) {
 			fui.ui.manageitems.edit();
 		});
-		fui.query("#reset").button();
+		fui.query("#reset").button()
+				.click( function(event) {
+			fui.query("#<%=Item.PARAM_GROUP%>").select2('data', fui.query("#<%=Item.PARAM_GROUP%>").find('option')[0]);
+			fui.query("#<%=Item.PARAM_CATEGORY%>").select2('data', fui.query("#<%=Item.PARAM_CATEGORY%>").find('option')[0]);
+		});
 
         //Register grid
         fui.grid.register(fui.ui.type.ITEM, fui.ui.grid.manageitems.get());
@@ -82,4 +99,9 @@
         };
         fui.workspace.load(config);
     });
+
+	fui.ready(function(){
+		// by default load the data into the grid when page loads
+		fui.query("#search").button().click();
+	});
 </script>

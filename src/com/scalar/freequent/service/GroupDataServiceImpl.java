@@ -28,30 +28,34 @@ public class GroupDataServiceImpl extends AbstractService implements GroupDataSe
 	protected static final Log logger = LogFactory.getLog(GroupDataServiceImpl.class);
 
 	public List<GroupData> findAll() {
-		GroupDataDAO GroupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
-		List<GroupDataRow> rows = GroupDataDAO.findAll();
+		GroupDataDAO groupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
+		List<GroupDataRow> rows = groupDataDAO.findAll();
 		List<GroupData> units = new ArrayList<GroupData>(rows.size());
 		for (GroupDataRow row: rows) {
-			units.add (GroupDataDAO.rowToData(row));
+			GroupData groupData = GroupDataDAO.rowToData(row);
+			setRecord(groupData, groupData.getId());
+			units.add (groupData);
 		}
 		return units;
 	}
 
 	public GroupData findByName(String name) {
-		GroupDataDAO GroupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
-		GroupDataRow row = GroupDataDAO.findByName(name);
-		return GroupDataDAO.rowToData(row);
+		GroupDataDAO groupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
+		GroupDataRow row = groupDataDAO.findByName(name);
+		GroupData groupData = GroupDataDAO.rowToData(row);
+		setRecord(groupData, groupData.getId());
+		return groupData;
 	}
 
 	@Transactional
 	public boolean insertOrUpdate(GroupData groupData) throws ScalarServiceException {
 		boolean isNew = groupData.getId() == null;
-		GroupDataDAO GroupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
+		GroupDataDAO groupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
 		if (isNew) {
 			// insert
 			try {
 				groupData.setId (GUID.generateString(ObjectType.TYPE_CODE_GROUP));
-				GroupDataDAO.insert(GroupDataDAO.dataToRow(groupData));
+				groupDataDAO.insert(GroupDataDAO.dataToRow(groupData));
 			} catch (ScalarException ex) {
 				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_CREATE_GROUP, groupData.getName());
 				throw ScalarServiceException.create(msgObject, ex);
@@ -59,7 +63,7 @@ public class GroupDataServiceImpl extends AbstractService implements GroupDataSe
 		} else {
 			// update
 			try {
-				GroupDataDAO.update(GroupDataDAO.dataToRow(groupData));
+				groupDataDAO.update(GroupDataDAO.dataToRow(groupData));
 			} catch (ScalarException ex) {
 				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_UPDATE_GROUP, groupData.getName());
 				throw ScalarServiceException.create(msgObject, ex);

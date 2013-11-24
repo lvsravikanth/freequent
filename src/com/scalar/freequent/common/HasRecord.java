@@ -8,6 +8,8 @@ import java.util.Map;
  * Time: 8:05:34 PM
  */
 public interface HasRecord {
+	public static final String ATTR_RECORD = "record";
 	Record getRecord();
+	void setRecord(Record record);
 	Map<String, Object> toMap();
 }

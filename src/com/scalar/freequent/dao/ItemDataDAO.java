@@ -7,10 +7,8 @@ import org.springframework.jdbc.core.RowMapper;
 import com.scalar.core.jdbc.AbstractDAO;
 import com.scalar.core.util.GUID;
 import com.scalar.core.ScalarException;
-import com.scalar.freequent.common.GroupData;
-import com.scalar.freequent.common.ObjectType;
-import com.scalar.freequent.common.Item;
-import com.scalar.freequent.common.UnitData;
+import com.scalar.freequent.common.*;
+import com.scalar.freequent.util.StringUtil;
 
 import java.util.*;
 import java.sql.Types;
@@ -32,6 +30,8 @@ public class ItemDataDAO extends AbstractDAO {
 	public static final String COL_PRICE = "price";
 	public static final String COL_PRICE_QTY = "priceQty";
 	public static final String COL_UNIT = "unit";
+	public static final String COL_DESCRIPTION = "description";
+	public static final String COL_TAXABLE = "taxable";
 
 	static final String SQL_SelectAllColumns =
 		"select " +
@@ -41,6 +41,8 @@ public class ItemDataDAO extends AbstractDAO {
 		COL_GROUP_NAME + ", " +
 		COL_PRICE + ", " +
 		COL_PRICE_QTY + ", " +
+		COL_DESCRIPTION + ", " +
+		COL_TAXABLE + ", " +
 		COL_UNIT +
 		" from " + TABLE_NAME + " ";
 
@@ -54,6 +56,8 @@ public class ItemDataDAO extends AbstractDAO {
 		COL_SQL_TYPES.put (COL_PRICE, Types.DOUBLE);
 		COL_SQL_TYPES.put (COL_PRICE_QTY, Types.INTEGER);
 		COL_SQL_TYPES.put (COL_UNIT, Types.VARCHAR);
+		COL_SQL_TYPES.put (COL_DESCRIPTION, Types.VARCHAR);
+		COL_SQL_TYPES.put (COL_TAXABLE, Types.BIT);
 	}
 
 	public boolean existsByName (String groupName) {
@@ -72,7 +76,7 @@ public class ItemDataDAO extends AbstractDAO {
     public ItemDataRow findByPrimaryKey(String id) {
         String query = SQL_SelectAllColumns +
                         " WHERE " + COL_ID + " = ? ";
-        List<ItemDataRow> groups = getJdbcTemplate().query(query,
+        List<ItemDataRow> items = getJdbcTemplate().query(query,
         new RowMapper<ItemDataRow>() {
             public ItemDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
                 ItemDataRow row = new ItemDataRow();
@@ -82,13 +86,15 @@ public class ItemDataDAO extends AbstractDAO {
                 row.setGroupName(rs.getString(COL_GROUP_NAME));
 				row.setPrice(rs.getDouble(COL_PRICE));
 				row.setPriceQty(rs.getInt(COL_PRICE_QTY));
+				row.setDescription(rs.getString(COL_DESCRIPTION));
+				row.setTaxable(rs.getInt(COL_TAXABLE));
 				row.setUnit(rs.getString(COL_UNIT));
 				row.clean();
                 return row;
             }
         }, id);
 
-        return groups.get(0);
+        return items.isEmpty() ? null : items.get(0);
     }
 
 	/**
@@ -111,6 +117,8 @@ public class ItemDataDAO extends AbstractDAO {
                 row.setGroupName(rs.getString(COL_GROUP_NAME));
 				row.setPrice(rs.getDouble(COL_PRICE));
 				row.setPriceQty(rs.getInt(COL_PRICE_QTY));
+				row.setDescription(rs.getString(COL_DESCRIPTION));
+				row.setTaxable(rs.getInt(COL_TAXABLE));
 				row.setUnit(rs.getString(COL_UNIT));
 				row.clean();
                 return row;
@@ -138,6 +146,77 @@ public class ItemDataDAO extends AbstractDAO {
                 row.setGroupName(rs.getString(COL_GROUP_NAME));
 				row.setPrice(rs.getDouble(COL_PRICE));
 				row.setPriceQty(rs.getInt(COL_PRICE_QTY));
+				row.setDescription(rs.getString(COL_DESCRIPTION));
+				row.setTaxable(rs.getInt(COL_TAXABLE));
+				row.setUnit(rs.getString(COL_UNIT));
+				row.clean();
+                return row;
+            }
+        });
+    }
+
+	/**
+     * Returns all the users in the system.
+     *
+     * @return the User object for the given userId.
+     */
+    public List<ItemDataRow> search(Map<String, String> params) {
+        String query = SQL_SelectAllColumns;
+		StringBuilder whereCaluse = new StringBuilder();
+		List<Object> args = new ArrayList<Object>();
+		boolean joinCategoryAssocTable = false;
+
+		String name = params.get(Item.PARAM_NAME);
+		String group = params.get(Item.PARAM_GROUP);
+		String category = params.get(Item.PARAM_CATEGORY);
+
+		String AND = " ";
+		final String LIKE = " like ";
+		final String EQUAL_TO = " = ";
+		final String AND_STR = " AND ";
+		if (!StringUtil.isEmpty(name)) {
+			name += "%";
+			whereCaluse.append(AND).append(COL_NAME).append(LIKE).append("?");
+			args.add (name);
+			AND = AND_STR;
+		}
+
+		if (!StringUtil.isEmpty(group)) {
+			whereCaluse.append(AND).append(COL_GROUP_NAME).append(EQUAL_TO).append("?");
+			args.add(group);
+			AND = AND_STR;
+		}
+
+		if (!StringUtil.isEmpty(category)) {
+			name += "%";
+			whereCaluse.append(AND).append(CategoryAssocDataDAO.TABLE_NAME + "." + CategoryAssocDataDAO.COL_CATEGORY_ID).append(EQUAL_TO).append("?");
+			args.add(category);
+			AND = AND_STR;
+			joinCategoryAssocTable = true;
+		}
+
+		if (joinCategoryAssocTable) {
+			query = query + ", " + CategoryAssocDataDAO.TABLE_NAME;
+		}
+		if (whereCaluse.length() > 0) {
+			query = query + " WHERE " + whereCaluse.toString();
+		}
+		if (joinCategoryAssocTable) {
+			query = query + AND + CategoryAssocDataDAO.COL_OBJECT_ID + EQUAL_TO + COL_ID;
+		}
+
+        return getJdbcTemplate().query(query, args.toArray(new Object[args.size()]),
+        new RowMapper<ItemDataRow>() {
+            public ItemDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+                ItemDataRow row = new ItemDataRow();
+                row.setId(new GUID(rs.getString(COL_ID)));
+                row.setName(rs.getString(COL_NAME));
+                row.setCode(rs.getString(COL_CODE));
+                row.setGroupName(rs.getString(COL_GROUP_NAME));
+				row.setPrice(rs.getDouble(COL_PRICE));
+				row.setPriceQty(rs.getInt(COL_PRICE_QTY));
+				row.setDescription(rs.getString(COL_DESCRIPTION));
+				row.setTaxable(rs.getInt(COL_TAXABLE));
 				row.setUnit(rs.getString(COL_UNIT));
 				row.clean();
                 return row;
@@ -146,7 +225,7 @@ public class ItemDataDAO extends AbstractDAO {
     }
 
 	public int insert (ItemDataRow row) throws ScalarException {
-		insertRecord(row.getId(), ObjectType.GROUP);
+		insertRecord(row.getId(), ObjectType.ITEM);
         StringBuilder query = new StringBuilder();
 		String sep = "";
         query.append ("insert into " + TABLE_NAME + " (");
@@ -156,8 +235,10 @@ public class ItemDataDAO extends AbstractDAO {
         query.append(sep).append(COL_GROUP_NAME);
         query.append(sep).append(COL_PRICE);
         query.append(sep).append(COL_PRICE_QTY);
+        query.append(sep).append(COL_DESCRIPTION);
+        query.append(sep).append(COL_TAXABLE);
         query.append(sep).append(COL_UNIT);
-		query.append(") values (?, ?, ?, ?, ?, ?, ?)");
+		query.append(") values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 		return getJdbcTemplate().update(query.toString(),
                 row.getId().toString(),
@@ -166,6 +247,8 @@ public class ItemDataDAO extends AbstractDAO {
 				row.getGroupName(),
 				row.getPrice(),
 				row.getPriceQty(),
+				row.getDescription(),
+				row.getTaxable(),
 				row.getUnit()
 		);
     }
@@ -180,6 +263,8 @@ public class ItemDataDAO extends AbstractDAO {
         if( row.modGroupName() ){ query.append(sep).append(COL_GROUP_NAME).append(" = ?"); sep = ","; }
         if( row.modPrice() ){ query.append(sep).append(COL_PRICE).append(" = ?"); sep = ","; }
         if( row.modPriceQty() ){ query.append(sep).append(COL_PRICE_QTY).append(" = ?"); sep = ","; }
+        if( row.modDescription() ){ query.append(sep).append(COL_DESCRIPTION).append(" = ?"); sep = ","; }
+        if( row.modTaxable() ){ query.append(sep).append(COL_TAXABLE).append(" = ?"); sep = ","; }
         if( row.modUnit() ){ query.append(sep).append(COL_UNIT).append(" = ?"); sep = ","; }
 		query.append(" where ").append(COL_ID).append(" = ?");
 
@@ -189,8 +274,10 @@ public class ItemDataDAO extends AbstractDAO {
         if (row.modCode()) { args.add (row.getCode()); argTypes.add(COL_SQL_TYPES.get(COL_CODE)); }
         if (row.modGroupName()) { args.add (row.getGroupName()); argTypes.add(COL_SQL_TYPES.get(COL_GROUP_NAME)); }
         if (row.modPrice()) { args.add (row.getPrice()); argTypes.add(COL_SQL_TYPES.get(COL_PRICE)); }
-        if (row.modPriceQty()) { args.add (row.getCode()); argTypes.add(COL_SQL_TYPES.get(COL_PRICE_QTY)); }
-        if (row.modUnit()) { args.add (row.getCode()); argTypes.add(COL_SQL_TYPES.get(COL_UNIT)); }
+        if (row.modPriceQty()) { args.add (row.getPriceQty()); argTypes.add(COL_SQL_TYPES.get(COL_PRICE_QTY)); }
+        if (row.modDescription()) { args.add (row.getDescription()); argTypes.add(COL_SQL_TYPES.get(COL_DESCRIPTION)); }
+        if (row.modTaxable()) { args.add (row.getTaxable()); argTypes.add(COL_SQL_TYPES.get(COL_TAXABLE)); }
+        if (row.modUnit()) { args.add (row.getUnit()); argTypes.add(COL_SQL_TYPES.get(COL_UNIT)); }
 		args.add (row.getId()); argTypes.add(COL_SQL_TYPES.get(COL_ID));
 
         return getJdbcTemplate().update(query.toString(), args.toArray(new Object[args.size()]), ArrayUtils.toPrimitive(argTypes.toArray(new Integer[argTypes.size()])));
@@ -212,6 +299,7 @@ public class ItemDataDAO extends AbstractDAO {
 		Item itemData = new Item();
         itemData.setId(row.getId().toString());
         itemData.setName(row.getName());
+        itemData.setCode(row.getCode());
 		GroupData groupData = new GroupData();
 		groupData.setName(row.getGroupName());
         itemData.setGroupData(groupData);
@@ -220,6 +308,8 @@ public class ItemDataDAO extends AbstractDAO {
 		UnitData unitData = new UnitData();
 		unitData.setName(row.getUnit());
 		itemData.setUnitData(unitData);
+		itemData.setDescription(row.getDescription());
+		itemData.setTaxable(row.getTaxable()!=0);
 
 		return itemData;
     }
@@ -228,10 +318,13 @@ public class ItemDataDAO extends AbstractDAO {
 		ItemDataRow row = new ItemDataRow();
         row.setId(new GUID(itemData.getId()));
         row.setName(itemData.getName());
+		row.setCode(itemData.getCode());
         row.setGroupName(itemData.getGroupData()==null ? null : itemData.getGroupData().getName());
 		row.setPrice(itemData.getPrice());
 		row.setPriceQty(itemData.getPriceQty());
 		row.setUnit(itemData.getUnitData() == null ? null : itemData.getUnitData().getName());
+		row.setDescription(itemData.getDescription());
+		row.setTaxable(itemData.getTaxable() ? 1 : 0);
 
         return row;
     }

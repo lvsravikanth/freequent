@@ -4,17 +4,17 @@ import com.scalar.core.ScalarException;
 import com.scalar.core.ScalarServiceException;
 import com.scalar.core.jdbc.DAOFactory;
 import com.scalar.core.service.AbstractService;
+import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.util.GUID;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
-import com.scalar.freequent.common.CategoryAssocData;
-import com.scalar.freequent.common.Item;
-import com.scalar.freequent.common.ObjectType;
+import com.scalar.freequent.common.*;
 import com.scalar.freequent.dao.*;
 import com.scalar.freequent.l10n.ServiceResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataAccessException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,15 +34,22 @@ public class ItemDataServiceImpl extends AbstractService implements ItemDataServ
 		List<Item> items = new ArrayList<Item>(rows.size());
 		for (ItemDataRow row: rows) {
 			Item item = ItemDataDAO.rowToData(row);
+			setRelations(item);
 			items.add (item);
-			// load category associations
-			setCategoryAssocDataList(item);
 		}
 		return items;
 	}
 
 	public List<Item> search(Map<String, String> searchParams) {
-		return null;
+		ItemDataDAO itemDataDAO = DAOFactory.getDAO(ItemDataDAO.class, getRequest());
+		List<ItemDataRow> rows = itemDataDAO.search(searchParams);
+		List<Item> items = new ArrayList<Item>(rows.size());
+		for (ItemDataRow row: rows) {
+			Item item = ItemDataDAO.rowToData(row);
+			setRelations(item);
+			items.add (item);
+		}
+		return items;
 	}
 
 	/**
@@ -57,19 +64,47 @@ public class ItemDataServiceImpl extends AbstractService implements ItemDataServ
 		Item item = null;
 		if (itemRow != null) {
 			item = ItemDataDAO.rowToData(itemRow);
-			setCategoryAssocDataList(item);
+			setRelations(item);
 		}
 
 		return item;
 	}
 
-	public Item findById(String id) {
+	public Item findById(String id) throws ScalarServiceException {
 		ItemDataDAO itemDataDAO = DAOFactory.getDAO(ItemDataDAO.class, getRequest());
-		ItemDataRow itemRow = itemDataDAO.findByPrimaryKey(id);
-		Item item = ItemDataDAO.rowToData(itemRow);
-		setCategoryAssocDataList(item);
+		Item item = null;
+		try {
+			ItemDataRow itemRow = itemDataDAO.findByPrimaryKey(id);
+			item = ItemDataDAO.rowToData(itemRow);
+			setRelations(item);
+		} catch (DataAccessException e) {
+			MsgObject msgObj = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_FIND_ITEM, id);
+			throw ScalarServiceException.create(msgObj, e);
+		}
 
 		return item;
+	}
+
+	private void setRelations(Item item) {
+		setCategoryAssocDataList(item);
+		setRecord(item, item.getId());
+		GroupData groupData = item.getGroupData();
+		if (groupData != null) {
+			GroupDataService groupDataService = ServiceFactory.getService(GroupDataService.class, getRequest());
+			groupData = groupDataService.findByName(groupData.getName());
+			item.setGroupData(groupData);
+		}
+		UnitData unitData = item.getUnitData();
+		if (unitData != null) {
+			UnitDataService unitDataService = ServiceFactory.getService(UnitDataService.class, getRequest());
+			unitData = unitDataService.findByName(unitData.getName());
+			item.setUnitData(unitData);
+		}
+	}
+
+	public boolean exists(String itemName) {
+		ItemDataDAO itemDataDAO = DAOFactory.getDAO(ItemDataDAO.class, getRequest());
+		return itemDataDAO.existsByName(itemName);
 	}
 
 	@Transactional
@@ -78,9 +113,13 @@ public class ItemDataServiceImpl extends AbstractService implements ItemDataServ
 		ItemDataDAO itemDataDAO = DAOFactory.getDAO(ItemDataDAO.class, getRequest());
 		if (isNew) {
 			// insert
+			try {
+				item.setId(GUID.generateString(ObjectType.TYPE_CODE_ITEM));
+			} catch (ScalarException e) {
+				throw ScalarServiceException.create(MsgObjectUtil.getMsgObject(e.getMessage()), e);
+			}
 			ItemDataRow row = ItemDataDAO.dataToRow(item);
 			try {
-				row.setId(GUID.generate(ObjectType.TYPE_CODE_ITEM));
 				itemDataDAO.insert(row);
 			} catch (ScalarException ex) {
 				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_CREATE_ITEM, item.getName());
@@ -101,12 +140,7 @@ public class ItemDataServiceImpl extends AbstractService implements ItemDataServ
 		//first remove associations
 		categoryAssocDataDAO.removeByObjectId(item.getId());
 		//insert associations
-		List<CategoryAssocData> categoryAssocDataList = item.getCategoryAssocDataList();
-		String[] categoryIds = new String[categoryAssocDataList.size()];
-		int i = 0;
-		for (CategoryAssocData categoryAssocData: categoryAssocDataList) {
-			categoryIds[i++] = categoryAssocData.getCategoryId();
-		}
+		String[] categoryIds = item.getCategoryId();
 		categoryAssocDataDAO.insert(item.getId(), categoryIds);
 
 		return false;
@@ -136,12 +170,15 @@ public class ItemDataServiceImpl extends AbstractService implements ItemDataServ
 	private void setCategoryAssocDataList(Item item) {
 		CategoryAssocDataDAO categoryAssocDataDAO = DAOFactory.getDAO(CategoryAssocDataDAO.class, getRequest());
 		CategoryDataDAO categoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
+		List<String> categoryIds = new ArrayList<String>();
 		// load category associations
 		List<CategoryAssocDataRow> categoryRows = categoryAssocDataDAO.findByObjectId(item.getId());
 		List<CategoryAssocData> categoryAssocDataList = new ArrayList<CategoryAssocData>(categoryRows.size());
 		for (CategoryAssocDataRow catRow: categoryRows) {
 			categoryAssocDataList.add (CategoryAssocDataDAO.rowToData(catRow));
+			categoryIds.add (catRow.getCategoryId().toString());
 		}
 		item.setCategoryAssocDataList(categoryAssocDataList);
+		item.setCategoryId(categoryIds.toArray(new String[categoryIds.size()]));
 	}
 }

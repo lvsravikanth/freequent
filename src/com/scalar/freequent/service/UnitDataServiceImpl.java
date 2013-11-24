@@ -32,7 +32,9 @@ public class UnitDataServiceImpl extends AbstractService implements UnitDataServ
 		List<UnitDataRow> rows = unitDataDAO.findAll();
 		List<UnitData> units = new ArrayList<UnitData>(rows.size());
 		for (UnitDataRow row: rows) {
-			units.add (UnitDataDAO.rowToData(row));
+			UnitData unitData = UnitDataDAO.rowToData(row);
+			setRecord(unitData, unitData.getId());
+			units.add (unitData);
 		}
 		return units;
 	}
@@ -40,7 +42,9 @@ public class UnitDataServiceImpl extends AbstractService implements UnitDataServ
 	public UnitData findByName(String name) {
 		UnitDataDAO unitDataDAO = DAOFactory.getDAO(UnitDataDAO.class, getRequest());
 		UnitDataRow row = unitDataDAO.findByName(name);
-		return UnitDataDAO.rowToData(row);
+		UnitData unitData = UnitDataDAO.rowToData(row);
+		setRecord(unitData, unitData.getId());
+		return unitData;
 	}
 
 	@Transactional

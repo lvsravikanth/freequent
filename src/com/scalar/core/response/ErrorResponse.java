@@ -227,7 +227,11 @@ public class ErrorResponse extends AbstractResponse {
 		this.throwable = throwable;
 
 		if ( null != throwable ) {
-			setMessage(ScalarException.getLocalizedMessage(throwable));
+			String msg = ScalarException.getLocalizedMessage(throwable);
+			if (StringUtil.isEmpty(msg)) {
+				msg = MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME,FrameworkResource.UNABLE_TO_PERFORM_ACTION).localize();
+			}
+			setMessage(msg);
 		}
 	}
 
