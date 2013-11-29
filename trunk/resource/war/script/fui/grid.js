@@ -309,6 +309,9 @@ fui.extend(fui.Grid,
             getIsDataRemote: function(gridProperties) {
                 return false;
             },
+			getSortable: function(gridProperties) {
+				return true;
+			},
             getIsSortingRemote: function(gridProperties) {
                 return false;
             },
@@ -482,7 +485,7 @@ fui.grid.internal = {
             minWidth: fui.grid.minWidth,
             numberCell: fui.grid.numberCell,
             resizable: false,
-            sortable: false
+            sortable: gridConfig.getSortable(gridProperties)
 		};
 
 		// special processing of uiConfig attributes

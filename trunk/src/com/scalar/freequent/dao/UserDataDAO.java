@@ -8,6 +8,7 @@ import com.scalar.core.jdbc.AbstractDAO;
 import com.scalar.core.ScalarException;
 import com.scalar.freequent.auth.User;
 import com.scalar.freequent.util.StringUtil;
+import com.scalar.freequent.common.ObjectType;
 
 import java.util.*;
 import java.sql.ResultSet;
@@ -192,7 +193,8 @@ public class UserDataDAO extends AbstractDAO {
         });
     }
 
-    public int insert (UserDataRow row) {
+    public int insert (UserDataRow row) throws ScalarException {
+		insertRecord(row.getUserId(), ObjectType.USER);
         StringBuilder query = new StringBuilder();
 		Calendar now = Calendar.getInstance();
 		String sep = "";
@@ -225,7 +227,8 @@ public class UserDataDAO extends AbstractDAO {
 		);
     }
 
-    public int update (UserDataRow row) {
+    public int update (UserDataRow row) throws ScalarException {
+		updateRecord(row.getUserId());
         StringBuilder query = new StringBuilder();
 		Calendar now = Calendar.getInstance();
 		String sep = "";

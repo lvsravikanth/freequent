@@ -81,4 +81,8 @@
         };
         fui.workspace.load(config);
     });
+	fui.ready(function(){
+		// by default load the data into the grid when page loads
+		fui.query("#search").button().click();
+	});
 </script>

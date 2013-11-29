@@ -73,7 +73,7 @@ public class RecordDataDAO extends AbstractDAO {
             public RecordDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
                 RecordDataRow row = new RecordDataRow();
                 row.setRecordId(new GUID(rs.getString(COL_RECORD_ID)));
-                row.setObjectId(new GUID(rs.getString(COL_OBJECT_ID)));
+                row.setObjectId(rs.getString(COL_OBJECT_ID));
                 row.setObjectType(rs.getString(COL_OBJECT_TYPE));
                 row.setCreatedBy(rs.getString(COL_CREATED_BY));
                 row.setCreatedOn(rs.getTimestamp(COL_CREATED_ON));
@@ -102,7 +102,7 @@ public class RecordDataDAO extends AbstractDAO {
             public RecordDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
                 RecordDataRow row = new RecordDataRow();
                 row.setRecordId(new GUID(rs.getString(COL_RECORD_ID)));
-                row.setObjectId(new GUID(rs.getString(COL_OBJECT_ID)));
+                row.setObjectId(rs.getString(COL_OBJECT_ID));
                 row.setObjectType(rs.getString(COL_OBJECT_TYPE));
                 row.setCreatedBy(rs.getString(COL_CREATED_BY));
                 row.setCreatedOn(rs.getDate(COL_CREATED_ON));
@@ -129,7 +129,7 @@ public class RecordDataDAO extends AbstractDAO {
             public RecordDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
                 RecordDataRow row = new RecordDataRow();
                 row.setRecordId(new GUID(rs.getString(COL_RECORD_ID)));
-                row.setObjectId(new GUID(rs.getString(COL_OBJECT_ID)));
+                row.setObjectId(rs.getString(COL_OBJECT_ID));
                 row.setObjectType(rs.getString(COL_OBJECT_TYPE));
                 row.setCreatedBy(rs.getString(COL_CREATED_BY));
                 row.setCreatedOn(rs.getDate(COL_CREATED_ON));
@@ -157,7 +157,7 @@ public class RecordDataDAO extends AbstractDAO {
 
 		return getJdbcTemplate().update(query.toString(),
                 row.getRecordId().toString(),
-                row.getObjectId().toString(),
+                row.getObjectId(),
                 row.getObjectType(),
 				row.getCreatedBy(),
 				now.getTime(),
@@ -187,7 +187,7 @@ public class RecordDataDAO extends AbstractDAO {
     public static Record rowToData (RecordDataRow row) {
 		Record recordData = new Record();
 		recordData.setRecordId(row.getRecordId().toString());
-		recordData.setObjectId(row.getObjectId().toString());
+		recordData.setObjectId(row.getObjectId());
 		recordData.setObjectType(row.getObjectType());
 		recordData.setCreatedBy(row.getCreatedBy());
 		recordData.setCreatedOn(row.getCreatedOn());
@@ -200,7 +200,7 @@ public class RecordDataDAO extends AbstractDAO {
     public static RecordDataRow dataToRow (Record record) {
 		RecordDataRow row = new RecordDataRow();
         row.setRecordId(new GUID(record.getRecordId()));
-        row.setObjectId(new GUID(record.getObjectId()));
+        row.setObjectId(record.getObjectId());
         row.setObjectType(record.getObjectType());
 		row.setCreatedBy(record.getCreatedBy());
 		row.setCreatedOn(record.getCreatedOn());

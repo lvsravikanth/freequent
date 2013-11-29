@@ -45,11 +45,11 @@ public class RecordDataRow {
      */
     public GUID getRecordId(){ return mRecordId; }
 
-	private GUID mObjectId;
+	private String mObjectId;
 	private boolean mModObjectId = false;
-	public void setObjectId(GUID x){ mObjectId = x; mModObjectId = true; }
+	public void setObjectId(String x){ mObjectId = x; mModObjectId = true; }
 	public boolean modObjectId(){ return mModObjectId; }
-	public GUID getObjectId(){ return mObjectId; }
+	public String getObjectId(){ return mObjectId; }
 
 	private String mObjectType;
 	private boolean mModObjectType = false;

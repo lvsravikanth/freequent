@@ -141,7 +141,7 @@
 				<item column="supportsDelete" value="true"/>
 			</row>
 			<row>
-				<item column="name" value="MANAGE_ITEMS"/>
+				<item column="name" value="ITEM"/>
 				<item column="supportsRead" value="true"/>
 				<item column="supportsWrite" value="true"/>
 				<item column="supportsDelete" value="true"/>
@@ -276,6 +276,15 @@
 				<item column="createdOn" value="2013-11-23 00.00.00" />
 				<item column="modifiedBy" value="admin" />
 				<item column="modifiedOn" value="2013-11-23 00.00.00" />
+			</row>
+			<row>
+				<item column="recordId" value="R01000000000000000000000000000000000RCRD"/>
+				<item column="objectId" value="admin"/>
+				<item column="objectType" value="user"/>
+				<item column="createdBy" value="system"/>
+				<item column="createdOn" value="2013-11-29 00.00.00" />
+				<item column="modifiedBy" value="system" />
+				<item column="modifiedOn" value="2013-11-29 00.00.00" />
 			</row>
 		</rowset>
 	</tablegroup>

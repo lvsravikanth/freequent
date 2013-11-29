@@ -29,31 +29,45 @@ fui.ui.grid.manageitems = {
     getColumnModel: function(grid, gridProperties) {
         return [
             {
-                title: 'actions',
+                title: fui.workspace.getMessage("actions"),
                 dataType: "string",
                 dataIndx: "id",
                 editable: false,
-                render: fui.scope(this, this.actionsRenderer)
+                render: fui.grid.rowaction.renderer
             },
             {
-                title: "Item Name",
+                title: fui.workspace.getMessage("item.name"),
                 width: 100,
                 dataType: "string",
                 dataIndx: "name",
                 editable: false
             },
-            {
-                title: "Unit",
-                width: 200,
+			{
+                title: fui.workspace.getMessage("code"),
+                width: 100,
                 dataType: "string",
-                dataIndx: "unitData.name",
+                dataIndx: "code",
                 editable: false
             },
             {
-                title: "Group",
+                title: fui.workspace.getMessage("group"),
                 width: 200,
                 dataType: "string",
-                dataIndx: "groupData.name",
+                dataIndx: "groupName",
+                editable: false
+            },
+			{
+                title: fui.workspace.getMessage("price"),
+                width: 200,
+                dataType: "float",
+                dataIndx: "price",
+                editable: false
+            },
+			{
+                title: fui.workspace.getMessage("taxable"),
+                width: 200,
+                dataType: "string",
+                dataIndx: "taxable",
                 editable: false
             }
         ];
@@ -63,19 +77,6 @@ fui.ui.grid.manageitems = {
         return "name";
     },
 
-	/**
-	 * Renderer for row actions.
-	 */
-	actionsRenderer: function(ui) {
-        if ( fui.log.isDebug() ) {
-            fui.log.debug("in actions rederer");
-        }
-        //fui.query("tr[pq-row-indx='0'] > td[pq-col-indx='0']").append(fui.query("<div></div>").button({icons:{primary:"ui-icon-pencil"}}));
-		var template = '<button onclick="javascript: fui.ui.manageitems.edit(\''+ui.rowData.id+'\');" onmouseover="javascript: fui.query(this).addClass( \'ui-state-hover\' )" onmouseout="javascript: fui.query(this).removeClass( \'ui-state-hover\' )" class="fui-actions-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false">' +
-					   	'<span class="ui-button-icon-primary ui-icon ui-icon-pencil"></span><span class="ui-button-text"></span>' +
-					   '</button>';
-		return template;
-	},
 
 	/**
 	 * Gets the list of header buttons
