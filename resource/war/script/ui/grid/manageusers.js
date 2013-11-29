@@ -34,7 +34,7 @@ fui.ui.grid.manageusers = {
                 dataType: "string",
                 dataIndx: "id",
                 editable: false,
-                render: fui.scope(this, this.actionsRenderer)
+                render: fui.grid.rowaction.renderer // fui.ui.grid.manageusers.actionsRenderer
             },
             {
                 title: "User Id",

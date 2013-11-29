@@ -44,6 +44,10 @@ public class AbstractDAO extends JdbcDaoSupport implements DAO {
     }
 
 	protected int insertRecord (GUID objectId, String objectType) throws ScalarException {
+		return insertRecord(objectId.toString(), objectType);
+	}
+
+	protected int insertRecord (String objectId, String objectType) throws ScalarException {
 		RecordDataDAO recordDataDAO = DAOFactory.getDAO(RecordDataDAO.class, getRequest());
 		RecordDataRow row = new RecordDataRow();
 		row.setRecordId(GUID.generate(ObjectType.TYPE_CODE_RECORD));
@@ -54,6 +58,10 @@ public class AbstractDAO extends JdbcDaoSupport implements DAO {
 	}
 
 	protected int updateRecord (GUID objectId) throws ScalarException {
+		return updateRecord(objectId.toString());
+	}
+
+	protected int updateRecord (String objectId) throws ScalarException {
 		RecordDataDAO recordDataDAO = DAOFactory.getDAO(RecordDataDAO.class, getRequest());
 		RecordDataRow row = new RecordDataRow();
 		row.setObjectId(objectId);

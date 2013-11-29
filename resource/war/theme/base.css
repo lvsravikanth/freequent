@@ -201,3 +201,17 @@
 }
 
 /*** End Editor css***/
+
+.fui-grid-actions {
+list-style: none;
+white-space: nowrap;
+}
+.fui-grid-action {
+float: left;
+display: inline;
+list-style: none;
+margin: 0 5px 1px 0;
+background-repeat: no-repeat;
+background-position: 0 0;
+white-space: nowrap;
+}

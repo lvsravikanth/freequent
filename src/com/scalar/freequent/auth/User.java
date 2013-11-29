@@ -10,7 +10,10 @@ import java.util.HashMap;
 
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.Global;
+import com.scalar.freequent.util.Constants;
 import com.scalar.freequent.l10n.FrameworkResource;
+import com.scalar.freequent.common.HasRecord;
+import com.scalar.freequent.common.Record;
 import com.scalar.core.ScalarAuthException;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
@@ -21,7 +24,7 @@ import com.scalar.core.util.MsgObjectUtil;
  * Date: Sep 5, 2013
  * Time: 9:18:25 PM
  */
-public class User {
+public class User implements HasRecord {
     protected static final Log logger = LogFactory.getLog(User.class);
     private static final ThreadLocal userThreadLocal = new ThreadLocal(){
         @Override
@@ -49,6 +52,7 @@ public class User {
 	private String createdBy;
 	private String modifiedBy;
 	private List<UserCapability> userCapabilities = null;
+	private Record record;
 
     public String getUserId() {
         return userId;
@@ -221,4 +225,25 @@ public class User {
             throw ScalarAuthException.create (msgObject);
         }
     }
+
+	public Record getRecord() {
+		return record;
+	}
+
+	public void setRecord(Record record) {
+		this.record = record;
+	}
+
+	public Map<String, Object> toMap() {
+		HashMap<String, Object> userMap = new HashMap<String,Object>();
+		userMap.put(User.USER_ID, getUserId());
+		userMap.put(User.FIRST_NAME, getFirstName());
+		userMap.put(User.MIDDLE_NAME, getMiddleName());
+		userMap.put(User.LAST_NAME, getLastName());
+		userMap.put(User.DISABLED, isDisabled());
+		userMap.put(User.EXPIRESON, getExpiresOn());
+		userMap.put(Constants.ITEM_NAME_ATTRIBUTE, getFirstName());
+		userMap.put (ATTR_RECORD, getRecord().toMap());
+		return userMap;
+	}
 }

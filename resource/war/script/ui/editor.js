@@ -48,9 +48,21 @@ fui.ui.editor = {
 			skipType: editConfig.skipType,
 			//extraSetup: customizeIcon,
 			ACTION_KEY: editConfig.ACTION_KEY,
-			validate: editConfig.validate
+			validate: editConfig.validate || this.validate
 		};
 
 		fui.editor.edit(rootEditConfig, requestData);
-    }
+    },
+
+	/**
+	 * validates the user edit form.
+	 *
+	 * @param editor
+	 * @param data
+	 * @param requestData
+	 */
+	validate: function(editor, data, requestData) {
+		var isValid = fui.query('#'+editor.formId).valid();
+		return isValid;
+	}
 };

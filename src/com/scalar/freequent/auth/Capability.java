@@ -2,11 +2,6 @@ package com.scalar.freequent.auth;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.StringUtils;
-
-import java.util.Map;
-
-import com.scalar.core.util.GUID;
 
 /**
  * User: Sujan Kumar Suppala
@@ -29,12 +24,12 @@ public class Capability {
 	public static final Capability USER_WRITE = new Capability(USER_CAPABILITY, false, true, false);
 	public static final Capability USER_DELETE = new Capability(USER_CAPABILITY, false, false, true);
 
-	public static final String MANAGE_ITEMS_CAPABILITY = "MANAGE_ITEMS";
-	public static final Capability MANAGE_ITEMS_READ = new Capability(MANAGE_ITEMS_CAPABILITY, true, false, false);
-	public static final Capability MANAGE_ITEMS_WRITE = new Capability(MANAGE_ITEMS_CAPABILITY, false, true, false);
-	public static final Capability MANAGE_ITEMS_DELETE = new Capability(MANAGE_ITEMS_CAPABILITY, false, false, true);
+	public static final String ITEM_CAPABILITY = "ITEM";
+	public static final Capability ITEM_READ = new Capability(ITEM_CAPABILITY, true, false, false);
+	public static final Capability ITEM_WRITE = new Capability(ITEM_CAPABILITY, false, true, false);
+	public static final Capability ITEM_DELETE = new Capability(ITEM_CAPABILITY, false, false, true);
 
-    public Capability() {
+	public Capability() {
     }
 
     public Capability(String name) {

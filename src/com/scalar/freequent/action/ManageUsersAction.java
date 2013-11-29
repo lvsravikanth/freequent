@@ -149,7 +149,7 @@ public class ManageUsersAction  extends AbstractActionController {
 
 		try {
 			user = userService.findById(user.getUserId());
-			data.put(Response.ITEM_ATTRIBUTE, convertToMap(user));
+			data.put(Response.ITEM_ATTRIBUTE, user.toMap());
 		} catch (ScalarServiceException e) {
 			throw ScalarActionException.create(e.getMsgObject(), e);
 		}
@@ -164,27 +164,15 @@ public class ManageUsersAction  extends AbstractActionController {
 		}
 	}
 
-	private List<HashMap<String,Object>> convertToMap(List<User> users) {
-        List<HashMap<String,Object>> items = new ArrayList<HashMap<String,Object>>();
+	private List<Map<String,Object>> convertToMap(List<User> users) {
+        List<Map<String,Object>> usersMap = new ArrayList<Map<String,Object>>();
         for (User user: users) {
-            HashMap<String, Object> userMap = convertToMap(user);
-			items.add(userMap);
+			usersMap.add(user.toMap());
         }
 
-        return items;
+        return usersMap;
     }
 
-	private HashMap<String, Object> convertToMap(User user) {
-		HashMap<String, Object> userMap = new HashMap<String,Object>();
-		userMap.put(User.USER_ID, user.getUserId());
-		userMap.put(User.FIRST_NAME, user.getFirstName());
-		userMap.put(User.MIDDLE_NAME, user.getMiddleName());
-		userMap.put(User.LAST_NAME, user.getLastName());
-		userMap.put(User.DISABLED, user.isDisabled());
-		userMap.put(User.EXPIRESON, user.getExpiresOn());
-		userMap.put(Constants.ITEM_NAME_ATTRIBUTE, user.getFirstName());
-		return userMap;
-	}
 
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws ScalarActionException {
 		super.initBinder(request, binder);

@@ -54,20 +54,7 @@ fui.ui.manageitems = {
 			type: fui.ui.type.ITEM,
 			id: id,
 			ACTION_KEY: fui.ui.manageitems.ACTION_KEY,
-			validate: this.validate //validate function for to validate the form
 		};
 		fui.ui.editor.edit(editConfig, requestData);
-	},
-
-	/**
-	 * validates the user edit form.
-	 *
-	 * @param editor
-	 * @param data
-	 * @param requestData
-	 */
-	validate: function(editor, data, requestData) {
-		var isValid = fui.query('#'+editor.formId).valid();
-		return isValid;
 	}
 };

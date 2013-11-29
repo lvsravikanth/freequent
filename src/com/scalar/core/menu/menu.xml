@@ -19,7 +19,7 @@
                 <link>manageitems</link>
                 <enabled>true</enabled>
                 <display>true</display>
-                <capability type="read"><name>MANAGE_ITEMS</name></capability>
+                <capability type="read"><name>ITEM</name></capability>
             </menu>
         </menuItems>
     </menu>

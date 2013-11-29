@@ -28,7 +28,9 @@ public class UserServiceImpl extends AbstractService implements UserService {
         List<UserDataRow> userRows = userDataDAO.getAllUsers();
         List<User> users = new ArrayList<User>(userRows.size());
         for (UserDataRow row: userRows) {
-            users.add (UserDataDAO.rowToData(row));
+			User user = UserDataDAO.rowToData(row);
+			setRelations(user);
+            users.add (user);
         }
 
         return users;
@@ -44,7 +46,9 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		List<UserDataRow> userRows = userDataDAO.getUsers(searchParam);
 		List<User> users = new ArrayList<User>(userRows.size());
 		for (UserDataRow row: userRows) {
-			users.add (UserDataDAO.rowToData(row));
+			User user = UserDataDAO.rowToData(row);
+			setRelations(user);
+			users.add (user);
 		}
 
 		return users;
@@ -58,16 +62,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		}
 
 		User user = UserDataDAO.rowToData(userDataRow);
-
-		// set capabilities
-		UserCapabilityInfoDAO userCapabilityInfoDAO = DAOFactory.getDAO(UserCapabilityInfoDAO.class, getRequest());
-		List<UserCapabilityInfoRow> rows = userCapabilityInfoDAO.findByUserId(userId);
-		List<UserCapability> userCapabilities = new ArrayList<UserCapability>();
-		for (UserCapabilityInfoRow row: rows) {
-			userCapabilities.add (UserCapabilityInfoDAO.rowToData(row));
-		}
-		user.setUserCapabilities(userCapabilities);
-
+		setRelations(user);
 		return user;
 	}
 
@@ -113,5 +108,17 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		userCapabilityInfoDAO.insert(userCapabilityInfoRows.toArray(new UserCapabilityInfoRow[userCapabilityInfoRows.size()]));
 
 		return true;
+	}
+
+	private void setRelations(User user) {
+		setRecord(user, user.getUserId());
+		// set capabilities
+		UserCapabilityInfoDAO userCapabilityInfoDAO = DAOFactory.getDAO(UserCapabilityInfoDAO.class, getRequest());
+		List<UserCapabilityInfoRow> rows = userCapabilityInfoDAO.findByUserId(user.getUserId());
+		List<UserCapability> userCapabilities = new ArrayList<UserCapability>();
+		for (UserCapabilityInfoRow row: rows) {
+			userCapabilities.add (UserCapabilityInfoDAO.rowToData(row));
+		}
+		user.setUserCapabilities(userCapabilities);
 	}
 }

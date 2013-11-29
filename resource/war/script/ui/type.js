@@ -13,5 +13,15 @@ fui.ui.type = {
     MANAGEITEMS: 'manageitems',
 
 	USER: 'user',
-	ITEM: "item"
+	ITEM: "item",
+
+	getActionKey: function (type) {
+		if (type === fui.ui.type.USER) {
+			return fui.ui.manageusers.ACTION_KEY;
+		} else if (type === fui.ui.type.ITEM) {
+			return fui.ui.manageitems.ACTION_KEY;
+		}
+
+		return null;
+	}
 };

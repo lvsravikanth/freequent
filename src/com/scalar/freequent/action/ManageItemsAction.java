@@ -179,9 +179,21 @@ public class ManageItemsAction extends AbstractActionController {
 		List<Map<String, Object>> itemsList = new ArrayList<Map<String, Object>>();
 		for (Item item : items) {
 			Map<String, Object> itemMap = item.toMap();
+			itemMap.put ("groupName", item.getGroupData()==null ? null : item.getGroupData().getName()); //hack for the pqgrid not supporting nested properties
 			itemsList.add(itemMap);
 		}
 
 		return itemsList;
+	}
+
+	@Override
+	 public Capability[] getRequiredCapabilities(Request request) {
+		if ("load".equals(request.getMethod())) {
+			return new Capability[]{Capability.ITEM_READ};
+		} else if ("save".equals(request.getMethod())) {
+			return new Capability[]{Capability.ITEM_WRITE};
+		}
+
+		return new Capability[0];
 	}
 }

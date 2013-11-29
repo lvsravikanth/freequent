@@ -73,20 +73,7 @@ fui.ui.manageusers = {
 			id: userId,
 			idAttribute: 'userid',
 			ACTION_KEY: fui.ui.manageusers.ACTION_KEY,
-			validate: this.validate //validate function for to validate the form
 		};
 		fui.ui.editor.edit(editConfig, requestData);
-	},
-
-	/**
-	 * validates the user edit form.
-	 *
-	 * @param editor
-	 * @param data
-	 * @param requestData
-	 */
-	validate: function(editor, data, requestData) {
-		var isValid = fui.query('#'+editor.formId).valid();
-		return isValid;
 	}
 };
