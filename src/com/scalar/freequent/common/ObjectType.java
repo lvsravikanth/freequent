@@ -17,6 +17,7 @@ public class ObjectType {
 	public static final String TYPE_CODE_UNIT = "UNIT";
 	public static final String TYPE_CODE_ITEM = "ITEM";
 	public static final String TYPE_CODE_TAX_RATE = "TAXR";
+	public static final String TYPE_CODE_ORDER = "ORDR";
 
 	public static final String USER = "user";
 	public static final String GROUP = "group";
@@ -24,4 +25,5 @@ public class ObjectType {
 	public static final String UNIT = "unit";
 	public static final String ITEM = "item";
 	public static final String TAX_RATE = "taxrate";
+	public static final String ORDER = "order";
 }

@@ -23,6 +23,26 @@
             </menu>
         </menuItems>
     </menu>
+	<menu name="Sales" id="sales">
+		<link/>
+		<enabled>true</enabled>
+		<display>true</display>
+		<capability type="read"><name>SALES</name></capability>
+		<menuItems>
+			<menu name="Manage Orders" id="manageorders">
+				<link>manageorders</link>
+				<enabled>true</enabled>
+				<display>true</display>
+				<capability type="read"><name>ORDER</name></capability>
+			</menu>
+			<menu name="Manage Invoices" id="manageinvoices">
+				<link>manageinvoices</link>
+				<enabled>true</enabled>
+				<display>true</display>
+				<capability type="read"><name>INVOICE</name></capability>
+			</menu>
+		</menuItems>
+	</menu>
     <menu name="Demo" id="demo">
         <link>demo</link>
         <enabled>true</enabled>

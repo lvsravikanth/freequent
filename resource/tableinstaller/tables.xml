@@ -118,6 +118,35 @@
 			<index name="IDX_ftRecord_objectId" columns="objectId" unique="true"/>
 		</table>
 
+		<table name="ftOrder">
+			<column name="id" no-nulls="true" size="40" type="varchar"/>
+			<column name="orderNumber" no-nulls="true" size="20" type="varchar"/>
+			<column name="orderDate" no-nulls="true" type="timestamp"/>
+			<column name="custName" type="varchar" no-nulls="true" size="80"/>
+			<column name="status" type="varchar" no-nulls="true" size="20"/>
+			<column name="revision" type="integer" no-nulls="true"/>
+			<column name="remarks" type="varchar" no-nulls="false" size="1024"/>
+			<column name="taxPercentage" no-nulls="false" size="10" type="decimal"  decimal-places="3"/>
+			<column name="discount" no-nulls="false" size="10" type="decimal"  decimal-places="3"/>
+			<index name="PK_ftOrder_id" columns="id" primary-key="true" />
+			<index name="IDX_ftOrder_orderNumber" columns="orderNumber" unique="true"/>
+		</table>
+
+		<table name="ftOrderLineItem">
+			<column name="id" no-nulls="true" size="40" type="varchar"/>
+			<column name="orderId" no-nulls="true" size="40" type="varchar"/>
+			<column name="lineNumber" no-nulls="true" type="integer"/>
+			<column name="itemId" no-nulls="true" size="40" type="varchar"/>
+			<column name="qty" no-nulls="true" type="integer"/>
+			<column name="price" no-nulls="false" size="10" type="decimal"  decimal-places="3"/>
+			<column name="taxable" no-nulls="true" type="bit" default="false" />
+			<index name="PK_ftOrderLineItem_id" columns="id" primary-key="true" />
+			<key-ref name="FK_ftOrderLineItem_orderId" columns="orderId" table="ftOrder"
+                     references="id" rule="cascade"/>
+			<index name="IDX_ftOrderLineItem_orderId_lineNumber" columns="orderId, lineNumber" unique="true"/>
+			<index name="IDX_ftOrderLineItem_orderId" columns="orderId"/>
+		</table>
+
         <!-- master data -->
         <rowset table="FTUSERS">
 			<row>

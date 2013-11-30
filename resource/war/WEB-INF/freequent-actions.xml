@@ -13,5 +13,6 @@
     <bean id="manageusers" class="com.scalar.freequent.action.ManageUsersAction"/>
     <bean id="manageitems" class="com.scalar.freequent.action.ManageItemsAction"/>
     <bean id="resource" class="com.scalar.freequent.action.ResourceAction"/>
+    <bean id="manageorders" class="com.scalar.freequent.action.ManageOrdersAction"/>
 
 </beans>
