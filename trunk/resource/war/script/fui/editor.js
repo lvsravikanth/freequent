@@ -1634,7 +1634,7 @@ fui.editor.internal = {
 				text: false,
 				disabled: tool.disabled || false
 			};
-			fui.query("#"+tool.id).button(toolButtonConfig)
+			fui.query("#"+tool.id).button(toolButtonConfig).off("click")
 				.click(tool.handler);
 		}
 	}
