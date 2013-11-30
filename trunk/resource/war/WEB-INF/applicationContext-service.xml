@@ -18,6 +18,8 @@
 	<bean id="com.scalar.freequent.service.UnitDataService" class="com.scalar.freequent.service.UnitDataServiceImpl" scope="prototype"/>
 	<bean id="com.scalar.freequent.service.GroupDataService" class="com.scalar.freequent.service.GroupDataServiceImpl" scope="prototype"/>
 	<bean id="com.scalar.freequent.service.TaxRateDataService" class="com.scalar.freequent.service.TaxRateDataServiceImpl" scope="prototype"/>
+	<bean id="com.scalar.freequent.service.OrderDataService" class="com.scalar.freequent.service.OrderDataServiceImpl" scope="prototype"/>
+	<bean id="com.scalar.freequent.service.OrderLineItemDataService" class="com.scalar.freequent.service.OrderLineItemDataServiceImpl" scope="prototype"/>
 
 
     <bean id="com.scalar.freequent.dao.UserDataDAO" class="com.scalar.freequent.dao.UserDataDAO" scope="prototype">
@@ -48,6 +50,12 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 	<bean id="com.scalar.freequent.dao.TaxRateDataDAO" class="com.scalar.freequent.dao.TaxRateDataDAO" scope="prototype">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	<bean id="com.scalar.freequent.dao.OrderDataDAO" class="com.scalar.freequent.dao.OrderDataDAO" scope="prototype">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	<bean id="com.scalar.freequent.dao.OrderLineItemDataDAO" class="com.scalar.freequent.dao.OrderLineItemDataDAO" scope="prototype">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 </beans>

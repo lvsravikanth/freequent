@@ -81,6 +81,6 @@ fui.query("#accordion > li").click(function(){
 	fui.query(this).next().slideToggle(300);
 });
 
-fui.query('#accordion > ul:eq(1)').show();
+//fui.query('#accordion > ul:eq(1)').show();
 
 </SCRIPT>
