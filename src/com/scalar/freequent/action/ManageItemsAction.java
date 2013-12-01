@@ -163,6 +163,24 @@ public class ManageItemsAction extends AbstractActionController {
 		data.put(Response.ITEM_ATTRIBUTE, item.toMap());
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @param command
+	 * @param data
+	 * @throws ScalarActionException
+	 * @throws ScalarValidationException
+	 */
+	public void findallitems(Request request, Object command, Map<String, Object> data) throws ScalarActionException, ScalarValidationException {
+		ItemDataService itemDataService = ServiceFactory.getService(ItemDataService.class, request);
+		try {
+			List<Item> items = itemDataService.findAll();
+			data.put (Response.ITEMS_ATTRIBUTE, items);
+		} catch (ScalarServiceException e) {
+			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.UNABLE_TO_LOAD_ITEMS), e);
+		}
+	}
+
 	protected void validate(Object command, BindException errors) throws ScalarValidationException {
 		super.validate(command, errors);
 		Item item = (Item)command;

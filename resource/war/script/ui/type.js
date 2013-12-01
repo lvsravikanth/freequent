@@ -14,12 +14,15 @@ fui.ui.type = {
 
 	USER: 'user',
 	ITEM: "item",
+	ORDER: "order",
 
 	getActionKey: function (type) {
 		if (type === fui.ui.type.USER) {
 			return fui.ui.manageusers.ACTION_KEY;
 		} else if (type === fui.ui.type.ITEM) {
 			return fui.ui.manageitems.ACTION_KEY;
+		} else if (type === fui.ui.type.ORDER) {
+			return fui.ui.manageorders.ACTION_KEY;
 		}
 
 		return null;

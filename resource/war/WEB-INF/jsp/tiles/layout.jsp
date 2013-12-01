@@ -12,13 +12,7 @@
 <%
 	Request fRequest = (Request)request.getAttribute(Request.REQUEST_ATTRIBUTE);
 	Context ctx = (Context)request.getAttribute(Context.CONTEXT_ATTRIBUTE);
-    String context = ContextUtil.getContextPath(request);
-	boolean loggedIn = (null != fRequest.getActiveUser());
-	Locale locale = ctx != null ? LocaleUtil.getLocale(ctx) : (request.getLocale());
-	TimeZone timeZone = ctx != null ? TimeZoneUtil.getTimeZone(ctx) : TimeZone.getDefault();
-	String datePattern = DateTimeUtil.getDatePattern(ctx);//formatsMap.get(Context.FORMAT_DATE_KEY);
-	String timePattern = DateTimeUtil.getTimePattern(ctx);//formatsMap.get(Context.FORMAT_TIME_KEY);
-	String dateTimePattern = DateTimeUtil.getDateTimePattern(ctx);//formatsMap.get(Context.FORMAT_DATE_TIME_KEY);
+	String context = ContextUtil.getContextPath(request);
 %>
 <!DOCTYPE html>
 <html class="fui-html">
@@ -39,24 +33,6 @@
         <div id="fui-footer"><tiles:insertAttribute name="footer"/></div>
     </div>
 </div>
-<%-- on ready --%>
-<script type="text/javascript">
-	fui.ready(fui.scope(this, function() {
-		// timezone should be of the form {id, offset, usesDaylight}
-		var tz = {id: "<%=timeZone.getID()%>", offset: "<%=timeZone.getRawOffset()%>", usesDaylight: "<%=timeZone.useDaylightTime()%>"};
-		fui.context.setLocalization("<%=locale%>", tz);
-	    fui.context.setFormat("<%=datePattern%>","<%=timePattern%>","<%=dateTimePattern%>");
-
-	<%
-		 // TODO remove this once REST authentication is in
-		 if ( loggedIn ) {
-	%>
-		fui.auth.internal.TOKEN = "loggedIn";
-	<%
-	 }
-	%>
-	}));
-</script>
 </body>
 
 </html>

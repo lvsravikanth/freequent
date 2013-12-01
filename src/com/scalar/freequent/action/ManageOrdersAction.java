@@ -54,7 +54,7 @@ public class ManageOrdersAction extends AbstractActionController {
 		data.put(ATTR_GROUP_DATA_LIST, groupDataList);
 		data.put(ATTR_CATEGORY_DATA_LIST, categoryDataList);
 
-		data.put(Response.TEMPLATE_ATTRIBUTE, "item/manageorders");
+		data.put(Response.TEMPLATE_ATTRIBUTE, "order/manageorders");
 	}
 
 	public void runsearch(Request request, Object command, Map<String, Object> data) throws ScalarActionException {

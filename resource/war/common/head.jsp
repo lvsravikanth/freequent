@@ -5,13 +5,24 @@
 <%@ page import="com.scalar.core.request.Request" %>
 <%@ page import="com.scalar.core.ContextUtil" %>
 <%@ page import="com.scalar.freequent.l10n.MessageResource" %>
+<%@ page import="com.scalar.freequent.util.DateTimeUtil" %>
+<%@ page import="java.util.TimeZone" %>
+<%@ page import="com.scalar.core.util.TimeZoneUtil" %>
+<%@ page import="com.scalar.core.request.Context" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="com.scalar.core.util.LocaleUtil" %>
 
 <%--<%@ taglib prefix="core" uri="http://ui.vignette.com/core" %>--%>
 
 <%
-	//Context ctx = (Context) request.getAttribute(Context.CONTEXT_ATTRIBUTE);
-	//Locale locale = LocaleUtil.getLocale(ctx);
+	Context ctx = (Context) request.getAttribute(Context.CONTEXT_ATTRIBUTE);
+	Locale locale = LocaleUtil.getLocale(ctx);
     Request fRequest = (Request)request.getAttribute(Request.REQUEST_ATTRIBUTE);
+	boolean loggedIn = (null != fRequest.getActiveUser());
+	TimeZone timeZone = ctx != null ? TimeZoneUtil.getTimeZone(ctx) : TimeZone.getDefault();
+	String datePattern = DateTimeUtil.getDatePattern(ctx);//formatsMap.get(Context.FORMAT_DATE_KEY);
+	String timePattern = DateTimeUtil.getTimePattern(ctx);//formatsMap.get(Context.FORMAT_TIME_KEY);
+	String dateTimePattern = DateTimeUtil.getDateTimePattern(ctx);//formatsMap.get(Context.FORMAT_DATE_TIME_KEY);
 %>
 
 <%-- Set locale and bundle --%>
@@ -143,3 +154,21 @@
 		
 		<title><fmt:message key="<%= MessageResource.SAMSKRITI_TITLE %>"/></title>
 	</head>
+<%-- on ready --%>
+<script type="text/javascript">
+	fui.ready(fui.scope(this, function() {
+		// timezone should be of the form {id, offset, usesDaylight}
+		var tz = {id: "<%=timeZone.getID()%>", offset: "<%=timeZone.getRawOffset()%>", usesDaylight: "<%=timeZone.useDaylightTime()%>"};
+		fui.context.setLocalization("<%=locale%>", tz);
+	    fui.context.setFormat("<%=datePattern%>","<%=timePattern%>","<%=dateTimePattern%>");
+
+	<%
+		 // TODO remove this once REST authentication is in
+		 if ( loggedIn ) {
+	%>
+		fui.auth.internal.TOKEN = "loggedIn";
+	<%
+	 }
+	%>
+	}));
+</script>

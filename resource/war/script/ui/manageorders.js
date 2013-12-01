@@ -1,23 +1,22 @@
 
-fui.provide("fui.ui.manageitems");
+fui.provide("fui.ui.manageorders");
 
 fui.require("fui.ui.content");
 fui.require("fui.ui.type");
 
-fui.ui.manageitems = {
+fui.ui.manageorders = {
 
     ID_ATTRIBUTE: "id",
 
 	/**
 	 * The action key
 	 */
-	ACTION_KEY: "manageitems",
+	ACTION_KEY: "manageorders",
 
     /**
 	 * Methods
 	 */
 	SEARCH: "runsearch",
-	FINDALLITEMS: "findallitems",
 
     /**
      * requires the following data.
@@ -32,9 +31,7 @@ fui.ui.manageitems = {
 
 		requestData = requestData || {};
 		requestData.content = requestData.content || {};
-		requestData.content.name = params.name;
-		requestData.content.group = params.group;
-		requestData.content.category = params.category;
+
         requestData.handler = this.getRunSearchHandler();
 
 		var c = fui.ui.content;
@@ -43,7 +40,7 @@ fui.ui.manageitems = {
 
     getRunSearchHandler: function() {
         return function(data) {
-            var grid = fui.grid.find(fui.ui.type.ITEM);
+            var grid = fui.grid.find(fui.ui.type.ORDER);
             grid.updateData(data);
         };
     },
@@ -52,25 +49,10 @@ fui.ui.manageitems = {
 		var requestData = {
 			};
 		var editConfig = {
-			type: fui.ui.type.ITEM,
+			type: fui.ui.type.ORDER,
 			id: id,
-			ACTION_KEY: fui.ui.manageitems.ACTION_KEY
+			ACTION_KEY: fui.ui.manageorders.ACTION_KEY
 		};
 		fui.ui.editor.edit(editConfig, requestData);
-	},
-
-	findAllItems: function(requestData) {
-		if ( fui.log.isDebug() ) { fui.log.debug("executing loadItems" ); }
-		var items = [];
-		requestData = requestData || {};
-		requestData.content = requestData.content || {};
-        requestData.handler = function(data){
-			items = data;
-		};
-		requestData.sync = true;
-
-		var c = fui.ui.content;
-		c.internal.sendAPI(this, this.FINDALLITEMS, requestData);
-		return items;
 	}
 };
