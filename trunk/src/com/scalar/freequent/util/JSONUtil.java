@@ -11,6 +11,8 @@ import java.io.Writer;
 import java.io.FilterWriter;
 import java.io.IOException;
 
+import com.scalar.freequent.common.HasRecord;
+
 /**
  * The <code>JSONUtil</code> class provides utility functions for working with JSON objects.
  *
@@ -104,6 +106,8 @@ public final class JSONUtil {
 				json.put(key, buildJSONArrayFromCollection((Collection<?>)value, locale, timeZone));
 			} else if (NormalizedDate.class.isInstance(value)) {
 				json.put(key, value.toString());
+			} else if (HasRecord.class.isInstance(value)) {
+				json.put(key, buildJSONObjectFromMap(((HasRecord)value).toMap(), locale, timeZone));
 			} else {
 				if ( (null != locale) && Date.class.isInstance(value) ) {
 					value = DateTimeUtil.getLocalizedValue(value, locale, timeZone);
@@ -134,6 +138,8 @@ public final class JSONUtil {
 				json.put(buildJSONArrayFromCollection((Collection<?>)value, locale, timeZone));
 			} else if (NormalizedDate.class.isInstance(value)) {
 				json.put(value.toString());
+			} else if (HasRecord.class.isInstance(value)) {
+				json.put(buildJSONObjectFromMap(((HasRecord)value).toMap(), locale, timeZone));
 			} else {
 				if ( (null != locale) && Date.class.isInstance(value) ) {
 					value = DateTimeUtil.getLocalizedValue(value, locale, timeZone);
