@@ -40,7 +40,6 @@
 						<span class="fui-workspace-search-table-cell">
 							<input type="hidden" name="<%=OrderData.PARAM_ITEM_ID%>" id="<%=OrderData.PARAM_ITEM_ID%>" class="fui-input fui-input-select"/>
 							<script type="text/javascript">
-								debugger;
 								var items= fui.ui.manageitems.findAllItems();
 								function format(item) { return "["+item.code+"]"+item.name; };
 								fui.ready(function(){

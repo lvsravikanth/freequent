@@ -197,10 +197,9 @@
 .fui-editor .ui-dialog-buttonpane {
 	padding: 0 !important; }
 
-.fui-editor .fui-editor-content.ui-dialog-content {
-    padding-right: 2%;
-    width: 98% !important; 
-    overflow: auto; }
+.fui-editor .fui-editor-content {
+	margin-right: -1px;
+     }
 
 .fui-widget-required-flag {
     color: #BA1414;

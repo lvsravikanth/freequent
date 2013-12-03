@@ -35,6 +35,12 @@ fui.ui.grid = {
     },
 
 	setupGrid: function(grid, gridConfig, config) {
+		// Set up content event handling
+		var gr = fui.ui.grid;
+		var eventFunc = gr.getContentEventHandler(grid);
+		fui.ui.content.event.subscribe(eventFunc);
+		// hack overwrite the width after rendered
+		fui.query(grid).css('width', 'auto');
 	},
 
 	/**
@@ -44,6 +50,37 @@ fui.ui.grid = {
 	 */
 	getHeaderButtonsList: function(idSuffix) {
 
+	},
+	getContentEventHandler: function(grid) {
+		return function(domEvent, fuiEvent) {
+			var reload = false;
+			//var store = grid.getStore();
+
+			var i, o, rec, id;
+			switch ( fuiEvent.type ) {
+				case fui.ui.content.event.CREATE:
+					reload = true;
+					break;
+				case fui.ui.content.event.UPDATE:
+				case fui.ui.content.event.DELETE:
+					reload = true;
+					/*for ( i = 0 ; i < fuiEvent.objects.length; ++i ) {
+						o = fuiEvent.objects[i];
+						id = o.contentManagementId || o.id;
+						rec = store.getById(id);
+						if ( rec ) {
+							reload = true;
+							break;
+						}
+					}*/
+					break;
+			}
+
+			if ( reload ) {
+				//store.load(); //todo
+				fui.query( grid ).pqGrid( "refresh" );
+			}
+		};
 	}
 };
 
