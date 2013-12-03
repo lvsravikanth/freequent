@@ -100,9 +100,12 @@ fui.loader.event = {
 	// Topic
 	TOPIC: "/fui/loader/event",
 
+	TOPIC_RESIZE: "/fui/loader/resize",
+
 	// Activity events
 	START: "start",
 	FINISH: "finish",
+	RESIZE: "resize",
 
 	/**
 	 * Subscribe to loader events
