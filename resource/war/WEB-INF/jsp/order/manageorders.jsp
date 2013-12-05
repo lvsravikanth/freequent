@@ -90,8 +90,8 @@
             params.<%=OrderData.PARAM_ITEM_ID%> = fui.byId("<%=OrderData.PARAM_ITEM_ID%>").value;
             params.<%=OrderData.PARAM_FROM_DATE%> = fui.byId("<%=OrderData.PARAM_FROM_DATE%>").value;
             params.<%=OrderData.PARAM_TO_DATE%> = fui.byId("<%=OrderData.PARAM_TO_DATE%>").value;
-            fui.ui.manageorders.runSearch(params);
-
+            fui.ui.manageorders.internal.setSearchParams(params);
+			fui.grid.find(fui.ui.type.ORDER).refresh();
         });
 		fui.query("#neworder").button()
 			.click( function(event) {
@@ -128,6 +128,6 @@
 
 	fui.ready(function(){
 		// by default load the data into the grid when page loads
-		fui.query("#search").button().click();
+		//fui.query("#search").button().click();
 	});
 </script>

@@ -155,7 +155,7 @@ fui.workspace = {
 
 
 	getGrid: function() {
-		return fui.grid.find(fui.workspace.internal.GRID_ID);
+		return fui.query("#"+fui.workspace.internal.GRID_ID);
 	}
 };
 

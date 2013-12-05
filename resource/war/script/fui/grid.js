@@ -285,7 +285,9 @@ fui.extend(fui.Grid,
 			 */
 			getHeaderButtons: function() { return null; },
 
-            getSortIndx: function() {return null; },
+            refresh: function() {
+				fui.query("#"+this.fuiWorkspaceConfig.gridId).pqGrid( "refreshDataAndView" );
+			},
 
             getSelectionModel: function() {
                 return { type: 'row' , mode: 'range' };
@@ -302,6 +304,9 @@ fui.extend(fui.Grid,
             getResponseDataFunc: function(gridProperties) {
                 return null;
             },
+			getErrorFunc: function(gridProperties) {
+				return null;
+			},
             getUrlFunc: function(gridProperties) {
                 return null;
             },
@@ -459,6 +464,7 @@ fui.grid.internal = {
         var data = gridConfig.getData(gridProperties);
         var title = gridConfig.getTitle(gridProperties);
         var responseDataFunc = gridConfig.getResponseDataFunc(gridProperties);
+		var errorFunc = gridConfig.getErrorFunc(gridProperties);
         var urlFunch = gridConfig.getUrlFunc(gridProperties);
         var dataRemote = gridConfig.getIsDataRemote(gridProperties) ? "remote" : "local";
         var sortingRemote = gridConfig.getIsSortingRemote(gridProperties) ? "remote" : "local";
@@ -468,6 +474,7 @@ fui.grid.internal = {
             data: data,
             dataType: gridConfig.getDataType(gridProperties),
             getData: responseDataFunc,
+			error: errorFunc,
             getUrl: urlFunch,
             location: dataRemote,
             sorting: sortingRemote,

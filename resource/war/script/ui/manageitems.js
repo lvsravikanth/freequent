@@ -32,6 +32,11 @@ fui.ui.manageitems = {
 
 		requestData = requestData || {};
 		requestData.content = requestData.content || {};
+		if (params) {
+			fui.ui.manageitems.internal.setSearchParams(params);
+		} else {
+			params = fui.ui.manageitems.internal.getSearchParams();
+		}
 		requestData.content.name = params.name;
 		requestData.content.group = params.group;
 		requestData.content.category = params.category;
@@ -72,5 +77,15 @@ fui.ui.manageitems = {
 		var c = fui.ui.content;
 		c.internal.sendAPI(this, this.FINDALLITEMS, requestData);
 		return items;
+	}
+};
+fui.ui.manageitems.internal = {
+  	searchparams: {},
+
+	getSearchParams: function() {
+		return this.searchparams;
+	},
+	setSearchParams: function(params) {
+		this.searchparams = params;
 	}
 };

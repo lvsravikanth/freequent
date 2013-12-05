@@ -45,6 +45,13 @@ fui.ui.manageorders = {
         };
     },
 
+	/**
+	 * Returns the params object
+	 */
+	getSearchParams: function() {
+		return fui.ui.manageorders.internal.getSearchParams();
+	},
+
 	edit: function(id) {
 		var requestData = {
 			};
@@ -54,5 +61,15 @@ fui.ui.manageorders = {
 			ACTION_KEY: fui.ui.manageorders.ACTION_KEY
 		};
 		fui.ui.editor.edit(editConfig, requestData);
+	}
+};
+fui.ui.manageorders.internal = {
+  	searchparams: {},
+
+	getSearchParams: function() {
+		return this.searchparams;
+	},
+	setSearchParams: function(params) {
+		this.searchparams = params;
 	}
 };

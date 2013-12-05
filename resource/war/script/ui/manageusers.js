@@ -31,6 +31,11 @@ fui.ui.manageusers = {
 
 		requestData = requestData || {};
 		requestData.content = requestData.content || {};
+		if (params) {
+			fui.ui.manageusers.internal.setSearchParams(params);
+		} else {
+			params = fui.ui.manageusers.internal.getSearchParams();
+		}
 		requestData.content.userid = params.userid;
 		requestData.content.firstname = params.firstname;
 		requestData.content.lastname = params.lastname;
@@ -75,5 +80,15 @@ fui.ui.manageusers = {
 			ACTION_KEY: fui.ui.manageusers.ACTION_KEY,
 		};
 		fui.ui.editor.edit(editConfig, requestData);
+	}
+};
+fui.ui.manageusers.internal = {
+  	searchparams: {},
+
+	getSearchParams: function() {
+		return this.searchparams;
+	},
+	setSearchParams: function(params) {
+		this.searchparams = params;
 	}
 };

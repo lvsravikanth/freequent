@@ -18,7 +18,10 @@ fui.ui.grid.manageitems = {
 			getColumnModel: fui.scope(this, this.getColumnModel),
 			getHeaderButtons: fui.ui.grid.manageitems.getHeaderButtonsList,
 			setupGrid: fui.ui.grid.setupGrid,
-            getSortIndx: fui.scope(this, this.getSortIndx)
+            getSortIndx: fui.scope(this, this.getSortIndx),
+			refresh: function() {
+				fui.ui.manageitems.runSearch();
+			}
 		});
 	},
 
