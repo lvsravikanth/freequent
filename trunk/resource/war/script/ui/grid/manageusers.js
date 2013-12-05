@@ -19,7 +19,10 @@ fui.ui.grid.manageusers = {
 			getColumnModel: fui.scope(this, this.getColumnModel),
 			getHeaderButtons: fui.ui.grid.manageusers.getHeaderButtonsList,
 			setupGrid: fui.ui.grid.setupGrid,
-            getSortIndx: fui.scope(this, this.getSortIndx)
+            getSortIndx: fui.scope(this, this.getSortIndx),
+			refresh: function() {
+				fui.ui.manageusers.runSearch();
+			}
 		});
 	},
 

@@ -12,6 +12,7 @@ import com.scalar.freequent.service.users.UserService;
 import com.scalar.freequent.util.EditorUtils;
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.Constants;
+import com.scalar.freequent.util.DateTimeUtil;
 import com.scalar.freequent.l10n.ServiceResource;
 import com.scalar.freequent.l10n.ActionResource;
 import com.scalar.freequent.dao.CapabilityInfoDAO;
@@ -22,14 +23,14 @@ import com.scalar.core.ScalarServiceException;
 import com.scalar.core.ScalarValidationException;
 import com.scalar.core.jdbc.DAOFactory;
 import com.scalar.core.util.MsgObjectUtil;
+import com.scalar.core.util.MsgObject;
 import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.response.Response;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
+import java.text.DateFormat;
+import java.text.ParseException;
 
 /**
  * User: Sujan Kumar Suppala
@@ -58,17 +59,43 @@ public class ManageOrdersAction extends AbstractActionController {
 	}
 
 	public void runsearch(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
-		ItemDataService itemDataService = ServiceFactory.getService(ItemDataService.class, request);
+		OrderDataService orderDataService = ServiceFactory.getService(OrderDataService.class, request);
 		try {
-			Map<String, String> params = new HashMap<String, String>();
-			params.put(Item.PARAM_NAME, request.getParameter(Item.PARAM_NAME));
-			params.put(Item.PARAM_GROUP, request.getParameter(Item.PARAM_GROUP));
-			params.put(Item.PARAM_CATEGORY, request.getParameter(Item.PARAM_CATEGORY));
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put(OrderData.PARAM_ORDER_NUMBER, request.getParameter(OrderData.PARAM_ORDER_NUMBER));
+			params.put(OrderData.PARAM_ITEM_ID, request.getParameter(OrderData.PARAM_ITEM_ID));
 
-			List<Item> items = itemDataService.search(params);
+			Date fromDate = null;
+			Date toDate = null;
+			DateFormat formatter = DateTimeUtil.getDateFormatter(request.getContext());
 
-			data.put(Response.ITEMS_ATTRIBUTE, convertToMap(items));
-			data.put(Response.TOTAL_ATTRIBUTE, items.size() + "");
+			String fromDateStr = request.getParameter(OrderData.PARAM_FROM_DATE);
+			if (!StringUtil.isEmpty(fromDateStr)) {
+				try {
+					fromDate = formatter.parse(fromDateStr);
+					params.put(OrderData.PARAM_FROM_DATE, fromDate);
+				} catch (ParseException e) {
+					MsgObject msgObject = MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.INVALID_PARAM_VALUE, OrderData.PARAM_FROM_DATE, fromDateStr);
+					throw ScalarActionException.create(msgObject, e);
+				}
+			}
+
+			String toDateStr = request.getParameter(OrderData.PARAM_TO_DATE);
+			if (!StringUtil.isEmpty(toDateStr)) {
+				try {
+					toDate = formatter.parse(toDateStr);
+					params.put(OrderData.PARAM_FROM_DATE, toDate);
+				} catch (ParseException e) {
+					MsgObject msgObject = MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.INVALID_PARAM_VALUE, OrderData.PARAM_TO_DATE, toDateStr);
+					throw ScalarActionException.create(msgObject, e);
+				}
+			}
+
+
+			List<OrderData> orders = orderDataService.search(params);
+
+			data.put(Response.ITEMS_ATTRIBUTE, orders);
+			data.put(Response.TOTAL_ATTRIBUTE, orders.size() + "");
 		} catch (ScalarServiceException e) {
 			throw getActionException(e);
 		}

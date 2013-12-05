@@ -18,12 +18,36 @@ fui.ui.grid.manageorders = {
 			getColumnModel: fui.scope(this, this.getColumnModel),
 			getHeaderButtons: fui.ui.grid.manageorders.getHeaderButtonsList,
 			setupGrid: fui.ui.grid.setupGrid,
-            getSortIndx: fui.scope(this, this.getSortIndx)
+            getSortIndx: fui.scope(this, this.getSortIndx),
+			getDataType: function(gridProperties) {
+				return "text";
+			},
+			getResponseDataFunc: function(gridProperties) {
+				return function( response, textStatus, jqXHR ){
+					var dataJSON = fui.transport.json.parse(response).responses[0];
+					dataJSON = fui.secure_eval(dataJSON.content);
+					return { curPage: this.curPage, totalRecords: dataJSON.total, data: dataJSON.items };
+				};
+            },
+			getErrorFunc: function(gridProperties) {
+				return function( jqXHR, textStatus, errorThrown ){
+					var msg = fui.transport.json.parse(jqXHR.responseText).errors[0].message || errorThrown;
+					fui.msg.alert(fui.workspace.getMessage('error'), msg);
+				};
+			},
+            getUrlFunc: function(gridProperties) {
+                return function(){
+					var url = fuiConfig.appContext + "/" + fui.ui.manageorders.ACTION_KEY + "/" + fui.ui.manageorders.SEARCH + ".json";
+					var params = fui.query.param(fui.ui.manageorders.getSearchParams());
+					return { url: url, data: params };
+				};
+            },
+			getIsDataRemote: function(gridProperties){ return true; }
 		});
 	},
 
     getData: function(gridProperties) {
-        return [];
+        return null;
     },
 
     getColumnModel: function(grid, gridProperties) {
