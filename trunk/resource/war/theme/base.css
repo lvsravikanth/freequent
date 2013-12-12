@@ -2,24 +2,34 @@
  * Base CSS classes
  */
 
-.fui-html, .fui-html *, .fui-html .x-form-item-label, .fui-button.x-btn .x-btn-inner, .fui-html .x-panel-header-text-default-framed,
-.fui-html .x-panel-header, .fui-html .x-grid-row .x-grid-cell, .fui-html .x-column-header, .fui-html .x-form-item, .fui-html .x-form-field{
+.fui-html *, .fui-html label, .fui-html .ui-widget, .fui-html div.pq-grid *{
 	font-weight: inherit;
 	font-style: inherit;
 	font-size: 100%;
 	font-family: Arial, sans-serif;
-	color: #000000; }
+	color: #000000;}
 
-.fui-html .x-form-item-label{
-	font-weight: bold;}
+.fui-html button, .fui-html th, .fui-html label, .fui-html .ui-widget-header,
+.fui-html button.ui-button, .fui-html .ui-button-text-only .ui-button-text{
+	font-weight: bold;
+	font-size: 15px;}
 
-.fui-html input.x-form-text, .fui-html textarea.x-form-field{
+.fui-html input[type="checkbox"] {
+	box-shadow: none;
+}
+
+.fui-html .ui-widget-header {
+	font-weight: bold;
+	font-size: 15px;
+}
+
+.fui-html input, .fui-html textarea{
 	background: rgba(255,255,255,1) none;
 	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1) inset;
 	border: 1px solid #c0c0c0;
 	font-size: 13px; /*adding for consistency*/}
 
-.fui-html textarea.x-form-field{
+.fui-html textarea{
 	padding: 2px 3px;}
 
 .fui-html .fui-input-text{
@@ -197,9 +207,28 @@
 .fui-editor .ui-dialog-buttonpane {
 	padding: 0 !important; }
 
-.fui-editor .fui-editor-content {
-	margin-right: -1px;
-     }
+.fui-editor .fui-editor-content.ui-dialog-content {
+    padding-right: 2%;
+    width: 98% !important;
+    overflow: auto; }
+
+.fui-widget-required-flag {
+    color: #BA1414;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 0.005em;
+    vertical-align: middle;
+}
+.fui-editor .ui-dialog-titlebar {
+	height: 25px; }
+
+.fui-editor .ui-dialog-buttonpane {
+	padding: 0 !important; }
+
+.fui-editor .fui-editor-content.ui-dialog-content {
+    padding-right: 2%;
+    width: 98% !important;
+    overflow: auto; }
 
 .fui-widget-required-flag {
     color: #BA1414;

@@ -31,38 +31,39 @@ fui.ui.grid.manageusers = {
     },
 
     getColumnModel: function(grid, gridProperties) {
-        return [
-            {
-                title: 'actions',
-                dataType: "string",
-                dataIndx: "id",
-                editable: false,
-                render: fui.grid.rowaction.renderer // fui.ui.grid.manageusers.actionsRenderer
-            },
-            {
-                title: "User Id",
-                width: 100,
-                dataType: "string",
-                dataIndx: "userid",
-                editable: false
-            },
-            {
-                title: "First Name",
-                width: 200,
-                dataType: "string",
-                dataIndx: "firstname",
-                editable: false
-            },
-            {
-                title: "Last Name",
-                width: 200,
-                dataType: "string",
-                dataIndx: "lastname",
-                editable: false
-            }
-        ];
+            return [
+                {
+                    title: 'Actions',
+                    dataType: "string",
+                    width: 150,
+                    dataIndx: "id",
+                    editable: false,
+                    render: fui.grid.rowaction.renderer // fui.ui.grid.manageusers.actionsRenderer
+                },
+                {
+                    title: "User Id",
+                    width: 150,
+                    dataType: "string",
+                    dataIndx: "userid",
+                    editable: false
+                },
+                {
+                    title: "First Name",
+                    width: 200,
+                    dataType: "string",
+                    dataIndx: "firstname",
+                    editable: false
+                },
+                {
+                    title: "Last Name",
+                    width: 200,
+                    dataType: "string",
+                    dataIndx: "lastname",
+                    editable: false
+                }
+            ];
     },
-
+    
     getSortIndx: function(gridProperties) {
         return "firstname";
     },
