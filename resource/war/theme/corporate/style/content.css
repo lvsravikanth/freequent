@@ -175,3 +175,32 @@ label.error {
 .fui-editor-capablilities-column-text{
 	padding: .5em .5em .5em 1em;
 }
+
+/*** Starting Search Panel CSS***/
+    .fui-workspace-search-panel {
+        border: 1px solid #a6c9e2;
+        border-radius: 5px;              
+    }
+    .fui-workspace-search-header {
+		position: relative;
+		padding: 10px;
+	}
+	.fui-workspace-search-container-column {
+		display: inline-block;
+		margin: 5px;
+	}
+	.fui-workspace-search-container-column-inner{
+		padding:5px;
+	}
+	.fui-workspace-search-row {
+		position: relative;
+		float: left;
+		max-width: 300px;
+	}
+	.fui-workspace-search-footer{
+		display: inline-block;
+		bottom: 10px;
+		width: 100%;
+		border-top: 1px solid #C3C3C3;
+	}
+/*** End Search panel css***/

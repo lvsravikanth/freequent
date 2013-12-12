@@ -14,46 +14,57 @@
 
 <% %>
 <div class="fui-workspace-container">
+<div class="fui-workspace-search-panel">
+	<div>
+	<div class="fui-workspace-search-header ui-widget-header ui-corner-top"><fmt:message key="<%=WorkspaceResource.MANAGEUSERS_TITLE%>"/></div>
 	<form id="manageusers">
-		<div class="fui-workspace-search-table">
-			<div class="fui-workspace-search-table-row">
-				<div class="fui-workspace-header ui-widget-header ui-corner-top"><fmt:message key="<%=WorkspaceResource.MANAGEUSERS_TITLE%>"/></div>
-			</div>
 			<div class="fui-workspace-search-container">
-					<div class="fui-workspace-search-table-row">
-						<span class="fui-workspace-search-table-cell">
-							<span for="userid"><fmt:message key="<%=WorkspaceResource.USERID%>"/></span>
-						</span>
-						<span class="fui-workspace-search-table-cell">
-							<input type="text" name="userid" id="userid">
-						</span>
-						<span class="fui-workspace-search-table-cell">
-							<span for="firstname"><fmt:message key="<%=WorkspaceResource.FIRST_NAME%>"/></span>
-						</span>
-						<span class="fui-workspace-search-table-cell">
-							<input type="text" name="firstname" id="firstname">
-						</span>
-						<span class="fui-workspace-search-table-cell">
-							<span for="lastname"><fmt:message key="<%=WorkspaceResource.LAST_NAME%>"/></span>
-						</span>
-						<span class="fui-workspace-search-table-cell">
+				<div >
+					<span class="fui-workspace-search-row">
+						<div class="fui-workspace-search-container-column" style="padding-right:24px">
+							<label for="userid"><fmt:message key="<%=WorkspaceResource.USERID%>"/></label>
+						</div>
+						<div class="fui-workspace-search-container-column">
+							<input type="text" name="userid" id="userid" />
+						</div>
+					</span>
+					<span class="fui-workspace-search-row">
+
+						<div class="fui-workspace-search-container-column">
+							<label for="firstname"><fmt:message key="<%=WorkspaceResource.FIRST_NAME%>"/></label>
+						</div>
+						<div class="fui-workspace-search-container-column">
+							<input type="text" name="firstname" id="firstname" />
+						</div>
+					</span>
+					<span class="fui-workspace-search-row">
+						<div class="fui-workspace-search-container-column">
+							<label for="lastname"><fmt:message key="<%=WorkspaceResource.LAST_NAME%>"/></label>
+						</div>
+						<div class="fui-workspace-search-container-column">
 							<input type="text" name="lastname" id="lastname">
-						</span>
-						<div class="fui-workspace-search-actions-container fui-workspace-search-table-cell">
+						</div>
+					</span>
+					<span class="fui-workspace-search-row">
+						<div class="fui-workspace-search-container-column">
 							<button type="button" id="search"><fmt:message key="<%=WorkspaceResource.SEARCH%>"/></button>
+						</div>
+						<div class="fui-workspace-search-container-column">
 							<button type="reset" id="reset"><fmt:message key="<%=WorkspaceResource.RESET%>"/></button>
 						</div>
-				</div>
-				<div class="fui-workspace-footer-search">
-					<div class="fui-workspace-footer-search-newuser">
-						<button type="button" id="newuser"><fmt:message key="<%=WorkspaceResource.NEWUSER%>"/></button>
+					</span>
 					</div>
 				</div>
 			</div>
-		</div>
 	</form>
+	<div class="fui-workspace-search-footer">
+		<div class="fui-workspace-footer-search-newuser">
+			<button type="button" id="newuser"><fmt:message key="<%=WorkspaceResource.NEWUSER%>"/></button>
+		</div>
+	</div>
+	</div>
 	<div class="fui-workspace-grid" id="fui-workspace-grid">
-    </div>
+	</div>
 </div>
 <script type="text/javascript">
     fui.ready(function() {
