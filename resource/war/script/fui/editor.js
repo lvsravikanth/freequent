@@ -310,6 +310,7 @@ fui.editor = {
 			fui.query( "#" +contentDivId ).on( "dialogopen", listenAndUpdate );
 			// open the dialogue
 			fui.query( "#" +contentDivId ).dialog( "open" );
+            fui.query('.ui-dialog-content').children().addClass('fui-editor-container');
 			if(editConfig.message){
 				var cls = editConfig.message.cls || fui.notification.WARNING;
 				var text = editConfig.message.text || '';
