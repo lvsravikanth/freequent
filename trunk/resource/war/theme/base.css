@@ -207,11 +207,6 @@
 .fui-editor .ui-dialog-buttonpane {
 	padding: 0 !important; }
 
-.fui-editor .fui-editor-content.ui-dialog-content {
-    padding-right: 2%;
-    width: 98% !important;
-    overflow: auto; }
-
 .fui-widget-required-flag {
     color: #BA1414;
     font-size: 22px;
@@ -226,8 +221,8 @@
 	padding: 0 !important; }
 
 .fui-editor .fui-editor-content.ui-dialog-content {
-    padding-right: 2%;
-    width: 98% !important;
+    width: 100% !important;
+    padding: .5em 0;
     overflow: auto; }
 
 .fui-widget-required-flag {
@@ -241,15 +236,15 @@
 /*** End Editor css***/
 
 .fui-grid-actions {
-list-style: none;
-white-space: nowrap;
+    list-style: none;
+    white-space: nowrap;
 }
 .fui-grid-action {
-float: left;
-display: inline;
-list-style: none;
-margin: 0 5px 1px 0;
-background-repeat: no-repeat;
-background-position: 0 0;
-white-space: nowrap;
+    float: left;
+    display: inline;
+    list-style: none;
+    margin: 0 5px 1px 0;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    white-space: nowrap;
 }
