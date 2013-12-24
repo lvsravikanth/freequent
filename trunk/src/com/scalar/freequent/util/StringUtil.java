@@ -584,4 +584,12 @@ public final class StringUtil {
     public static String encrypt (String string) throws ScalarException {
          return StringUtil.concatBytes( MessageDigestUtils.getMAC (string), "," );
     }
+
+	public static String formatToLength (String value, String prefix, String suffix, int length) {
+		while (value.length() < length) {
+			value = (prefix==null ? "" : prefix) + value + (suffix==null ? "" : suffix);
+		}
+
+		return value.substring(0, length);
+	}
 }

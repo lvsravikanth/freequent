@@ -81,6 +81,18 @@ fui.ui.grid = {
 				//fui.query( grid ).pqGrid( "refreshDataAndView" );
 			}
 		};
+	},
+	dateRenderer: function(ui) {
+		var rowData = ui.rowData;
+		var dataIdx = ui.dataIndx;
+		var dateStr = rowData[dataIdx];
+		if (dateStr && dateStr != "") {
+			var dateFormat = fui.context.getContext()[fui.context.FORMAT_KEY].date;
+			var dateObj = fui.query.datepicker.parseDate(dateFormat, dateStr);
+			return fui.query.datepicker.formatDate(dateFormat, dateObj);
+		}
+
+		return "";
 	}
 };
 

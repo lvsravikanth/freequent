@@ -124,10 +124,14 @@ public class JsonView extends JstlView {
 			if ( logger.isErrorEnabled() ) {
 				logger.error("Unable to create output", e);
 			}
+
+			throw e;
 		} catch ( IOException e ) {
 			if ( logger.isErrorEnabled() ) {
 				logger.error("Unable to get writer", e);
 			}
+
+			throw e;
 		} catch ( Exception e ) {
 			// Catching just exception on purpose
 			if ( logger.isErrorEnabled() ) {

@@ -4,24 +4,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindException;
 import com.scalar.freequent.web.spring.controller.AbstractActionController;
-import com.scalar.freequent.auth.User;
 import com.scalar.freequent.auth.Capability;
 import com.scalar.freequent.common.*;
 import com.scalar.freequent.service.*;
-import com.scalar.freequent.service.users.UserService;
 import com.scalar.freequent.util.EditorUtils;
 import com.scalar.freequent.util.StringUtil;
-import com.scalar.freequent.util.Constants;
 import com.scalar.freequent.util.DateTimeUtil;
 import com.scalar.freequent.l10n.ServiceResource;
 import com.scalar.freequent.l10n.ActionResource;
-import com.scalar.freequent.dao.CapabilityInfoDAO;
-import com.scalar.freequent.dao.CapabilityInfoRow;
 import com.scalar.core.request.Request;
 import com.scalar.core.ScalarActionException;
 import com.scalar.core.ScalarServiceException;
 import com.scalar.core.ScalarValidationException;
-import com.scalar.core.jdbc.DAOFactory;
+import com.scalar.core.ScalarException;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.service.ServiceFactory;
@@ -40,20 +35,9 @@ import java.text.ParseException;
 public class ManageOrdersAction extends AbstractActionController {
 	protected static final Log logger = LogFactory.getLog(ManageOrdersAction.class);
 
-	public static final String ATTR_ITEM_DATA = "itemData";
-	public static final String ATTR_GROUP_DATA_LIST = "groupDataList";
-	public static final String ATTR_UNIT_DATA_LIST = "unitDataList";
-	public static final String ATTR_CATEGORY_DATA_LIST = "categoryDataList";
+	public static final String ATTR_ORDER_DATA = "orderData";
 
 	public void defaultProcess(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
-		GroupDataService groupDataService = ServiceFactory.getService(GroupDataService.class, request);
-		List<GroupData> groupDataList = groupDataService.findAll();
-
-		CategoryDataService categoryDataService = ServiceFactory.getService(CategoryDataService.class, request);
-		List<CategoryData> categoryDataList = categoryDataService.findAll();
-
-		data.put(ATTR_GROUP_DATA_LIST, groupDataList);
-		data.put(ATTR_CATEGORY_DATA_LIST, categoryDataList);
 
 		data.put(Response.TEMPLATE_ATTRIBUTE, "order/manageorders");
 	}
@@ -115,35 +99,34 @@ public class ManageOrdersAction extends AbstractActionController {
 			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.ID_REQUIRED), null);
 		}
 		if (EditorUtils.isNewEditorId(id)) {
-			data.put(ATTR_ITEM_DATA, new Item());
+			OrderData newOrderDatda = new OrderData();
+			newOrderDatda.setOrderDate(new Date());
+			List<OrderLineItemData> lineItemList = new ArrayList<OrderLineItemData>();
+			OrderLineItemData lineItemData = new OrderLineItemData();
+			lineItemData.setLineNumber(1);
+			lineItemList.add(lineItemData);
+			lineItemData = new OrderLineItemData();
+			lineItemData.setLineNumber(2);
+			lineItemList.add(lineItemData);
+
+			newOrderDatda.setLineItems(lineItemList);
+			data.put(ATTR_ORDER_DATA, newOrderDatda);
 		} else {
-			// load item
-			ItemDataService itemDataService = ServiceFactory.getService(ItemDataService.class, request);
+			// load order
+			OrderDataService orderDataService = ServiceFactory.getService(OrderDataService.class, request);
 			try {
-				Item item = itemDataService.findById(id);
-				if (item == null) {
-					throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_FIND_ITEM, id), null);
+				OrderData orderData = orderDataService.findById(id);
+				if (orderData == null) {
+					throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_FIND_ORDER, id), null);
 				}
-				data.put(ATTR_ITEM_DATA, item);
+				setTotals(orderData);
+				data.put(ATTR_ORDER_DATA, orderData);
 			} catch (ScalarServiceException e) {
 				throw getActionException(e);
 			}
 		}
 
-		GroupDataService groupDataService = ServiceFactory.getService(GroupDataService.class, request);
-		List<GroupData> groupDataList = groupDataService.findAll();
-
-		UnitDataService unitDataService = ServiceFactory.getService(UnitDataService.class, request);
-		List<UnitData> unitDataList = unitDataService.findAll();
-
-		CategoryDataService categoryDataService = ServiceFactory.getService(CategoryDataService.class, request);
-		List<CategoryData> categoryDataList = categoryDataService.findAll();
-
-		data.put(ATTR_GROUP_DATA_LIST, groupDataList);
-		data.put(ATTR_UNIT_DATA_LIST, unitDataList);
-		data.put(ATTR_CATEGORY_DATA_LIST, categoryDataList);
-
-		data.put(Response.TEMPLATE_ATTRIBUTE, "item/itemtemplate");
+		data.put(Response.TEMPLATE_ATTRIBUTE, "order/ordertemplate");
 	}
 
 	/**
@@ -155,51 +138,103 @@ public class ManageOrdersAction extends AbstractActionController {
 	 * @throws com.scalar.core.ScalarActionException
 	 */
 	public void save(Request request, Object command, Map<String, Object> data) throws ScalarActionException, ScalarValidationException {
-		Item item = new Item();
-		bindAndValidate(item, (HttpServletRequest)request.getWrappedObject());
-		ItemDataService itemDataService = ServiceFactory.getService(ItemDataService.class, request);
+		OrderData order = new OrderData();
+		bindAndValidate(order, (HttpServletRequest)request.getWrappedObject());
+		OrderDataService orderDataService = ServiceFactory.getService(OrderDataService.class, request);
 
 		// check whether the request is from new editor
 		String editorId = request.getParameter(EditorUtils.EDITOR_ID_ATTRIBUTE);
 		if (logger.isDebugEnabled()) {
 			logger.debug("item editor id: " + editorId);
 		}
-		if (EditorUtils.isNewEditorId(editorId)) {
+		boolean isNew = EditorUtils.isNewEditorId(editorId);
+		if (isNew) {
 			try {
-				if (itemDataService.exists(item.getName())) {
-					throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.ITEM_ALREADY_EXISTS, item.getName()), null);
+				setDefaults(order, isNew, request);
+				if (orderDataService.exists(order.getOrderNumber())) {
+					throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.ORDER_NUMBER_ALREADY_EXISTS, order.getOrderNumber()), null);
 				}
-			} catch (ScalarServiceException e) {
+			} catch (ScalarException e) {
 				throw getActionException(e);
 			}
-			item.setId(null);
+			order.setId(null);
 		} else {
 			// check do we need to set the id?
-			item.setId(editorId);
+			order.setId(editorId);
 		}
 		try {
-			itemDataService.insertOrUpdate(item);
+			orderDataService.insertOrUpdate(order);
 		} catch (ScalarServiceException e) {
 			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.UNABLE_TO_SAVE), e);
 		}
 		try {
-			item = itemDataService.findById(item.getId());
+			order = orderDataService.findById(order.getId());
 		} catch (ScalarServiceException e) {
 			throw getActionException(e);
 		}
-		data.put(Response.ITEM_ATTRIBUTE, item.toMap());
+		data.put(Response.ITEM_ATTRIBUTE, order.toMap());
 	}
 
 	protected void validate(Object command, BindException errors) throws ScalarValidationException {
 		super.validate(command, errors);
-		Item item = (Item)command;
+		OrderData order = (OrderData)command;
 
-		if (StringUtil.isEmpty(item.getName())) {
-			throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.NAME_REQUIRED, ObjectType.ITEM), null);
+		List<OrderLineItemData> lineitems = order.getLineItems();
+		if (lineitems != null) {
+			// check whether the lineitems have items and qty
+			int lineNumber = 0;
+			Iterator<OrderLineItemData> itr = lineitems.iterator();
+			while (itr.hasNext()) {
+			//for (OrderLineItemData lineItem: lineitems) {
+				OrderLineItemData lineItem = itr.next();
+				lineNumber++;
+				String itemId = lineItem.getItemId();
+				int qty = lineItem.getQty();
+				if (StringUtil.isEmpty(itemId) && (qty == 0)) {
+					// remove this lineitem
+					itr.remove();
+				} else if (StringUtil.isEmpty(itemId) || (qty==0)) {
+					throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.ORDER_LINEITEM_NO_QTY_OR_PRICE, lineNumber+""), null);
+				}
+			}
 		}
-		if (StringUtil.isEmpty(item.getCode())) {
-			throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.ITEM_CODE_REQUIRED), null);
+
+		// does order has lineitems?
+		if (StringUtil.isEmpty(lineitems)) {
+			throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.ORDER_LINEITEMS_EMPTY), null);
 		}
+	}
+
+	@Override
+	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) throws ScalarActionException {
+		super.onBindAndValidate(request, command, errors);
+		OrderData order = (OrderData)command;
+		setLineNumbersAndTotals(order);
+	}
+
+	private void setLineNumbersAndTotals(OrderData orderData) {
+		List<OrderLineItemData> lineitems = orderData.getLineItems();
+		int lineNumber = 0;
+		for (OrderLineItemData lineItem: lineitems) {
+			lineNumber++;
+			lineItem.setLineNumber(lineNumber);
+		}
+		setTotals(orderData);
+	}
+
+	private void setTotals (OrderData orderData) {
+		List<OrderLineItemData> lineitems = orderData.getLineItems();
+		double totalAmt = 0d;
+		for (OrderLineItemData lineItem: lineitems) {
+			lineItem.setAmount(lineItem.getQty() * lineItem.getPrice());
+			totalAmt += lineItem.getAmount();
+		}
+		orderData.setTotalAmount(totalAmt);
+		// calculate tax
+		double taxAmt = (totalAmt * orderData.getTaxPercentage())/100;
+		orderData.setTaxAmount(taxAmt);
+		double grandTotalAmt = totalAmt + taxAmt;
+		orderData.setGrandTotal(grandTotalAmt);
 	}
 
 	private List<Map<String, Object>> convertToMap(List<Item> items) {
@@ -223,4 +258,23 @@ public class ManageOrdersAction extends AbstractActionController {
 
 		return new Capability[0];
 	}
+
+	private void setDefaults(OrderData order, boolean isNew, Request request) throws ScalarException {
+		if (isNew) {
+			if (StringUtil.isEmpty(order.getCustName())) {
+				order.setCustName(OrderData.DEFAULT_CUST_NAME);
+			}
+			if (StringUtil.isEmpty(order.getOrderNumber())) {
+					// generate order number
+				order.setOrderNumber(AutoNumber.generateOrderNumber(request));
+			}
+			if (order.getOrderDate() == null) {
+				order.setOrderDate(new Date());
+			}
+			if (order.getStatus() == null) {
+				order.setStatus(OrderData.OrderStatus.ACTIVE);
+			}
+		}
+	}
+
 }

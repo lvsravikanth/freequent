@@ -54,6 +54,7 @@ fui.ui.grid.manageorders = {
         return [
             {
                 title: fui.workspace.getMessage("actions"),
+				width: 100,
                 dataType: "string",
                 dataIndx: "id",
                 editable: false,
@@ -61,7 +62,7 @@ fui.ui.grid.manageorders = {
             },
             {
                 title: fui.workspace.getMessage("order.number"),
-                width: 100,
+                width: 200,
                 dataType: "string",
                 dataIndx: "orderNumber",
                 editable: false
@@ -71,6 +72,21 @@ fui.ui.grid.manageorders = {
                 width: 100,
                 dataType: "string",
                 dataIndx: "status",
+                editable: false
+            },
+			{
+                title: fui.workspace.getMessage("order.date"),
+                width: 100,
+                dataType: "string",
+                dataIndx: "orderDate",
+                editable: false,
+				render: fui.ui.grid.dateRenderer
+            },
+			{
+                title: fui.workspace.getMessage("revision"),
+                width: 100,
+                dataType: "integer",
+                dataIndx: "revision",
                 editable: false
             }
         ];

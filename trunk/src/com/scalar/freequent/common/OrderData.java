@@ -57,13 +57,16 @@ public class OrderData implements HasRecord {
 	private String orderNumber;
 	private Date orderDate;
 	private String custName;
-	private OrderStatus status;
+	private OrderStatus status = OrderStatus.ACTIVE;
 	private int revision;
 	private String remarks;
 	private double taxPercentage;
 	private double discount;
 	private Record record;
 	private List<OrderLineItemData> lineItems = null;
+	private double taxAmount;
+	private double totalAmount;
+	private double grandTotal;
 
 	public static final String PARAM_ORDER_NUMBER = "ordernumber";
 	public static final String PARAM_ITEM_ID = "itemid";
@@ -80,6 +83,11 @@ public class OrderData implements HasRecord {
 	public static final String ATTR_TAX_PERCENTAGE = "taxPercentage";
 	public static final String ATTR_DISCOUNT = "discount";
 	public static final String ATTR_LINEITEMS = "lineItems";
+	public static final String ATTR_TAX_AMOUNT = "taxAmount";
+	public static final String ATTR_TOTAL_AMOUNT = "totalAmount";
+	public static final String ATTR_GRAND_TOTAL = "grandTotal";
+
+	public static final String DEFAULT_CUST_NAME = "Cash";
 
 	public String getId() {
 		return id;
@@ -169,6 +177,30 @@ public class OrderData implements HasRecord {
 		this.lineItems = lineItems;
 	}
 
+	public double getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(double totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public double getGrandTotal() {
+		return grandTotal;
+	}
+
+	public void setGrandTotal(double grandTotal) {
+		this.grandTotal = grandTotal;
+	}
+
+	public double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
 	public Map<String, Object> toMap() {
 		return toMap(this);
 	}
@@ -176,6 +208,7 @@ public class OrderData implements HasRecord {
 	public static Map<String, Object> toMap(OrderData orderData) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put(ATTR_ID, orderData.getId());
+		map.put ("name", orderData.getOrderNumber());
 		map.put(ATTR_ORDER_NUMBER, orderData.getOrderNumber());
 		map.put(ATTR_ORDER_DATE, orderData.getOrderDate());
 		map.put(ATTR_CUST_NAME, orderData.getCustName());

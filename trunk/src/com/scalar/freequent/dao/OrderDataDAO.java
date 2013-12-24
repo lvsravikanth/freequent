@@ -354,6 +354,11 @@ public class OrderDataDAO extends AbstractDAO {
 		return getJdbcTemplate().update(query, id);
 	}
 
+	public long getOrdersCount() {
+		String query = "select count(*) from " + TABLE_NAME;
+		return getJdbcTemplate().queryForLong(query);
+	}
+
 	public static OrderData rowToData(OrderDataRow row) {
 		OrderData orderData = new OrderData();
 		orderData.setId(row.getId().toString());

@@ -17,8 +17,7 @@
             <div class="ui-widget-overlay">
                 <div id="site_signin_box" class="frq_signin_container_box ui-widget-shadow ui-corner-all">
                     <h2 align="center" style="">
-                        Login
-                        <img src=""/>
+                        Sign In
                     </h2>
                     <div class="site_signin_table">
                         <form id="site_signin_form" action="<%=request.getContextPath()%>/auth/authenticate"
@@ -46,7 +45,7 @@
                             <div class="site_signin_row site_signin_align">
 									<span class="site_signin_cell"></span>
 									<span class="site_signin_cell site_signin_cell_padding site_signin_button_padding">
-										<button id="site_signin_button" class="site_signin_button">Signin</button>
+										<button id="site_signin_button" class="site_signin_button">Sign In</button>
 									</span>
                             </div>
                         </form>
