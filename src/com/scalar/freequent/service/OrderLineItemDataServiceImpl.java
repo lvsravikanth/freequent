@@ -4,13 +4,16 @@ import com.scalar.core.ScalarException;
 import com.scalar.core.ScalarServiceException;
 import com.scalar.core.jdbc.DAOFactory;
 import com.scalar.core.service.AbstractService;
+import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.util.GUID;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.freequent.common.OrderLineItemData;
+import com.scalar.freequent.common.Item;
 import com.scalar.freequent.dao.OrderLineItemDataDAO;
 import com.scalar.freequent.dao.OrderLineItemDataRow;
 import com.scalar.freequent.l10n.ServiceResource;
+import com.scalar.freequent.util.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,8 +87,10 @@ public class OrderLineItemDataServiceImpl extends AbstractService implements Ord
 
 	@Transactional
 	public boolean insertOrUpdate(OrderLineItemData orderLineItemData) throws ScalarServiceException {
-		boolean isNew = orderLineItemData.getId() == null;
+		boolean isNew = StringUtil.isEmpty(orderLineItemData.getId());
 		OrderLineItemDataDAO orderLineItemDataDAO = DAOFactory.getDAO(OrderLineItemDataDAO.class, getRequest());
+		ItemDataService itemDataService = ServiceFactory.getService(ItemDataService.class, getRequest());
+		Item itemData = itemDataService.findById(orderLineItemData.getItemId());
 		if (isNew) {
 			// insert
 			try {
@@ -94,6 +99,11 @@ public class OrderLineItemDataServiceImpl extends AbstractService implements Ord
 				throw ScalarServiceException.create(MsgObjectUtil.getMsgObject(e.getMessage()), e);
 			}
 			OrderLineItemDataRow row = OrderLineItemDataDAO.dataToRow(orderLineItemData);
+			if (row.getPrice() == 0) {
+				// set item price
+				row.setPrice(itemData.getPrice());
+			}
+			row.setTaxable(itemData.getTaxable() ? 1 : 0);
 			try {
 				orderLineItemDataDAO.insert(row);
 			} catch (ScalarException ex) {
@@ -102,7 +112,15 @@ public class OrderLineItemDataServiceImpl extends AbstractService implements Ord
 			}
 		} else {
 			// update
-			OrderLineItemDataRow row = OrderLineItemDataDAO.dataToRow(orderLineItemData);
+			//OrderLineItemDataRow row = OrderLineItemDataDAO.dataToRow(orderLineItemData);
+			OrderLineItemDataRow row = new OrderLineItemDataRow();
+			row.setId(new GUID(orderLineItemData.getId()));
+			row.setOrderId(new GUID(orderLineItemData.getOrderId()));
+			row.setLineNumber(orderLineItemData.getLineNumber());
+			row.setItemId(new GUID(orderLineItemData.getItemId()));
+			row.setQty(orderLineItemData.getQty());
+			row.setPrice(itemData.getPrice());
+			row.setTaxable(itemData.getTaxable() ? 1 : 0);
 			try {
 				orderLineItemDataDAO.update(row);
 			} catch (ScalarException ex) {

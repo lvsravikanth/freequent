@@ -23,6 +23,7 @@ public class OrderLineItemData {
 	private double price;
 	private boolean taxable;
 	private boolean removed;
+	private double amount;
 
 	public static final String ATTR_ID = "id";
 	public static final String ATTR_ORDER_ID = "orderId";
@@ -31,6 +32,7 @@ public class OrderLineItemData {
 	public static final String ATTR_QTY = "qty";
 	public static final String ATTR_PRICE = "price";
 	public static final String ATTR_TAXABLE = "taxable";
+	public static final String ATTR_AMOUNT = "amount";
 
 	public String getId() {
 		return id;
@@ -94,5 +96,13 @@ public class OrderLineItemData {
 
 	public void setRemoved(boolean removed) {
 		this.removed = removed;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 }

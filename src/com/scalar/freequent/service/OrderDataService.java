@@ -21,4 +21,5 @@ public interface OrderDataService {
 	boolean insertOrUpdate(OrderData orderData) throws ScalarServiceException;
 	boolean removeByOrderNumber(String orderNumber) throws ScalarServiceException;
 	boolean remove(String id) throws ScalarServiceException;
+	long getOrdersCount() throws ScalarServiceException;
 }

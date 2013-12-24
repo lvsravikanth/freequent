@@ -78,7 +78,7 @@
 	margin: auto;
 	min-width: 1024px;
 	min-height: 768px;
-	overflow: hidden;
+	/*overflow: hidden;*/
 	width: 98%; }
 
 .fui-header {
@@ -247,4 +247,17 @@
     background-repeat: no-repeat;
     background-position: 0 0;
     white-space: nowrap;
+}
+
+.fui-table {
+	table-layout:fixed;
+}
+.fui-col {
+
+}
+.fui-col.fui-col-head {
+	text-align:center;
+}
+.fui-col.fui-col-content {
+
 }

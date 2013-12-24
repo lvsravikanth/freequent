@@ -477,7 +477,7 @@ public class GUID
 
         if (id.length() != ID_LENGTH) {
             throw ScalarRuntimeException.create(
-                    MsgObjectUtil.getMsgObject(FrameworkResource.ILLEGAL_ID_LENGTH,
+                    MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.ILLEGAL_ID_LENGTH,
                             id, String.valueOf(ID_LENGTH)));
         }
 
@@ -486,7 +486,7 @@ public class GUID
         for (int i = 0; i < chars.length; i++) {
             if (Character.isWhitespace(chars[i])) {
                 throw ScalarRuntimeException.create(
-                        MsgObjectUtil.getMsgObject(FrameworkResource.WHITESPACE_NOT_ALLOWED_IN_ID));
+                        MsgObjectUtil.getMsgObject(FrameworkResource.BASE_NAME, FrameworkResource.WHITESPACE_NOT_ALLOWED_IN_ID));
             }
         }
 

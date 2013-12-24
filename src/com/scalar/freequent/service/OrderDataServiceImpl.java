@@ -96,6 +96,7 @@ public class OrderDataServiceImpl extends AbstractService implements OrderDataSe
 		boolean isNew = orderData.getId() == null;
 		OrderDataDAO orderDataDAO = DAOFactory.getDAO(OrderDataDAO.class, getRequest());
 		OrderLineItemDataService orderLineItemDataService = ServiceFactory.getService(OrderLineItemDataService.class, getRequest());
+		List<OrderLineItemData> oldLineItems = null;
 		if (isNew) {
 			// insert
 			try {
@@ -109,27 +110,59 @@ public class OrderDataServiceImpl extends AbstractService implements OrderDataSe
 			} catch (ScalarException ex) {
 				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_CREATE_ORDER, orderData.getOrderNumber());
 				throw ScalarServiceException.create(msgObject, ex);
+			} catch (Exception e) {
+				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_CREATE_ORDER, orderData.getOrderNumber());
+				throw ScalarServiceException.create(msgObject, e);
 			}
 		} else {
 			// update
-			OrderDataRow row = OrderDataDAO.dataToRow(orderData);
+			OrderData oldOrderData = findById(orderData.getId());
+			if (oldOrderData == null) {
+				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_FIND_ORDER, orderData.getId());
+				throw ScalarServiceException.create(msgObject, null);
+			}
+			oldLineItems = oldOrderData.getLineItems();
+
+			// prepare order data row
+			OrderDataRow row = new OrderDataRow();
+			row.setId(new GUID(orderData.getId()));
+			row.setCustName(orderData.getCustName());
+			row.setRevision(oldOrderData.getRevision()+1);
+			row.setDiscount(orderData.getDiscount());
+			if (orderData.getStatus() != null) {
+				row.setStatus(orderData.getStatus().toString());
+			}
+			row.setRemarks(orderData.getRemarks());
+
 			try {
 				orderDataDAO.update(row);
 
 			} catch (ScalarException ex) {
 				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_UPDATE_ORDER, orderData.getOrderNumber());
 				throw ScalarServiceException.create(msgObject, ex);
+			} catch (Exception ex) {
+				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_UPDATE_ORDER, orderData.getOrderNumber());
+				throw ScalarServiceException.create(msgObject, ex);
 			}
 		}
-		// insert/update lineitems
 		List<OrderLineItemData> lineItemDatas = orderData.getLineItems();
-		for (OrderLineItemData lineItem: lineItemDatas) {
-			if (lineItem.isRemoved()) {
-				orderLineItemDataService.remove(lineItem.getId());
-			} else {
-				orderLineItemDataService.insertOrUpdate(lineItem);
+		// remove lineitems if any.
+		if (oldLineItems != null) {
+			for (OrderLineItemData oldLineItem: oldLineItems) {
+				// check if this line item is removed
+				if (removed(oldLineItem, lineItemDatas)) {
+					orderLineItemDataService.remove(oldLineItem.getId());
+				}
 			}
 		}
+
+		// insert/update lineitems
+		for (OrderLineItemData lineItem: lineItemDatas) {
+			lineItem.setOrderId(orderData.getId());
+			orderLineItemDataService.insertOrUpdate(lineItem);
+		}
+
+
 
 		return false;
 	}
@@ -149,5 +182,29 @@ public class OrderDataServiceImpl extends AbstractService implements OrderDataSe
 		OrderDataDAO orderDataDAO = DAOFactory.getDAO(OrderDataDAO.class, getRequest());
 		orderDataDAO.removeById(id);
 		return true;
+	}
+
+	public long getOrdersCount() throws ScalarServiceException {
+		OrderDataDAO orderDataDAO = DAOFactory.getDAO(OrderDataDAO.class, getRequest());
+		return orderDataDAO.getOrdersCount();
+	}
+
+	/**
+	 * Checks whether the given line item is removed or not.
+	 *
+	 * @param oldLineItem
+	 * @param newLineItems
+	 * @return true - if removed, otherwise false.
+	 */
+	private boolean removed(OrderLineItemData oldLineItem, List<OrderLineItemData> newLineItems) {
+		boolean removed = true;
+		for (OrderLineItemData lineItem: newLineItems) {
+			if (lineItem.getId() != null && lineItem.getId().equals(oldLineItem.getId())) {
+				removed = false;
+				break;
+			}
+		}
+
+		return removed;
 	}
 }

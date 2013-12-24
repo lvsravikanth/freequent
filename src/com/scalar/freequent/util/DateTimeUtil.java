@@ -52,7 +52,7 @@ public class DateTimeUtil {
 			locale = Locale.getDefault();
 		}
 
-		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, locale);
+		DateFormat format = getDateTimeFormat(locale); //DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, locale);
 		if ( null != timeZone ) {
 			format.setTimeZone(timeZone);
 		}

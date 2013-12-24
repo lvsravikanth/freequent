@@ -40,16 +40,8 @@
 						<span class="fui-workspace-search-table-cell">
 							<input type="hidden" name="<%=OrderData.PARAM_ITEM_ID%>" id="<%=OrderData.PARAM_ITEM_ID%>" class="fui-input fui-input-select"/>
 							<script type="text/javascript">
-								var items= fui.ui.manageitems.findAllItems();
-								function format(item) { return "["+item.code+"]"+item.name; };
 								fui.ready(function(){
-									fui.query("#<%=OrderData.PARAM_ITEM_ID%>").select2({
-										data:{ results: items, text: format },
-										formatSelection: format,
-    									formatResult: format,
-										placeholder: fui.workspace.getMessage("all"),
-										allowClear: true
-									});
+									fui.ui.manageorders.makeItemSelect("<%=OrderData.PARAM_ITEM_ID%>", fui.workspace.getMessage("all"));
 								});
 							</script>
 						</span>

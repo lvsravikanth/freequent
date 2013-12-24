@@ -126,7 +126,7 @@ public class OrderLineItemDataDAO extends AbstractDAO {
 	 */
 	public List<OrderLineItemDataRow> findAll(String orderId) {
 		String query = SQL_SelectAllColumns +
-				" WHERE " + COL_ORDER_ID + " = ?";
+				" WHERE " + COL_ORDER_ID + " = ? order by " + COL_LINE_NUMBER + " asc";
 
 		return getJdbcTemplate().query(query,
 				new RowMapper<OrderLineItemDataRow>() {
@@ -162,7 +162,7 @@ public class OrderLineItemDataDAO extends AbstractDAO {
 
 		return getJdbcTemplate().update(query.toString(),
 				row.getId().toString(),
-				row.getOrderId(),
+				row.getOrderId().toString(),
 				row.getLineNumber(),
 				row.getItemId().toString(),
 				row.getQty(),
