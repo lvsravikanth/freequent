@@ -816,7 +816,8 @@ fui.extend(fui.editor.Editor,
 						isNew: isNew,
 						parentId: ctx.activeContainerId,
 						object: object,
-						reload: config.reload
+						reload: config.reload,
+						configCallbackData: config.callbackData
 					};
 				}
 
@@ -1462,15 +1463,7 @@ fui.editor.internal = {
 				disabled: disabled || button.disabled,
 				id: editor.id + "-" + button.id,
 				click: this.buildButtonHandler(type, editor.id, button.clickHandler)
-			}; /*fui.ext.create('fui.vext.Button', {
-				disabled: disabled || button.disabled,
-				text: button.getTitle(editor, obj),
-				id: editor.id + "-" + button.id,
-				cls: button.getButtonClass(editor, obj),
-				iconCls: button.getIconClass(editor, obj),
-				handler: this.buildButtonHandler(type, editor.id, button.clickHandler),
-				tooltip: button.getTooltip(editor, obj)
-			});*/ //todo
+			};
 
 			if ( button.setupButton) {
 				button.setupButton(type, editor, tbButton);
@@ -1564,6 +1557,8 @@ fui.editor.internal = {
 			if ( !config.skipSave ) {
 				// Build save which is always at the end
 				var buttons = [fui.editor.button.save.getSave(readOnly), fui.editor.button.save.getClose(readOnly)];
+				var registeredButtons = fui.editor.button.getButtons(config.type);
+				fui.query.merge(buttons, registeredButtons);
 				ei.buildButtons(config.type, editor, buttons, dialogButtons, false);
 			}
 

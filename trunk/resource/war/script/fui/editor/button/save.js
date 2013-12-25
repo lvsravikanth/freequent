@@ -227,7 +227,7 @@ fui.editor.button.save = {
 		// in read-only mode, the save/close button will simply be close
 		if (action === 0) {
 			editor.deactivate();
-			editor.closeHandler(editor.ui);
+			editor.closeHandler(editor);
 			return;
 		}
 

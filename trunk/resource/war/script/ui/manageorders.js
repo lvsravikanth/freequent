@@ -63,7 +63,7 @@ fui.ui.manageorders = {
 		fui.ui.editor.edit(editConfig, requestData);
 	},
 
-	makeItemSelect: function(fieldId, placeholder) {
+	makeItemSelect: function(fieldId, placeholder, readOnly) {
 		if (fui.ui.manageorders.internal.items === "") {
 			fui.ui.manageorders.internal.items = fui.ui.manageitems.findAllItems();
 		}
@@ -74,7 +74,8 @@ fui.ui.manageorders = {
 				formatResult: fui.ui.manageorders.internal.itemformat,
 				placeholder: placeholder ? placeholder : null,
 				allowClear: true,
-				dropdownCssClass:"ui-dialog"
+				dropdownCssClass:"ui-dialog",
+				disabled: readOnly || false
 			});
 
 		fui.query("#"+fieldId).on("change", function(e) { fui.ui.manageorders.itemChanged(this.id, e.added, e.removed);});
@@ -123,6 +124,10 @@ fui.ui.manageorders = {
 		fui.query("#taxAmount").val(taxAmount);
 		// set grand total
 		fui.query("#grandTotal").val(orderTotal+taxAmount);
+	},
+
+	print: function(id) {
+		alert("in print: "+id);
 	}
 };
 fui.ui.manageorders.internal = {

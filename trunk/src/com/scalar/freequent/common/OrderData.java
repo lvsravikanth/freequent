@@ -72,6 +72,7 @@ public class OrderData implements HasRecord {
 	public static final String PARAM_ITEM_ID = "itemid";
 	public static final String PARAM_FROM_DATE = "fromdate";
 	public static final String PARAM_TO_DATE = "todate";
+	public static final String PARAM_STATUS = "status";
 
 	public static final String ATTR_ID = "id";
 	public static final String ATTR_ORDER_NUMBER = "orderNumber";
