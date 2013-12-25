@@ -30,6 +30,7 @@
 	OrderData orderData = (OrderData) fRequest.getAttribute(ManageOrdersAction.ATTR_ORDER_DATA);
 	DateFormat dateFormatter = DateTimeUtil.getDateFormatter(ctx);
 	String orderDateStr = dateFormatter.format(orderData.getOrderDate());
+	boolean readOnly = orderData.getStatus() != OrderData.OrderStatus.ACTIVE;
 %>
 <fmt:setLocale value="<%= locale %>"/>
 <fmt:setBundle basename="<%= WorkspaceResource.BASE_NAME %>"/>
@@ -111,7 +112,7 @@
 												 cssClass="fui-input"/>
 									<script type="text/javascript">
 										fui.ready(function() {
-											fui.ui.manageorders.makeItemSelect("lineItems${row.index}itemId", fui.workspace.getMessage("select"));
+											fui.ui.manageorders.makeItemSelect("lineItems${row.index}itemId", fui.workspace.getMessage("select"), <%=readOnly%>);
 										});
 									</script>
 								</td>
@@ -130,7 +131,7 @@
 					<script type="text/javascript">
 						fui.lineItemCount = <%=lineItemCount%>;
 						fui.ready(function(){
-							fui.query("#addmore").button()
+							fui.query("#addmore").button({disabled: <%=readOnly%>})
 								.click( function(event) {
 									var lineItem = {};
 									lineItem.index = fui.lineItemCount;
@@ -188,8 +189,9 @@
 </form:form>
 <script type="text/javascript">
 	fui.ready(function() {
-		fui.editor.find('<%=editorId%>').setFormId('<%=formId%>');
-
+		var editor = fui.editor.find('<%=editorId%>');
+		editor.setFormId('<%=formId%>');
+		editor.readOnly = <%=readOnly%>;
 		fui.query("#<%=formId%>").validate({
 			rules: {
 				name: "required",

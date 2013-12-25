@@ -48,6 +48,7 @@ public class ManageOrdersAction extends AbstractActionController {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put(OrderData.PARAM_ORDER_NUMBER, request.getParameter(OrderData.PARAM_ORDER_NUMBER));
 			params.put(OrderData.PARAM_ITEM_ID, request.getParameter(OrderData.PARAM_ITEM_ID));
+			params.put(OrderData.PARAM_STATUS, request.getParameter(OrderData.PARAM_STATUS));
 
 			Date fromDate = null;
 			Date toDate = null;

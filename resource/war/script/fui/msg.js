@@ -23,17 +23,6 @@ fui.msg = {
 	 */
 	confirm: function(title, msg, fn, scope) {
 		fui.msg.internal.show(this.TYPE_CONFIRM, title, msg, fn, scope);
-		/*return fui.ext.Msg.show({
-			title: title,
-			msg: msg,
-			fn: fn,
-			scope: scope,
-			width: 400,
-			buttons: {yes: fui.ui.getMessage('yes'), no: fui.ui.getMessage('no')},
-			closable: false,
-			cls: "fui-dialog",
-			icon: fui.ext.Msg.QUESTION
-		});*/
 	},
 
 	/**
@@ -47,17 +36,6 @@ fui.msg = {
 	 *  Confirm with ok/cancel buttons
 	 */
 	confirmOk: function(title, msg, fn, scope) {
-		/*return fui.ext.Msg.show({
-			title: title,
-			msg: msg,
-			fn: fn,
-			scope: scope,
-			width: 400,
-			buttons: {ok: fui.ui.getMessage('ok'), cancel: fui.ui.getMessage('cancel')},
-			closable: false,
-			cls: "fui-dialog",
-			icon: fui.ext.Msg.QUESTION
-		});*/
 		fui.msg.internal.show(this.TYPE_CONFIRM_OK, title, msg, fn, scope);
 	},
 
@@ -65,17 +43,6 @@ fui.msg = {
 	 *  Confirm with yes/no/cancel buttons
 	 */
 	confirmSave: function(title, msg, fn, scope, buttons) {
-		/*return fui.ext.Msg.show({
-			title: title,
-			msg: msg,
-			fn: fn,
-			scope: scope,
-			width: 400,
-			buttons: (buttons) ? buttons : {yes: fui.ui.getMessage('yes'), no: fui.ui.getMessage('no'), cancel: fui.ui.getMessage('cancel')},
-			closable: false,
-			cls: "fui-dialog",
-			icon: fui.ext.Msg.QUESTION
-		});*/
 		fui.msg.internal.show(this.TYPE_CONFIRM_SAVE, title, msg, fn, scope, buttons);
 	},
 
@@ -84,19 +51,6 @@ fui.msg = {
 	 */
 	prompt: function(title, msg, value, fn, scope, multiline){
 		multiline = multiline || false;
-		/*return fui.ext.Msg.show({
-			title: title,
-			msg: msg,
-			fn: fn,
-			scope: scope,
-			width: 400,
-			buttons: {ok: fui.ui.getMessage('ok'), cancel: fui.ui.getMessage('cancel')},
-			closable: false,
-			cls: "fui-dialog",
-			prompt: true,
-			multiline: multiline,
-			value: value
-		});	*/
 		fui.msg.internal.show(this.TYPE_PROMPT, title, msg, fn, scope);
 	}
 };

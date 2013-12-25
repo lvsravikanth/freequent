@@ -160,16 +160,28 @@ public class OrderDataDAO extends AbstractDAO {
 	/**
 	 * Returns all the users in the system.
 	 *
+	 * @param params
 	 * @return the User object for the given userId.
 	 */
 	public List<OrderDataRow> search(Map<String, Object> params) {
-		String query = SQL_SelectAllColumns;
+		String query = "select distinct " +
+					TABLE_NAME + "." + COL_ID + ", " +
+					TABLE_NAME + "." + COL_ORDER_NUMBER + ", " +
+					TABLE_NAME + "." + COL_ORDER_DATE + ", " +
+					TABLE_NAME + "." + COL_CUST_NAME + ", " +
+					TABLE_NAME + "." + COL_STATUS + ", " +
+					TABLE_NAME + "." + COL_REVISION + ", " +
+					TABLE_NAME + "." + COL_TAX_PERCENTAGE + ", " +
+					TABLE_NAME + "." + COL_DISCOUNT + ", " +
+					TABLE_NAME + "." + COL_REMARKS +
+					" from " + TABLE_NAME + " ";
 		StringBuilder whereCaluse = new StringBuilder();
 		List<Object> args = new ArrayList<Object>();
 		boolean joinOrderLineItemTable = false;
 
 		String orderNumber = (String)params.get(OrderData.PARAM_ORDER_NUMBER);
 		Object itemId = params.get(OrderData.PARAM_ITEM_ID);
+		String status = (String)params.get(OrderData.PARAM_STATUS);
 		Object fromDate = params.get(OrderData.PARAM_FROM_DATE);
 		Object toDate = params.get(OrderData.PARAM_TO_DATE);
 
@@ -181,6 +193,13 @@ public class OrderDataDAO extends AbstractDAO {
 			orderNumber += "%";
 			whereCaluse.append(AND).append(COL_ORDER_NUMBER).append(LIKE).append("?");
 			args.add(orderNumber);
+			AND = AND_STR;
+		}
+
+		if (!StringUtil.isEmpty(status)) {
+			orderNumber += "%";
+			whereCaluse.append(AND).append(COL_STATUS).append(EQUAL_TO).append("?");
+			args.add(status);
 			AND = AND_STR;
 		}
 
@@ -196,23 +215,22 @@ public class OrderDataDAO extends AbstractDAO {
 			AND = AND_STR;
 		}
 
-		// todo
-		/*if (!StringUtil.isEmpty(itemId)) {
-			whereCaluse.append(AND).append(CategoryAssocDataDAO.TABLE_NAME + "." + CategoryAssocDataDAO.COL_CATEGORY_ID).append(EQUAL_TO).append("?");
-			args.add(category);
+		if (!StringUtil.isEmpty(itemId)) {
+			whereCaluse.append(AND).append(OrderLineItemDataDAO.TABLE_NAME + "." + OrderLineItemDataDAO.COL_ITEM_ID).append(EQUAL_TO).append("?");
+			args.add(itemId);
 			AND = AND_STR;
 			joinOrderLineItemTable = true;
-		}*/
+		}
 
-		/*if (joinOrderLineItemTable) {
-			query = query + ", " + CategoryAssocDataDAO.TABLE_NAME;
-		}*/
+		if (joinOrderLineItemTable) {
+			query = query + ", " + OrderLineItemDataDAO.TABLE_NAME;
+		}
 		if (whereCaluse.length() > 0) {
 			query = query + " WHERE " + whereCaluse.toString();
 		}
-		/*if (joinOrderLineItemTable) {
-			query = query + AND + CategoryAssocDataDAO.COL_OBJECT_ID + EQUAL_TO + COL_ID;
-		}*/
+		if (joinOrderLineItemTable) {
+			query = query + AND + OrderLineItemDataDAO.TABLE_NAME + "." + OrderLineItemDataDAO.COL_ORDER_ID + EQUAL_TO + TABLE_NAME + "." + COL_ID;
+		}
 
 		return getJdbcTemplate().query(query, args.toArray(new Object[args.size()]),
 				new RowMapper<OrderDataRow>() {
