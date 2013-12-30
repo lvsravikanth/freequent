@@ -18,6 +18,8 @@ fui.ui.manageorders = {
 	 */
 	SEARCH: "runsearch",
 
+	CREATE_INVOICE: "createinvoice",
+
     /**
      * requires the following data.
      * params.userid
@@ -127,7 +129,27 @@ fui.ui.manageorders = {
 	},
 
 	print: function(id) {
-		alert("in print: "+id);
+		var invoiceid = this.createinvoice(id);
+
+		// print the invoice
+		alert ("invoice id: " + invoiceid);
+		//todo
+	},
+
+	createinvoice: function(id, requestData) {
+		if ( fui.log.isDebug() ) { fui.log.debug("executing createinvoice" ); }
+		var invoiceid = "";
+		requestData = requestData || {};
+		requestData.content = requestData.content || {};
+		requestData.content.orderid = id;
+
+        requestData.handler = function(data) { invoiceid = data.invoiceid; };
+		requestData.sync = true;
+
+		var c = fui.ui.content;
+		c.internal.sendAPI(this, this.CREATE_INVOICE, requestData);
+
+		return invoiceid;
 	}
 };
 fui.ui.manageorders.internal = {
