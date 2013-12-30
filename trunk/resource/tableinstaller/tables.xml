@@ -147,6 +147,37 @@
 			<index name="IDX_ftOrderLineItem_orderId" columns="orderId"/>
 		</table>
 
+		<table name="ftInvoice">
+			<column name="id" no-nulls="true" size="40" type="varchar"/>
+			<column name="orderId" no-nulls="true" size="40" type="varchar"/>
+			<column name="invoiceNumber" no-nulls="true" size="20" type="varchar"/>
+			<column name="date" no-nulls="true" type="timestamp"/>
+			<column name="custName" type="varchar" no-nulls="true" size="80"/>
+			<column name="status" type="varchar" no-nulls="true" size="20"/>
+			<column name="remarks" type="varchar" no-nulls="false" size="1024"/>
+			<column name="taxName" no-nulls="false" size="20" type="varchar"/>
+			<column name="taxPercentage" no-nulls="false" size="10" type="decimal"  decimal-places="3"/>
+			<column name="discount" no-nulls="false" size="10" type="decimal"  decimal-places="3"/>
+			<index name="PK_ftInvoice_id" columns="id" primary-key="true" />
+			<index name="IDX_ftInvoice_invoiceNumber" columns="invoiceNumber" unique="true"/>
+		</table>
+
+		<table name="ftInvoiceLineItem">
+			<column name="id" no-nulls="true" size="40" type="varchar"/>
+			<column name="invoiceId" no-nulls="true" size="40" type="varchar"/>
+			<column name="lineNumber" no-nulls="true" type="integer"/>
+			<column name="itemId" no-nulls="true" size="40" type="varchar"/>
+			<column name="itemName" no-nulls="true" size="80" type="varchar" />
+			<column name="qty" no-nulls="true" type="integer"/>
+			<column name="price" no-nulls="false" size="10" type="decimal"  decimal-places="3"/>
+			<column name="taxable" no-nulls="true" type="bit" default="false" />
+			<index name="PK_ftInvoiceLineItem_id" columns="id" primary-key="true" />
+			<key-ref name="FK_ftInvoiceLineItem_invoiceId" columns="invoiceId" table="ftOrder"
+                     references="id" rule="cascade"/>
+			<index name="IDX_ftInvoiceLineItem_invoiceId_lineNumber" columns="invoiceId, lineNumber" unique="true"/>
+			<index name="IDX_ftInvoiceLineItem_invoiceId" columns="invoiceId"/>
+		</table>
+
         <!-- master data -->
         <rowset table="FTUSERS">
 			<row>

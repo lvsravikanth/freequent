@@ -19,6 +19,7 @@ import com.scalar.core.ScalarValidationException;
 import com.scalar.core.ScalarException;
 import com.scalar.core.util.MsgObjectUtil;
 import com.scalar.core.util.MsgObject;
+import com.scalar.core.util.GUID;
 import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.response.Response;
 
@@ -36,6 +37,7 @@ public class ManageOrdersAction extends AbstractActionController {
 	protected static final Log logger = LogFactory.getLog(ManageOrdersAction.class);
 
 	public static final String ATTR_ORDER_DATA = "orderData";
+	public static final String PARAM_ORDER_ID = "orderid";
 
 	public void defaultProcess(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
 
@@ -174,6 +176,28 @@ public class ManageOrdersAction extends AbstractActionController {
 			throw getActionException(e);
 		}
 		data.put(Response.ITEM_ATTRIBUTE, order.toMap());
+	}
+
+	public void createinvoice(Request request, Object command, Map<String, Object> data) throws ScalarActionException, ScalarValidationException {
+		String id = request.getParameter(PARAM_ORDER_ID);
+		if (StringUtil.isEmpty(id)) {
+			throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.PARAM_REQUIRED, PARAM_ORDER_ID), null);
+		}
+
+		if (!GUID.isValid(id)) {
+			throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.INVALID_PARAM_VALUE, PARAM_ORDER_ID, id), null);
+		}
+		OrderDataService orderDataService = ServiceFactory.getService(OrderDataService.class, request);
+		// check order existence
+		try {
+			OrderData orderData = orderDataService.findById(id);
+			if (orderData == null) {
+				throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.ORDER_DOES_NOT_EXISTS, id), null);
+			}
+			
+		} catch (ScalarServiceException e) {
+			throw getActionException(e);
+		}
 	}
 
 	protected void validate(Object command, BindException errors) throws ScalarValidationException {
