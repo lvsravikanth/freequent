@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -46,6 +47,31 @@ public class GroupDataServiceImpl extends AbstractService implements GroupDataSe
 		setRecord(groupData, groupData.getId());
 		return groupData;
 	}
+
+    public GroupData findById(String id) {
+		GroupDataDAO groupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
+		GroupDataRow row = groupDataDAO.findById(id);
+		GroupData groupData = GroupDataDAO.rowToData(row);
+		setRecord(groupData, groupData.getId());
+		return groupData;
+	}
+
+    public boolean exists(String groupName) throws ScalarServiceException {
+        GroupDataDAO groupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
+		return groupDataDAO.existsByName(groupName);
+    }
+
+    public List<GroupData> search(Map<String, String> searchParams) throws ScalarServiceException {
+        GroupDataDAO groupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
+        List<GroupDataRow> groupDataRows = groupDataDAO.getGroups(searchParams);
+        List<GroupData> groupDataList = new ArrayList<GroupData>(groupDataRows.size());
+        for (GroupDataRow row: groupDataRows) {
+			GroupData groupData = GroupDataDAO.rowToData(row);
+            setRecord(groupData, groupData.getId());
+			groupDataList.add(groupData);
+		}
+        return groupDataList;
+    }
 
 	@Transactional
 	public boolean insertOrUpdate(GroupData groupData) throws ScalarServiceException {

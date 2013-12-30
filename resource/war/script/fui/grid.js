@@ -525,7 +525,7 @@ fui.grid.internal = {
 			gridConfig.setupGrid(grid, gridConfig, config);
 		}
 
-		fui.grid.internal.registerGridInButtons(grid);
+		//  fui.grid.internal.registerGridInButtons(grid);
 
 		return grid;
 	},

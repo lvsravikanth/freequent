@@ -55,8 +55,8 @@
 					</span>
 					</div>
 				</div>
+                </form>
 			</div>
-	</form>
 	<div class="fui-workspace-search-footer">
 		<div class="fui-workspace-footer-search-newuser">
 			<button type="button" id="newuser"><fmt:message key="<%=WorkspaceResource.NEWUSER%>"/></button>
