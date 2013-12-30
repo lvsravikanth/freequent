@@ -73,12 +73,76 @@ public class GroupDataDAO extends AbstractDAO {
         return groups.get(0);
     }
 
-	/**
+    /**
      * Returns the User object for the given userId.
+     *
+     * @param searchParams
+     *
+     * @return the User object for the given userId.
+     */
+    public List<GroupDataRow> getGroups(Map<String, String> searchParams) {
+        String query = SQL_SelectAllColumns;
+        List<Object> args = new ArrayList<Object>();
+        String groupName = searchParams.get(GroupData.ATTR_NAME);
+        if (groupName == null) {
+            return getJdbcTemplate().query(query,
+                new RowMapper<GroupDataRow>() {
+                    public GroupDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        GroupDataRow row = new GroupDataRow();
+                        row.setId(new GUID(rs.getString(COL_ID)));
+                        row.setName(rs.getString(COL_NAME));
+                        row.setDescription(rs.getString(COL_DESCRIPTION));
+                        row.clean();
+                        return row;
+                    }
+            });    
+        } else {
+            query += "WHERE " + COL_NAME + " like ? ";
+            return getJdbcTemplate().query(query,
+            new RowMapper<GroupDataRow>() {
+                public GroupDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    GroupDataRow row = new GroupDataRow();
+                    row.setName(rs.getString(COL_NAME));
+                    row.setDescription(rs.getString(COL_DESCRIPTION));
+                    row.setId(new GUID(rs.getString(COL_ID)));
+                    row.clean();
+                    return row;
+                }
+            }, groupName + "%");
+        }
+    }
+
+	/**
+     * Returns the Group object for the given groupId.
+     *
+     * @param groupId
+     *
+     * @return the Group object for the given groupId.
+     */
+    public GroupDataRow findById(String groupId) {
+        String query = SQL_SelectAllColumns +
+                        " WHERE " + COL_ID + " = ? ";
+        List<GroupDataRow> groups = getJdbcTemplate().query(query,
+        new RowMapper<GroupDataRow>() {
+            public GroupDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GroupDataRow row = new GroupDataRow();
+                row.setId(new GUID(rs.getString(COL_ID)));
+                row.setName(rs.getString(COL_NAME));
+                row.setDescription(rs.getString(COL_DESCRIPTION));
+				row.clean();
+                return row;
+            }
+        }, groupId);
+
+        return groups.get(0);
+    }
+    
+    /**
+     * Returns the Group object for the given groupName.
      *
      * @param groupName
      *
-     * @return the User object for the given userId.
+     * @return the Group object for the given groupName.
      */
     public GroupDataRow findByName(String groupName) {
         String query = SQL_SelectAllColumns +

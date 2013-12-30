@@ -21,57 +21,68 @@
 
 <% %>
 <div class="fui-workspace-container">
-	<form id="manageorders">
-		<div class="fui-workspace-search-table">
-			<div class="fui-workspace-search-table-row">
-				<div class="fui-workspace-header ui-widget-header ui-corner-top"><fmt:message key="<%=WorkspaceResource.MANAGEORDERS_TITLE%>"/></div>
-			</div>
-			<div class="fui-workspace-search-container">
-					<div class="fui-workspace-search-table-row">
-						<span class="fui-workspace-search-table-cell">
-							<span for="<%=OrderData.PARAM_ORDER_NUMBER%>"><fmt:message key="<%=WorkspaceResource.ORDER_NUMBER%>"/></span>
+    <div class="fui-workspace-search-panel">
+        <div>
+            <div class="fui-workspace-search-header ui-widget-header ui-corner-top"><fmt:message key="<%=WorkspaceResource.MANAGEORDERS_TITLE%>"/></div>
+			<form id="manageitems">
+                <div class="fui-workspace-search-container">
+                    <div >
+                        <span class="fui-workspace-search-wrap-row">
+                            <div class="fui-workspace-search-container-column">
+							    <label for="<%=OrderData.PARAM_ORDER_NUMBER%>"><fmt:message key="<%=WorkspaceResource.ORDER_NUMBER%>"/></label>
+                            </div>
+						    <div class="fui-workspace-search-container-column fui-workspace-search-container-wrap-column">
+							    <input type="text" name="<%=OrderData.PARAM_ORDER_NUMBER%>" id="<%=OrderData.PARAM_ORDER_NUMBER%>">
+                            </div>
 						</span>
-						<span class="fui-workspace-search-table-cell">
-							<input type="text" name="<%=OrderData.PARAM_ORDER_NUMBER%>" id="<%=OrderData.PARAM_ORDER_NUMBER%>">
-						</span>
-						<span class="fui-workspace-search-table-cell">
-							<span for="<%=OrderData.PARAM_ITEM_ID%>"><fmt:message key="<%=WorkspaceResource.ITEM_NAME%>"/></span>
-						</span>
-						<span class="fui-workspace-search-table-cell">
-							<input type="hidden" name="<%=OrderData.PARAM_ITEM_ID%>" id="<%=OrderData.PARAM_ITEM_ID%>" class="fui-input fui-input-select"/>
-							<script type="text/javascript">
-								fui.ready(function(){
-									fui.ui.manageorders.makeItemSelect("<%=OrderData.PARAM_ITEM_ID%>", fui.workspace.getMessage("all"));
-								});
-							</script>
-						</span>
-						<span class="fui-workspace-search-table-cell">
-							<span for="<%=OrderData.PARAM_FROM_DATE%>"><fmt:message key="<%=WorkspaceResource.FROM_DATE%>"/>&nbsp;(<%=datePattern%>)</span>
-						</span>
-						<span class="fui-workspace-search-table-cell">
-							<input type="text" class="fui-input fui-input-text" name="<%=OrderData.PARAM_FROM_DATE%>" id="<%=OrderData.PARAM_FROM_DATE%>"/>
-						</span>
-						<span class="fui-workspace-search-table-cell">
-							<span for="<%=OrderData.PARAM_TO_DATE%>"><fmt:message key="<%=WorkspaceResource.TO_DATE%>"/>&nbsp;(<%=datePattern%>)</span>
-						</span>
-						<span class="fui-workspace-search-table-cell">
-							<input type="text" class="fui-input fui-input-text" name="<%=OrderData.PARAM_TO_DATE%>" id="<%=OrderData.PARAM_TO_DATE%>"/>
-						</span>
-						<div class="fui-workspace-search-actions-container fui-workspace-search-table-cell">
-							<button type="button" id="search"><fmt:message key="<%=WorkspaceResource.SEARCH%>"/></button>
-							<button type="reset" id="reset"><fmt:message key="<%=WorkspaceResource.RESET%>"/></button>
-						</div>
-				</div>
-				<div class="fui-workspace-footer-search">
-					<div class="fui-workspace-footer-search-newuser">
-						<button type="button" id="neworder"><fmt:message key="<%=WorkspaceResource.NEW_ORDER%>"/></button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</form>
-	<div class="fui-workspace-grid" id="fui-workspace-grid">
-    </div>
+                        <span class="fui-workspace-search-wrap-row">
+                            <div class="fui-workspace-search-container-column">
+                                <label for="<%=OrderData.PARAM_ITEM_ID%>"><fmt:message key="<%=WorkspaceResource.ITEM_NAME%>"/></label>
+                            </div>
+                            <div class="fui-workspace-search-container-column fui-workspace-search-container-wrap-column">
+                                <input type="hidden" name="<%=OrderData.PARAM_ITEM_ID%>" id="<%=OrderData.PARAM_ITEM_ID%>" class="fui-input fui-input-select"/>
+                                <script type="text/javascript">
+                                    fui.ready(function(){
+									    fui.ui.manageorders.makeItemSelect("<%=OrderData.PARAM_ITEM_ID%>", fui.workspace.getMessage("all"));
+								    });
+                                </script>
+                            </div>
+                        </span>
+                        <span class="fui-workspace-search-wrap-row">
+                            <div class="fui-workspace-search-container-column">
+                                <label for="<%=OrderData.PARAM_FROM_DATE%>"><fmt:message key="<%=WorkspaceResource.FROM_DATE%>"/>&nbsp;(<%=datePattern%>)</label>
+                            </div>
+                            <div class="fui-workspace-search-container-column fui-workspace-search-container-wrap-column">
+                                <input type="text" class="fui-input fui-input-text" name="<%=OrderData.PARAM_FROM_DATE%>" id="<%=OrderData.PARAM_FROM_DATE%>"/>
+                            </div>
+                        </span>
+                        <span class="fui-workspace-search-wrap-row">
+                            <div class="fui-workspace-search-container-column">
+                                <label for="<%=OrderData.PARAM_TO_DATE%>"><fmt:message key="<%=WorkspaceResource.TO_DATE%>"/>&nbsp;(<%=datePattern%>)</label>
+                            </div>
+                            <div class="fui-workspace-search-container-column fui-workspace-search-container-wrap-column">
+                                <input type="text" class="fui-input fui-input-text" name="<%=OrderData.PARAM_TO_DATE%>" id="<%=OrderData.PARAM_TO_DATE%>"/>
+                            </div>
+                        </span>
+                        <span class="fui-workspace-search-wrap-row">
+                            <div class="fui-workspace-search-container-column  fui-workspace-search-container-wrap-column fui-workspace-search-container-button-wrap-column">
+                                <button type="button" id="search"><fmt:message key="<%=WorkspaceResource.SEARCH%>"/></button>
+                            </div>
+                            <div class="fui-workspace-search-container-column fui-workspace-search-container-wrap-column fui-workspace-search-container-button-wrap-column">
+                                <button type="reset" id="reset"><fmt:message key="<%=WorkspaceResource.RESET%>"/></button>
+                            </div>
+                        </span>
+                    </div>
+			    </div>
+            </form>
+            </div>
+            <div class="fui-workspace-search-footer">
+                <div class="fui-workspace-footer-search-newuser">
+                    <button type="button" id="neworder"><fmt:message key="<%=WorkspaceResource.NEW_ORDER%>"/></button>
+                </div>
+            </div>
+        </div>
+        <div class="fui-workspace-grid" id="fui-workspace-grid"></div>
 </div>
 <script type="text/javascript">
     fui.ready(function() {

@@ -34,41 +34,43 @@ fui.ui.grid.manageitems = {
             {
                 title: fui.workspace.getMessage("actions"),
                 dataType: "string",
+                width: 120,
                 dataIndx: "id",
                 editable: false,
                 render: fui.grid.rowaction.renderer
             },
             {
                 title: fui.workspace.getMessage("item.name"),
-                width: 100,
+                width: 150,
                 dataType: "string",
                 dataIndx: "name",
                 editable: false
             },
 			{
                 title: fui.workspace.getMessage("code"),
-                width: 100,
+                width: 200,
                 dataType: "string",
                 dataIndx: "code",
                 editable: false
             },
             {
                 title: fui.workspace.getMessage("group"),
-                width: 200,
+                width: 100,
                 dataType: "string",
                 dataIndx: "groupName",
                 editable: false
             },
 			{
                 title: fui.workspace.getMessage("price"),
-                width: 200,
+                width: 100,
                 dataType: "float",
                 dataIndx: "price",
                 editable: false
             },
 			{
                 title: fui.workspace.getMessage("taxable"),
-                width: 200,
+                width: 100,
+
                 dataType: "string",
                 dataIndx: "taxable",
                 editable: false

@@ -33,6 +33,9 @@
       <entry name="?*.tld" />
     </wildcardResourcePatterns>
   </component>
+  <component name="CopyrightManager" default="">
+    <module2copyright />
+  </component>
   <component name="DBNavigator.Project.ConnectionManager">
     <connections />
   </component>
@@ -510,9 +513,13 @@
     <option name="projectName" value="freequent" />
   </component>
   <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectKey">
+    <option name="state" value="project://780d5109-d6b2-4f49-92c3-dd1e44efe93e" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/freequent.iml" filepath="$PROJECT_DIR$/freequent.iml" />
+      <module fileurl="file://E:/freequent/jquery/messages/messages.iml" filepath="E:/freequent/jquery/messages/messages.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
@@ -534,7 +541,6 @@
   </component>
   <component name="SvnBranchConfigurationManager">
     <option name="myVersion" value="123" />
-    <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="" />
@@ -543,64 +549,85 @@
   <component name="libraryTable">
     <library name="thirdparty">
       <CLASSES>
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-api.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-fr.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.web.servlet-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jasper.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/ecj-3.7.1.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jsp-api.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jasper-el.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/el-api.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-util.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.context-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.orm-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-ja.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-jdbc.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.core-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-ant.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-ha.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.jdbc-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.beans-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/apache-log4j/dist/lib/log4j.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-dbcp.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.aop-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/hibernate/hibernate.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-coyote.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.context.support-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/servlet-api.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.web-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/annotations-api.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.expression-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-es.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-tribes.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/spring/org.springframework.asm-3.0.4.RELEASE.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/jakarta-commons/logging/1.0.4/commons-logging.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-api.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-fr.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.web.servlet-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jasper.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/ecj-3.7.1.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jsp-api.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jasper-el.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/el-api.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-util.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.context-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.orm-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-ja.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-jdbc.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.core-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-ant.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-ha.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.jdbc-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.beans-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/apache-log4j/dist/lib/log4j.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-dbcp.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.aop-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/hibernate/hibernate.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-coyote.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.context.support-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/servlet-api.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.web-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/annotations-api.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.expression-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-es.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-tribes.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/spring/org.springframework.asm-3.0.4.RELEASE.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/jakarta-commons/logging/1.0.4/commons-logging.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.web.portlet-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.oxm-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.instrument.tomcat-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.beans-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.jms-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.web-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.instrument-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.asm-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.test-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.core-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.orm-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.context-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.web.struts-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.jdbc-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.web.servlet-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.transaction-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.context.support-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.aop-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.aspects-sources-3.1.1.RELEASE.jar!/" />
+        <root url="jar://E:/Spring/Springlibrary_jars/org.springframework.expression-sources-3.1.1.RELEASE.jar!/" />
+      </SOURCES>
     </library>
     <library name="tomcat_lib">
       <CLASSES>
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-jdbc.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-api.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-ant.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-fr.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jasper.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/ecj-3.7.1.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-ha.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jsp-api.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-dbcp.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jasper-el.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-coyote.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/el-api.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-util.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/servlet-api.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/annotations-api.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-es.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-ja.jar!/" />
-        <root url="jar://E:/dev/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-tribes.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-jdbc.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-api.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-ant.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-fr.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jasper.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/ecj-3.7.1.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-ha.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jsp-api.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-dbcp.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/jasper-el.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-coyote.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/el-api.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-util.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/servlet-api.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/annotations-api.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-es.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/tomcat-i18n-ja.jar!/" />
+        <root url="jar://E:/freequent/fileset/thirdparty/tomcat/lib/apache-tomcat-7.0.26/lib/catalina-tribes.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

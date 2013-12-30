@@ -51,14 +51,16 @@ public class GroupData implements HasRecord  {
 	public Record getRecord() {
 		return record;
 	}
-
-	public Map<String, Object> toMap() {
+    public Map<String, Object> toMap() {
+		return toMap(this);
+	}
+    
+	public Map<String, Object> toMap(GroupData groupData) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put (ATTR_ID, id);
 		map.put (ATTR_NAME, name);
 		map.put (ATTR_DESCRIPTION, description);
-		map.put (ATTR_RECORD, record.toMap());
-
+		map.put (ATTR_RECORD, groupData.getRecord().toMap());
 		return map;
 	}
 

@@ -11,9 +11,12 @@ fui.ui.type = {
 
     MANAGEUSERS: 'manageusers',
     MANAGEITEMS: 'manageitems',
+    MANAGEGROUPS: 'managegroups',
+
 
 	USER: 'user',
 	ITEM: "item",
+    GROUP: "group",
 	ORDER: "order",
 
 	getActionKey: function (type) {
@@ -21,7 +24,9 @@ fui.ui.type = {
 			return fui.ui.manageusers.ACTION_KEY;
 		} else if (type === fui.ui.type.ITEM) {
 			return fui.ui.manageitems.ACTION_KEY;
-		} else if (type === fui.ui.type.ORDER) {
+		} else if (type === fui.ui.type.GROUP) {
+            return fui.ui.managegroups.ACTION_KEY;
+        } else if (type === fui.ui.type.ORDER) {
 			return fui.ui.manageorders.ACTION_KEY;
 		}
 
