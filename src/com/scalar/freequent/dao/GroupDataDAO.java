@@ -9,6 +9,7 @@ import com.scalar.core.util.GUID;
 import com.scalar.core.ScalarException;
 import com.scalar.freequent.common.GroupData;
 import com.scalar.freequent.common.ObjectType;
+import com.scalar.freequent.util.StringUtil;
 
 import java.util.*;
 import java.sql.Types;
@@ -80,25 +81,15 @@ public class GroupDataDAO extends AbstractDAO {
      *
      * @return the User object for the given userId.
      */
-    public List<GroupDataRow> getGroups(Map<String, String> searchParams) {
+    public List<GroupDataRow> getGroups(Map<String, Object> searchParams) {
         String query = SQL_SelectAllColumns;
         List<Object> args = new ArrayList<Object>();
-        String groupName = searchParams.get(GroupData.ATTR_NAME);
-        if (groupName == null) {
-            return getJdbcTemplate().query(query,
-                new RowMapper<GroupDataRow>() {
-                    public GroupDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        GroupDataRow row = new GroupDataRow();
-                        row.setId(new GUID(rs.getString(COL_ID)));
-                        row.setName(rs.getString(COL_NAME));
-                        row.setDescription(rs.getString(COL_DESCRIPTION));
-                        row.clean();
-                        return row;
-                    }
-            });    
-        } else {
-            query += "WHERE " + COL_NAME + " like ? ";
-            return getJdbcTemplate().query(query,
+        String groupName = (String)searchParams.get(GroupData.PARAM_NAME);
+        if (!StringUtil.isEmpty(groupName)) {
+            query +="WHERE " + COL_NAME + " like ? ";
+            args.add(groupName + "%");
+        }
+        return getJdbcTemplate().query(query, args.toArray(new Object[args.size()]),
             new RowMapper<GroupDataRow>() {
                 public GroupDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
                     GroupDataRow row = new GroupDataRow();
@@ -108,8 +99,7 @@ public class GroupDataDAO extends AbstractDAO {
                     row.clean();
                     return row;
                 }
-            }, groupName + "%");
-        }
+        });
     }
 
 	/**

@@ -29,6 +29,11 @@ public class Capability {
 	public static final Capability ITEM_WRITE = new Capability(ITEM_CAPABILITY, false, true, false);
 	public static final Capability ITEM_DELETE = new Capability(ITEM_CAPABILITY, false, false, true);
 
+    public static final String GROUP_CAPABILITY = "GROUP";
+	public static final Capability GROUP_READ = new Capability(GROUP_CAPABILITY, true, false, false);
+	public static final Capability GROUP_WRITE = new Capability(GROUP_CAPABILITY, false, true, false);
+	public static final Capability GROUP_DELETE = new Capability(GROUP_CAPABILITY, false, false, true);
+
 	public Capability() {
     }
 

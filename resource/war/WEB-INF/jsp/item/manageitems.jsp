@@ -99,11 +99,11 @@
 		});
 
         //Register grid
-        fui.grid.register(fui.ui.type.MANAGEITEMS, fui.ui.grid.manageitems.get());
+        fui.grid.register(fui.ui.type.ITEM, fui.ui.grid.manageitems.get());
 
         //build grid
         var config = {
-            type: fui.ui.type.MANAGEITEMS
+            type: fui.ui.type.ITEM
         };
         fui.workspace.load(config);
     });

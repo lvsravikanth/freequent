@@ -46,12 +46,12 @@ public class ManageGroupsAction extends AbstractActionController {
 	public void runsearch(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
 		GroupDataService groupDataService = ServiceFactory.getService(GroupDataService.class, request);
 		try {
-			Map<String, String> params = new HashMap<String, String>();
-			params.put(GroupData.ATTR_NAME, request.getParameter(GroupData.ATTR_NAME));
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put(GroupData.PARAM_NAME, request.getParameter(GroupData.PARAM_NAME));
 
 			List<GroupData> groupData = groupDataService.search(params);
 
-			data.put(Response.ITEMS_ATTRIBUTE, convertToMap(groupData));
+			data.put(Response.ITEMS_ATTRIBUTE, groupData);
 			data.put(Response.TOTAL_ATTRIBUTE, groupData.size() + "");
 		} catch (ScalarServiceException e) {
 			throw getActionException(e);
@@ -59,7 +59,7 @@ public class ManageGroupsAction extends AbstractActionController {
 	}
 
 	/**
-	 * action method for user edit.
+	 * Action method for Group edit.
 	 *
 	 * @param request
 	 * @param command
@@ -134,7 +134,7 @@ public class ManageGroupsAction extends AbstractActionController {
 		} catch (Exception e) {
 			throw getActionException(e);
 		}
-		data.put(Response.ITEM_ATTRIBUTE, groupData.toMap());
+		data.put(Response.ITEM_ATTRIBUTE, groupData);
 	}
 
 
@@ -147,20 +147,12 @@ public class ManageGroupsAction extends AbstractActionController {
 		}
 	}
 
-	private List<Map<String,Object>> convertToMap(List<GroupData> groupDataList) {
-        List<Map<String,Object>> groupsList = new ArrayList<Map<String,Object>>();
-        for (GroupData group: groupDataList) {
-            groupsList.add(group.toMap());
-        }
-        return groupsList;
-    }
-
 	@Override
 	 public Capability[] getRequiredCapabilities(Request request) {
 		if ("load".equals(request.getMethod())) {
-			return new Capability[]{Capability.ITEM_READ};
+			return new Capability[]{Capability.GROUP_READ};
 		} else if ("save".equals(request.getMethod())) {
-			return new Capability[]{Capability.ITEM_WRITE};
+			return new Capability[]{Capability.GROUP_WRITE};
 		}
 
 		return new Capability[0];

@@ -16,7 +16,7 @@ public interface GroupDataService {
 	GroupData findByName(String name);
     GroupData findById(String id);
     public boolean exists (String id) throws ScalarServiceException;
-    List<GroupData> search(Map<String, String> searchParams) throws ScalarServiceException;
+    List<GroupData> search(Map<String, Object> searchParams) throws ScalarServiceException;
 	boolean insertOrUpdate(GroupData groupData) throws ScalarServiceException;
 	boolean removeByName(String name);
 	boolean remove(String id);
