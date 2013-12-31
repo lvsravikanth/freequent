@@ -51,8 +51,11 @@ public class GroupDataServiceImpl extends AbstractService implements GroupDataSe
     public GroupData findById(String id) {
 		GroupDataDAO groupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
 		GroupDataRow row = groupDataDAO.findById(id);
-		GroupData groupData = GroupDataDAO.rowToData(row);
-		setRecord(groupData, groupData.getId());
+		GroupData groupData = null; 
+        if (row != null) {
+            groupData = GroupDataDAO.rowToData(row);
+            setRecord(groupData, groupData.getId());
+        }
 		return groupData;
 	}
 
@@ -61,7 +64,7 @@ public class GroupDataServiceImpl extends AbstractService implements GroupDataSe
 		return groupDataDAO.existsByName(groupName);
     }
 
-    public List<GroupData> search(Map<String, String> searchParams) throws ScalarServiceException {
+    public List<GroupData> search(Map<String, Object> searchParams) throws ScalarServiceException {
         GroupDataDAO groupDataDAO = DAOFactory.getDAO(GroupDataDAO.class, getRequest());
         List<GroupDataRow> groupDataRows = groupDataDAO.getGroups(searchParams);
         List<GroupData> groupDataList = new ArrayList<GroupData>(groupDataRows.size());

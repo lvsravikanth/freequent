@@ -24,7 +24,7 @@
     <div class="fui-workspace-search-panel">
         <div>
             <div class="fui-workspace-search-header ui-widget-header ui-corner-top"><fmt:message key="<%=WorkspaceResource.MANAGEORDERS_TITLE%>"/></div>
-			<form id="manageitems">
+			<form id="manageorders">
                 <div class="fui-workspace-search-container">
                     <div >
                         <span class="fui-workspace-search-wrap-row">

@@ -46,7 +46,7 @@ fui.ui.managegroups = {
 
     getRunSearchHandler: function() {
         return function(data) {
-            var grid = fui.grid.find(fui.ui.type.MANAGEGROUPS);
+            var grid = fui.grid.find(fui.ui.type.GROUP);
             grid.updateData(data);
         };
     },
