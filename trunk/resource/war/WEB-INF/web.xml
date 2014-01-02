@@ -199,4 +199,9 @@
 		<location>/</location>
 	</error-page>
 
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/jsp/common/unknownexception.jsp</location>
+	</error-page>
+
 </web-app>

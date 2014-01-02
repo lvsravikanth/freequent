@@ -172,7 +172,7 @@
 			<column name="price" no-nulls="false" size="10" type="decimal"  decimal-places="3"/>
 			<column name="taxable" no-nulls="true" type="bit" default="false" />
 			<index name="PK_ftInvoiceLineItem_id" columns="id" primary-key="true" />
-			<key-ref name="FK_ftInvoiceLineItem_invoiceId" columns="invoiceId" table="ftOrder"
+			<key-ref name="FK_ftInvoiceLineItem_invoiceId" columns="invoiceId" table="ftInvoice"
                      references="id" rule="cascade"/>
 			<index name="IDX_ftInvoiceLineItem_invoiceId_lineNumber" columns="invoiceId, lineNumber" unique="true"/>
 			<index name="IDX_ftInvoiceLineItem_invoiceId" columns="invoiceId"/>

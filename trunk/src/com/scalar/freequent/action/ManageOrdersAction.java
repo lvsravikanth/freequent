@@ -38,6 +38,8 @@ public class ManageOrdersAction extends AbstractActionController {
 
 	public static final String ATTR_ORDER_DATA = "orderData";
 	public static final String PARAM_ORDER_ID = "orderid";
+	public static final String PARAM_INVOICE_ID = "invoiceid";
+	public static final String PARAM_CREATE_INVOICE = "createinvoice";
 
 	public void defaultProcess(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
 
@@ -166,7 +168,8 @@ public class ManageOrdersAction extends AbstractActionController {
 			order.setId(editorId);
 		}
 		try {
-			orderDataService.insertOrUpdate(order);
+			boolean createInvoice = Boolean.parseBoolean(request.getParameter(PARAM_CREATE_INVOICE));
+			orderDataService.insertOrUpdate(order, createInvoice);
 		} catch (ScalarServiceException e) {
 			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.UNABLE_TO_SAVE), e);
 		}
@@ -175,10 +178,11 @@ public class ManageOrdersAction extends AbstractActionController {
 		} catch (ScalarServiceException e) {
 			throw getActionException(e);
 		}
+		// check if
 		data.put(Response.ITEM_ATTRIBUTE, order.toMap());
 	}
 
-	public void createinvoice(Request request, Object command, Map<String, Object> data) throws ScalarActionException, ScalarValidationException {
+	public void getinvoiceid(Request request, Object command, Map<String, Object> data) throws ScalarActionException, ScalarValidationException {
 		String id = request.getParameter(PARAM_ORDER_ID);
 		if (StringUtil.isEmpty(id)) {
 			throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.PARAM_REQUIRED, PARAM_ORDER_ID), null);
@@ -188,13 +192,17 @@ public class ManageOrdersAction extends AbstractActionController {
 			throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.INVALID_PARAM_VALUE, PARAM_ORDER_ID, id), null);
 		}
 		OrderDataService orderDataService = ServiceFactory.getService(OrderDataService.class, request);
+		InvoiceDataService invoiceDataService = ServiceFactory.getService(InvoiceDataService.class, request);
+
 		// check order existence
 		try {
-			OrderData orderData = orderDataService.findById(id);
-			if (orderData == null) {
-				throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.ORDER_DOES_NOT_EXISTS, id), null);
+			List<InvoiceData> invoices = invoiceDataService.findByOrderId(id);
+			if (StringUtil.isEmpty(invoices)) {
+				MsgObject msgObject = MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.INVOICE_NOT_EXITS_FOR_THE_ORDER, id);
+				throw ScalarActionException.create(msgObject, null);
 			}
-			
+			InvoiceData invoiceData = invoices.get(0); // currently assuming each order will have only one invoice.
+			data.put (PARAM_INVOICE_ID, invoiceData.getId());
 		} catch (ScalarServiceException e) {
 			throw getActionException(e);
 		}
@@ -260,17 +268,6 @@ public class ManageOrdersAction extends AbstractActionController {
 		orderData.setTaxAmount(taxAmt);
 		double grandTotalAmt = totalAmt + taxAmt;
 		orderData.setGrandTotal(grandTotalAmt);
-	}
-
-	private List<Map<String, Object>> convertToMap(List<Item> items) {
-		List<Map<String, Object>> itemsList = new ArrayList<Map<String, Object>>();
-		for (Item item : items) {
-			Map<String, Object> itemMap = item.toMap();
-			itemMap.put ("groupName", item.getGroupData()==null ? null : item.getGroupData().getName()); //hack for the pqgrid not supporting nested properties
-			itemsList.add(itemMap);
-		}
-
-		return itemsList;
 	}
 
 	@Override

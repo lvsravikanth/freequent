@@ -64,6 +64,27 @@
                                 <input type="text" class="fui-input fui-input-text" name="<%=OrderData.PARAM_TO_DATE%>" id="<%=OrderData.PARAM_TO_DATE%>"/>
                             </div>
                         </span>
+						<span class="fui-workspace-search-wrap-row">
+                            <div class="fui-workspace-search-container-column">
+                                <label for="<%=OrderData.PARAM_STATUS%>"><fmt:message key="<%=WorkspaceResource.STATUS%>"/></label>
+                            </div>
+                            <div class="fui-workspace-search-container-column fui-workspace-search-container-wrap-column">
+								<select name="<%=OrderData.PARAM_STATUS%>" id="<%=OrderData.PARAM_STATUS%>" class="fui-input fui-input-select">
+									<option value=""><fmt:message key="<%=WorkspaceResource.ALL%>"/></option>
+								<%
+									OrderData.OrderStatus[] statuses = OrderData.OrderStatus.values();
+									for (OrderData.OrderStatus status: statuses) {
+								%>
+									<option value="<%=status%>" <%=status.isActive() ? "selected" : ""%>><%=status%></option>
+								<% } %>
+								</select>
+                                <script type="text/javascript">
+                                    fui.ready(function(){
+									    fui.query("#<%=OrderData.PARAM_STATUS%>").select2();
+								    });
+                                </script>
+                            </div>
+                        </span>
                         <span class="fui-workspace-search-wrap-row">
                             <div class="fui-workspace-search-container-column  fui-workspace-search-container-wrap-column fui-workspace-search-container-button-wrap-column">
                                 <button type="button" id="search"><fmt:message key="<%=WorkspaceResource.SEARCH%>"/></button>
@@ -86,6 +107,15 @@
 </div>
 <script type="text/javascript">
     fui.ready(function() {
+
+		var params = {};
+		params.<%=OrderData.PARAM_ORDER_NUMBER%> = fui.byId("<%=OrderData.PARAM_ORDER_NUMBER%>").value;
+		params.<%=OrderData.PARAM_ITEM_ID%> = fui.byId("<%=OrderData.PARAM_ITEM_ID%>").value;
+		params.<%=OrderData.PARAM_FROM_DATE%> = fui.byId("<%=OrderData.PARAM_FROM_DATE%>").value;
+		params.<%=OrderData.PARAM_TO_DATE%> = fui.byId("<%=OrderData.PARAM_TO_DATE%>").value;
+		params.<%=OrderData.PARAM_STATUS%> = fui.byId("<%=OrderData.PARAM_STATUS%>").value;
+		fui.ui.manageorders.internal.setSearchParams(params);
+
         fui.query("#search").button()
                 .click( function(event) {
             var params = {};
@@ -93,6 +123,7 @@
             params.<%=OrderData.PARAM_ITEM_ID%> = fui.byId("<%=OrderData.PARAM_ITEM_ID%>").value;
             params.<%=OrderData.PARAM_FROM_DATE%> = fui.byId("<%=OrderData.PARAM_FROM_DATE%>").value;
             params.<%=OrderData.PARAM_TO_DATE%> = fui.byId("<%=OrderData.PARAM_TO_DATE%>").value;
+            params.<%=OrderData.PARAM_STATUS%> = fui.byId("<%=OrderData.PARAM_STATUS%>").value;
             fui.ui.manageorders.internal.setSearchParams(params);
 			fui.grid.find(fui.ui.type.ORDER).refresh();
         });

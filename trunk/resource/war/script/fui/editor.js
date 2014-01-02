@@ -1040,6 +1040,56 @@ fui.extend(fui.editor.Editor,
 
 	/**
 	 * @function
+	 * @desc Adds one or more collectors.
+	 *
+	 * @param collector function/array of collector functions
+	 * @param collectorId The collector ID. It is used only when a single collector is passed in.
+	 * 			When a collectorId is passed, it is not added to the list of collectors if it
+	 * 			already exists.
+	 * @public
+	 */
+	addCollector: function(collector, collectorId) {
+		if ( collector ) {
+			if (fui.query.isArray(collector)) {
+				var len = collector.length;
+				for (var i = 0; i < len; ++i) {
+					this.collectors.push(collector[i]);
+				}
+			} else {
+				if (collectorId && collectorId !== "") {
+					collector.collectorId = collectorId;
+					// Add the collector only if a collector with the same ID is not present.
+					if (fui.query.grep(this.collectors, function(item, itemIndex) {
+							return (item.collectorId && item.collectorId === collectorId);
+						}).length === 0) {
+						this.collectors.push(collector);
+					}
+				} else {
+					// If a collectorId was not provided, go ahead and push it in...
+					this.collectors.push(collector);
+				}
+			}
+		}
+	},
+
+	/**
+	 * @function
+	 * @desc Removes a named collector.
+	 *
+	 * @param collectorId
+	 * @public
+	 */
+	removeCollector: function(collectorId) {
+		if (!collectorId) {
+			return;
+		}
+		this.collectors=fui.query.grep(this.collectors, function(item, itemIndex) {
+			return (!item.collectorId || item.collectorId !== collectorId);
+		});
+	},
+
+	/**
+	 * @function
 	 * @desc Returns the data from all the editor's widgets. If there's a
 	 * validation error, this will return null.
 	 *

@@ -11,7 +11,7 @@ import java.util.Locale;
  * Date: Aug 31, 2013
  * Time: 1:05:30 PM
  */
-public class ScalarServiceException extends ScalarLoggedException {
+public class ScalarServiceException extends ScalarRuntimeException {
     protected static final Log logger = LogFactory.getLog(ScalarServiceException.class);
 
     protected ScalarServiceException(MsgObject msgObject, Locale locale, Throwable throwable) {

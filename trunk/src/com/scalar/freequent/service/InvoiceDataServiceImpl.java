@@ -8,12 +8,8 @@ import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.util.GUID;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
-import com.scalar.freequent.common.InvoiceData;
-import com.scalar.freequent.common.InvoiceLineItemData;
-import com.scalar.freequent.common.ObjectType;
-import com.scalar.freequent.common.OrderData;
-import com.scalar.freequent.dao.InvoiceDataDAO;
-import com.scalar.freequent.dao.InvoiceDataRow;
+import com.scalar.freequent.common.*;
+import com.scalar.freequent.dao.*;
 import com.scalar.freequent.l10n.ServiceResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 /**
  * User: Sujan Kumar Suppala
@@ -77,10 +74,24 @@ public class InvoiceDataServiceImpl extends AbstractService implements InvoiceDa
 		InvoiceDataDAO invoiceDataDAO = DAOFactory.getDAO(InvoiceDataDAO.class, getRequest());
 		InvoiceData invoiceData = null;
 		InvoiceDataRow invoiceDataRow = invoiceDataDAO.findByPrimaryKey(id);
-		invoiceData = InvoiceDataDAO.rowToData(invoiceDataRow);
-		setRelations(invoiceData);
+		if (invoiceDataRow != null) {
+			invoiceData = InvoiceDataDAO.rowToData(invoiceDataRow);
+			setRelations(invoiceData);
+		}
 
 		return invoiceData;
+	}
+
+	public List<InvoiceData> findByOrderId(String orderId) throws ScalarServiceException {
+		InvoiceDataDAO invoiceDataDAO = DAOFactory.getDAO(InvoiceDataDAO.class, getRequest());
+		List<InvoiceDataRow> rows = invoiceDataDAO.findByOrderId(orderId);
+		List<InvoiceData> invoiceDatas = new ArrayList<InvoiceData>(rows.size());
+		for (InvoiceDataRow row : rows) {
+			InvoiceData invoiceData = InvoiceDataDAO.rowToData(row);
+			setRelations(invoiceData);
+			invoiceDatas.add(invoiceData);
+		}
+		return invoiceDatas;
 	}
 
 	private void setRelations(InvoiceData invoiceData) throws ScalarServiceException {
@@ -96,7 +107,12 @@ public class InvoiceDataServiceImpl extends AbstractService implements InvoiceDa
 		return invoiceDataDAO.existsByInvoiceNumber(invoiceNumber);
 	}
 
-	@Transactional
+	public boolean existsByOrderId(String orderId) throws ScalarServiceException {
+		InvoiceDataDAO invoiceDataDAO = DAOFactory.getDAO(InvoiceDataDAO.class, getRequest());
+		return invoiceDataDAO.existsByOrderId(orderId);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
 	public boolean insertOrUpdate(InvoiceData invoiceData) throws ScalarServiceException {
 		boolean isNew = invoiceData.getId() == null;
 		InvoiceDataDAO invoiceDataDAO = DAOFactory.getDAO(InvoiceDataDAO.class, getRequest());
@@ -105,7 +121,7 @@ public class InvoiceDataServiceImpl extends AbstractService implements InvoiceDa
 		if (isNew) {
 			// insert
 			try {
-				invoiceData.setId(GUID.generateString(ObjectType.TYPE_CODE_ORDER));
+				invoiceData.setId(GUID.generateString(ObjectType.TYPE_CODE_INVOICE));
 			} catch (ScalarException e) {
 				throw ScalarServiceException.create(MsgObjectUtil.getMsgObject(e.getMessage()), e);
 			}
@@ -172,7 +188,7 @@ public class InvoiceDataServiceImpl extends AbstractService implements InvoiceDa
 		return false;
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public boolean removeByInvoiceNumber(String invoiceNumber) throws ScalarServiceException {
 		InvoiceDataDAO invoiceDataDAO = DAOFactory.getDAO(InvoiceDataDAO.class, getRequest());
 		InvoiceData invoiceData = findByInvoiceNumber(invoiceNumber);
@@ -182,7 +198,7 @@ public class InvoiceDataServiceImpl extends AbstractService implements InvoiceDa
 		return true;
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public boolean remove(String id) {
 		InvoiceDataDAO invoiceDataDAO = DAOFactory.getDAO(InvoiceDataDAO.class, getRequest());
 		invoiceDataDAO.removeById(id);
@@ -220,8 +236,55 @@ public class InvoiceDataServiceImpl extends AbstractService implements InvoiceDa
 	 * @return the created InvoiceData object.
 	 * @throws ScalarServiceException
 	 */
+	@Transactional(propagation = Propagation.REQUIRED)
 	public InvoiceData createInvoice(OrderData orderData) throws ScalarServiceException {
-		// todo
-		return null;
+		InvoiceDataDAO invoiceDataDAO = DAOFactory.getDAO(InvoiceDataDAO.class, getRequest());
+		InvoiceLineItemDataDAO invoiceLineItemDataDAO = DAOFactory.getDAO(InvoiceLineItemDataDAO.class, getRequest());
+		ItemDataDAO itemDataDAO = DAOFactory.getDAO(ItemDataDAO.class, getRequest());
+		OrderDataDAO orderDataDAO = DAOFactory.getDAO(OrderDataDAO.class, getRequest());
+		InvoiceDataRow invoiceDataRow = new InvoiceDataRow();
+		GUID invoiceId = null;
+		try {
+			// update the order status
+			OrderDataRow orderDataRow = new OrderDataRow();
+			orderDataRow.setId(new GUID(orderData.getId()));
+			orderDataRow.setStatus(OrderData.OrderStatus.INVOICED.toString());
+			orderDataDAO.update(orderDataRow);
+
+			invoiceId = GUID.generate(ObjectType.TYPE_CODE_INVOICE);
+			invoiceDataRow.setId(invoiceId);
+			invoiceDataRow.setOrderId(new GUID(orderData.getId()));
+			invoiceDataRow.setCustName(orderData.getCustName());
+			invoiceDataRow.setInvoiceNumber(AutoNumber.generateInvoiceNumber(getRequest()));
+			invoiceDataRow.setInvoiceDate(new Date());
+			invoiceDataRow.setStatus(InvoiceData.InvoiceStatus.ACTIVE.toString());
+			if (orderData.getTaxRateData() != null) {
+				invoiceDataRow.setTaxName(orderData.getTaxRateData().getName());
+			}
+			invoiceDataRow.setTaxPercentage(orderData.getTaxPercentage());
+			invoiceDataRow.setDiscount(orderData.getDiscount());
+
+			invoiceDataDAO.insert(invoiceDataRow);
+
+			List<OrderLineItemData> orderLineItems =  orderData.getLineItems();
+			for (OrderLineItemData lineItem: orderLineItems) {
+				InvoiceLineItemDataRow invoiceLineItem = new InvoiceLineItemDataRow();
+				invoiceLineItem.setId(GUID.generate());
+				invoiceLineItem.setInvoiceId(invoiceId);
+				invoiceLineItem.setItemId(new GUID(lineItem.getItemId()));
+				ItemDataRow itemRow = itemDataDAO.findByPrimaryKey(lineItem.getItemId());
+				invoiceLineItem.setItemName(itemRow.getName());
+				invoiceLineItem.setLineNumber(lineItem.getLineNumber());
+				invoiceLineItem.setPrice(lineItem.getPrice());
+				invoiceLineItem.setQty(lineItem.getQty());
+				invoiceLineItem.setTaxable(lineItem.isTaxable() ? 1 : 0);
+				invoiceLineItemDataDAO.insert(invoiceLineItem);
+			}
+		} catch (Exception e) {
+			MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_CREATE_INVOICE_FOR_ORDER, orderData.getOrderNumber());
+			throw ScalarServiceException.create(msgObject, e);
+		}
+
+		return findById(invoiceId.toString());
 	}
 }
