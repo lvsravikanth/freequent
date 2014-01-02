@@ -27,7 +27,7 @@ public class InvoiceLineItemDataDAO extends AbstractDAO {
 	protected static final Log logger = LogFactory.getLog(InvoiceLineItemDataDAO.class);
 	public static final String TABLE_NAME = "ftInvoiceLineItem";
 	public static final String COL_ID = "id";
-	public static final String COL_INVOICE_ID = "orderId";
+	public static final String COL_INVOICE_ID = "invoiceId";
 	public static final String COL_LINE_NUMBER = "lineNumber";
 	public static final String COL_ITEM_ID = "itemId";
 	public static final String COL_ITEM_NAME = "itemName";

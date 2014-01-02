@@ -48,7 +48,7 @@ fui.ui.manageitems = {
 
     getRunSearchHandler: function() {
         return function(data) {
-            var grid = fui.grid.find(fui.ui.type.ITEMS);
+            var grid = fui.grid.find(fui.ui.type.ITEM);
             grid.updateData(data);
         };
     },

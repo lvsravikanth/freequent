@@ -21,10 +21,17 @@
             if (exception == null) {
                 exception = RequestUtil.getException (request);
             }
+			if (exception == null) {
+				exception = (Exception) request.getAttribute("javax.servlet.error.exception");
+			}
             if (exception instanceof ScalarException) {
                 out.println (((ScalarException)exception).getMsgObject());
             } else {
-                out.println (exception.getMessage());
+				if (exception == null) {
+					out.println ("Unable to find the exception. check the logs.");
+				} else {
+                	out.println (exception.getMessage());
+				}
             }
         %>
 

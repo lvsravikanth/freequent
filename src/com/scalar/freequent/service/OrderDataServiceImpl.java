@@ -14,6 +14,7 @@ import com.scalar.freequent.l10n.ServiceResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.dao.DataAccessException;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.Map;
  * Date: Nov 30, 2013
  * Time: 11:25:54 AM
  */
+@Transactional(propagation = Propagation.SUPPORTS)
 public class OrderDataServiceImpl extends AbstractService implements OrderDataService {
 	protected static final Log logger = LogFactory.getLog(OrderDataServiceImpl.class);
 
@@ -91,8 +93,8 @@ public class OrderDataServiceImpl extends AbstractService implements OrderDataSe
 		return orderDataDAO.existsByOrderNumber(orderNumber);
 	}
 
-	@Transactional
-	public boolean insertOrUpdate(OrderData orderData) throws ScalarServiceException {
+	@Transactional (propagation = Propagation.REQUIRED)
+	public boolean insertOrUpdate(OrderData orderData, boolean createInvoice) throws ScalarServiceException {
 		boolean isNew = orderData.getId() == null;
 		OrderDataDAO orderDataDAO = DAOFactory.getDAO(OrderDataDAO.class, getRequest());
 		OrderLineItemDataService orderLineItemDataService = ServiceFactory.getService(OrderLineItemDataService.class, getRequest());
@@ -162,7 +164,13 @@ public class OrderDataServiceImpl extends AbstractService implements OrderDataSe
 			orderLineItemDataService.insertOrUpdate(lineItem);
 		}
 
-
+		if (createInvoice) {
+			InvoiceDataService invoiceDataService = ServiceFactory.getService(InvoiceDataService.class, getRequest());
+			// check if invoice already exists, if not exists create
+			if (!invoiceDataService.existsByOrderId(orderData.getId())) {
+				invoiceDataService.createInvoice(orderData);
+			}
+		}
 
 		return false;
 	}

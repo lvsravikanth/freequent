@@ -67,6 +67,7 @@ public class OrderData implements HasRecord {
 	private double taxAmount;
 	private double totalAmount;
 	private double grandTotal;
+	private TaxRateData taxRateData;
 
 	public static final String PARAM_ORDER_NUMBER = "ordernumber";
 	public static final String PARAM_ITEM_ID = "itemid";
@@ -200,6 +201,14 @@ public class OrderData implements HasRecord {
 
 	public void setTaxAmount(double taxAmount) {
 		this.taxAmount = taxAmount;
+	}
+
+	public TaxRateData getTaxRateData() {
+		return taxRateData;
+	}
+
+	public void setTaxRateData(TaxRateData taxRateData) {
+		this.taxRateData = taxRateData;
 	}
 
 	public Map<String, Object> toMap() {

@@ -11,6 +11,7 @@ fui.ui.editor.button.print = {
 	PRINT_BUTTON_CLASS : 'fui-btn-action',
 	PRINT_ICON_CLASS : 'fui-editor-toolbar-print',
 	PRINT_DEFAULT_INDEX : 1,
+	CREATE_INVOICE_COLLECTOR_ID: 'fui-create-invoice-collector',
 
 	/**
 	 * Return the Print button.
@@ -103,8 +104,10 @@ fui.ui.editor.button.print = {
 				fui.ui.editor.button.print.clickHandler(type, id, button);
 			}
 		};
+		var e = fui.editor;
+		var editor = e.find(id);
 		var reloadTitle = fui.editor.getMessage("print.order.confirm.title");
-		var reloadText = fui.editor.getMessage("print.order.confirm.text");
+		var reloadText = editor.isReadOnly() ? fui.editor.getMessage("print.order.confirm.text") : fui.editor.getMessage("save.print.order.confirm.text");
 		fui.msg.confirm(reloadTitle, reloadText, printFunc);
 	},
 
@@ -127,7 +130,7 @@ fui.ui.editor.button.print = {
 
 		// action > 0 means it's either a save or save/close
 		var isNew = fui.editor.isNewEditorId(id);
-		if (!readOnly && editor.hasChanged()) {
+		if (!readOnly) {
 			// save the editor
 			var config = {
 				close: undefined,
@@ -135,7 +138,17 @@ fui.ui.editor.button.print = {
 				callbackData: {print: true}
 			};
 			config.isNew = isNew;
+			// add collector to set the createinvoice flag
+			editor.addCollector(function (editor, data, requestData) {
+				data = data || {};
+				fui.combine(data, {createinvoice: true});
+				return data;
+			}, this.CREATE_INVOICE_COLLECTOR_ID);
+
 			editor.save(config);
+
+			// remove the collector
+			editor.removeCollector(this.CREATE_INVOICE_COLLECTOR_ID);
 			return; // print will be handled in the save callback handler.
 		}
 

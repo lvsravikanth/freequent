@@ -18,7 +18,7 @@ fui.ui.manageorders = {
 	 */
 	SEARCH: "runsearch",
 
-	CREATE_INVOICE: "createinvoice",
+	GET_INVOICE_ID: "getinvoiceid",
 
     /**
      * requires the following data.
@@ -129,25 +129,28 @@ fui.ui.manageorders = {
 	},
 
 	print: function(id) {
-		var invoiceid = this.createinvoice(id);
-
-		// print the invoice
-		alert ("invoice id: " + invoiceid);
-		//todo
+		var invoiceid = this.getInvoiceId(id);
+	   if (invoiceid) {
+			// print the invoice
+			alert ("invoice id: " + invoiceid);
+			//todo
+	   }
 	},
 
-	createinvoice: function(id, requestData) {
+	getInvoiceId: function(id, requestData) {
 		if ( fui.log.isDebug() ) { fui.log.debug("executing createinvoice" ); }
 		var invoiceid = "";
 		requestData = requestData || {};
 		requestData.content = requestData.content || {};
 		requestData.content.orderid = id;
 
-        requestData.handler = function(data) { invoiceid = data.invoiceid; };
+        requestData.handler = function(data) {
+			invoiceid = data.invoiceid;
+		};
 		requestData.sync = true;
 
 		var c = fui.ui.content;
-		c.internal.sendAPI(this, this.CREATE_INVOICE, requestData);
+		c.internal.sendAPI(this, this.GET_INVOICE_ID, requestData);
 
 		return invoiceid;
 	}

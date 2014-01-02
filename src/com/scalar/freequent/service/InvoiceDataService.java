@@ -3,6 +3,7 @@ package com.scalar.freequent.service;
 import com.scalar.core.ScalarServiceException;
 import com.scalar.freequent.common.InvoiceData;
 import com.scalar.freequent.common.OrderData;
+import com.scalar.freequent.dao.InvoiceDataRow;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,9 @@ public interface InvoiceDataService {
 	List<InvoiceData> search(Map<String, Object> searchParams) throws ScalarServiceException;
 	InvoiceData findByInvoiceNumber(String invoiceNumber) throws ScalarServiceException;
 	InvoiceData findById(String id) throws ScalarServiceException;
+	public List<InvoiceData> findByOrderId(String orderId) throws ScalarServiceException;
 	boolean exists (String invoiceNumber) throws ScalarServiceException;
+	boolean existsByOrderId (String orderId) throws ScalarServiceException;
 	boolean insertOrUpdate(InvoiceData invoiceData) throws ScalarServiceException;
 	boolean removeByInvoiceNumber(String invoiceNumber) throws ScalarServiceException;
 	boolean remove(String id) throws ScalarServiceException;

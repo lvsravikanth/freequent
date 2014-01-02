@@ -47,6 +47,7 @@ public class InvoiceDataDAO extends AbstractDAO {
 					COL_INVOICE_DATE + ", " +
 					COL_CUST_NAME + ", " +
 					COL_STATUS + ", " +
+					COL_TAX_NAME + ", " +
 					COL_TAX_PERCENTAGE + ", " +
 					COL_DISCOUNT + ", " +
 					COL_REMARKS +

@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 import com.scalar.freequent.service.OrderDataService;
+import com.scalar.freequent.service.InvoiceDataService;
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.request.Request;
@@ -46,5 +47,26 @@ public class AutoNumber {
 		return "O"+prefix+suffix;
 	}
 
+	protected static long getNextInvoiceSequence(Request request) throws ScalarException {
+		if (invoiceSequence == null) {
+			InvoiceDataService invoiceDataService = ServiceFactory.getService(InvoiceDataService.class, request);
+			invoiceSequence = new AtomicLong(invoiceDataService.getInvoicesCount());
+		}
+
+		if (Long.toString(invoiceSequence.get()+1).length() > MAX_SEQUENCE_LENGTH) {
+			invoiceSequence.set(0);
+		}
+
+		return invoiceSequence.incrementAndGet();
+	}
+
+	public static String generateInvoiceNumber(Request request) throws ScalarException  {
+		long seq = getNextInvoiceSequence(request);
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat format = new SimpleDateFormat("MMddyy");
+		String prefix = format.format(cal.getTime());
+		String suffix = StringUtil.formatToLength(seq+"", "0", null, MAX_SEQUENCE_LENGTH);
+		return "I"+prefix+suffix;
+	}
 
 }
