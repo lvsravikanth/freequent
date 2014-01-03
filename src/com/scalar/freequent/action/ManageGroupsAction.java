@@ -74,27 +74,20 @@ public class ManageGroupsAction extends AbstractActionController {
 		if (EditorUtils.isNewEditorId(groupId)) {
 			data.put(ATTR_GROUP_DATA, new GroupData());
 		} else {
-			// load user
+			// load group
 			GroupDataService groupDataService = ServiceFactory.getService(GroupDataService.class, request);
 			GroupData groupData = groupDataService.findById(groupId);
 			if (groupData == null) {
-				throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_FIND_GROUP, groupData), null);
+				throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_FIND_GROUP, groupId), null);
 			}
 			data.put(ATTR_GROUP_DATA, groupData);
 		}
-		CapabilityInfoDAO capabilityInfoDAO = DAOFactory.getDAO(CapabilityInfoDAO.class, request);
-		List<CapabilityInfoRow> capabilityRows = capabilityInfoDAO.findAll();
-		List<Capability> capabilities = new ArrayList<Capability>();
-		for (CapabilityInfoRow capabilityRow: capabilityRows) {
-			capabilities.add (CapabilityInfoDAO.rowToData(capabilityRow));
-		}
-		data.put(Constants.CAPABILITIES_ATTRIBUTE, capabilities);
 
 		data.put(Response.TEMPLATE_ATTRIBUTE, "group/grouptemplate");
 	}
 
 	/**
-	 * Action method to save the item data.
+	 * Action method to save the group data.
 	 *
 	 * @param request
 	 * @param command
@@ -109,7 +102,7 @@ public class ManageGroupsAction extends AbstractActionController {
 		// check whether the request is from new editor
 		String editorId = request.getParameter(EditorUtils.EDITOR_ID_ATTRIBUTE);
 		if (logger.isDebugEnabled()) {
-			logger.debug("item editor id: " + editorId);
+			logger.debug("group editor id: " + editorId);
 		}
 		if (EditorUtils.isNewEditorId(editorId)) {
 			try {
@@ -126,7 +119,7 @@ public class ManageGroupsAction extends AbstractActionController {
 		}
 		try {
 			groupDataService.insertOrUpdate(groupData);
-		} catch (ScalarServiceException e) {
+		} catch (Exception e) {
 			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.UNABLE_TO_SAVE), e);
 		}
 		try {

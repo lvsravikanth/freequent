@@ -27,15 +27,15 @@
 <div class="fui-form-container">
 
 	<div class="fui-form-block-container">
-		<label for="name" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.GROUP_NAME%>"/><span class="fui-widget-required-flag">&nbsp;*</span></label><br>
-		<div class="fui-form-inline-input"><input type="text" class="fui-input fui-input-text" name="name" id="name" value="<c:out value="${groupData.name}"/>"/></div>
+		<label for="<%=GroupData.ATTR_NAME%>" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.GROUP_NAME%>"/><span class="fui-widget-required-flag">&nbsp;*</span></label><br>
+		<div class="fui-form-inline-input"><form:input path="<%=GroupData.ATTR_NAME%>" cssClass="fui-input fui-input-text"/></div>
 		<div class="fui-form-item-validation"><div id="name-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
 	</div>
 
     <div class="fui-form-block-container">
-		<label for="name" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.GROUP_DESCRIPTION%>"/></label><br>
-		<div class="fui-form-inline-input"><textarea class="fui-input fui-input-text" name="description" id="description" width="300" height="150" value="<c:out value="${groupData.description}"/>"/></div>
+		<label for="<%=GroupData.ATTR_DESCRIPTION%>" class="fui-label-text"><fmt:message key="<%=WorkspaceResource.GROUP_DESCRIPTION%>"/></label><br>
+		<div class="fui-form-inline-input"><form:textarea path="<%=GroupData.ATTR_DESCRIPTION%>" cssClass="fui-input fui-input-text" cols="80" rows="5"/></div>
 		<div class="fui-form-item-validation"><div id="description-validation-text" class="fui-form-item-validation-text"></div></div>
 		<div class="fui-layout-end"></div>
 	</div>
@@ -47,6 +47,7 @@
 		fui.editor.find('<%=editorId%>').setFormId('<%=formId%>');
 
 		fui.query("#<%=formId%>").validate({
+			submitHandler : function(form) {/*do nothing. hack, to prevent text field enter key submitting.*/},
 			rules: {
 				name: "required"			
 			},
