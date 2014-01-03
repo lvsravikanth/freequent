@@ -51,11 +51,16 @@
 </div>
 <script type="text/javascript">
     fui.ready(function() {
+		var params = {};
+		params.name = fui.byId("name").value;
+		fui.ui.managegroups.internal.setSearchParams(params);
+
         fui.query("#search").button()
             .click( function(event) {
                 var params = {};
                 params.name = fui.byId("name").value;
-                fui.ui.managegroups.runSearch(params);
+                fui.ui.managegroups.internal.setSearchParams(params);
+				fui.grid.find(fui.ui.type.GROUP).refresh();
             }
         );
 		fui.query("#newgroup").button()
@@ -76,6 +81,6 @@
 
 	fui.ready(function(){
 		// by default load the data into the grid when page loads
-		fui.query("#search").button().click();
+		// fui.query("#search").button().click();
 	});
 </script>

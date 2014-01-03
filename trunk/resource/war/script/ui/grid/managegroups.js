@@ -38,7 +38,7 @@ fui.ui.grid.managegroups = {
             getUrlFunc: function(gridProperties) {
                 return function(){
 					var url = fuiConfig.appContext + "/" + fui.ui.managegroups.ACTION_KEY + "/" + fui.ui.managegroups.SEARCH + ".json";
-					var params = fui.query.param(fui.ui.managegroups.getSearchParams());
+					var params = fui.query.param(fui.ui.managegroups.internal.getSearchParams());
 					return { url: url, data: params };
 				};
             },
