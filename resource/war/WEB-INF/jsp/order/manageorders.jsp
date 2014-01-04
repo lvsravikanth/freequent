@@ -24,7 +24,7 @@
     <div class="fui-workspace-search-panel">
         <div>
             <div class="fui-workspace-search-header ui-widget-header ui-corner-top"><fmt:message key="<%=WorkspaceResource.MANAGEORDERS_TITLE%>"/></div>
-			<form id="manageorders">
+			<form id="manageorders" class="fui-workspace-search-manageorders">
                 <div class="fui-workspace-search-container">
                     <div >
                         <span class="fui-workspace-search-wrap-row">
@@ -50,18 +50,18 @@
                         </span>
                         <span class="fui-workspace-search-wrap-row">
                             <div class="fui-workspace-search-container-column">
-                                <label for="<%=OrderData.PARAM_FROM_DATE%>"><fmt:message key="<%=WorkspaceResource.FROM_DATE%>"/>&nbsp;(<%=datePattern%>)</label>
+                                <label for="<%=OrderData.PARAM_FROM_DATE%>"><fmt:message key="<%=WorkspaceResource.FROM_DATE%>"/></label>
                             </div>
                             <div class="fui-workspace-search-container-column fui-workspace-search-container-wrap-column">
-                                <input type="text" class="fui-input fui-input-text" name="<%=OrderData.PARAM_FROM_DATE%>" id="<%=OrderData.PARAM_FROM_DATE%>"/>
+                                <input type="text" class="fui-input fui-input-text" placeholder="<%=datePattern%>" name="<%=OrderData.PARAM_FROM_DATE%>" id="<%=OrderData.PARAM_FROM_DATE%>"/>
                             </div>
                         </span>
-                        <span class="fui-workspace-search-wrap-row">
+                        <span class="fui-workspace-search-wrap-row fui-workspace-search-order-datepicker">
                             <div class="fui-workspace-search-container-column">
-                                <label for="<%=OrderData.PARAM_TO_DATE%>"><fmt:message key="<%=WorkspaceResource.TO_DATE%>"/>&nbsp;(<%=datePattern%>)</label>
+                                <label for="<%=OrderData.PARAM_TO_DATE%>"><fmt:message key="<%=WorkspaceResource.TO_DATE%>"/></label>
                             </div>
                             <div class="fui-workspace-search-container-column fui-workspace-search-container-wrap-column">
-                                <input type="text" class="fui-input fui-input-text" name="<%=OrderData.PARAM_TO_DATE%>" id="<%=OrderData.PARAM_TO_DATE%>"/>
+                                <input type="text" class="fui-input fui-input-text" placeholder="<%=datePattern%>" name="<%=OrderData.PARAM_TO_DATE%>" id="<%=OrderData.PARAM_TO_DATE%>"/>
                             </div>
                         </span>
 						<span class="fui-workspace-search-wrap-row">
@@ -69,7 +69,7 @@
                                 <label for="<%=OrderData.PARAM_STATUS%>"><fmt:message key="<%=WorkspaceResource.STATUS%>"/></label>
                             </div>
                             <div class="fui-workspace-search-container-column fui-workspace-search-container-wrap-column">
-								<select name="<%=OrderData.PARAM_STATUS%>" id="<%=OrderData.PARAM_STATUS%>" class="fui-input fui-input-select">
+								<select name="<%=OrderData.PARAM_STATUS%>" id="<%=OrderData.PARAM_STATUS%>" class="fui-worspace-search-order-status">
 									<option value=""><fmt:message key="<%=WorkspaceResource.ALL%>"/></option>
 								<%
 									OrderData.OrderStatus[] statuses = OrderData.OrderStatus.values();
@@ -85,7 +85,7 @@
                                 </script>
                             </div>
                         </span>
-                        <span class="fui-workspace-search-wrap-row">
+                        <span class="fui-workspace-search-wrap-row fui-workspace-search-button-wrap-row">
                             <div class="fui-workspace-search-container-column  fui-workspace-search-container-wrap-column fui-workspace-search-container-button-wrap-column">
                                 <button type="button" id="search"><fmt:message key="<%=WorkspaceResource.SEARCH%>"/></button>
                             </div>
@@ -138,14 +138,15 @@
 
 		fui.query( "#<%=OrderData.PARAM_FROM_DATE%>" ).datepicker({
 			dateFormat: fui.context.getContext()[fui.context.FORMAT_KEY].date,
-			showOn: "button",
+			//showOn: "button",
       		buttonImage: "<%=context%>/theme/corporate/icon/calendar.gif",
       		buttonImageOnly: true
 		});
 
 		fui.query( "#<%=OrderData.PARAM_TO_DATE%>" ).datepicker({
+            //showAnim: fui.query(this).val(),
 			dateFormat: fui.context.getContext()[fui.context.FORMAT_KEY].date,
-			showOn: "button",
+			//showOn: "button",
       		buttonImage: "<%=context%>/theme/corporate/icon/calendar.gif",
       		buttonImageOnly: true
 		});

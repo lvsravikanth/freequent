@@ -109,7 +109,7 @@
 												disabled="true"/></td>
 								<td class="fui-col fui-col-content">
 									<form:input path="lineItems[${row.index}].itemId" id="lineItems${row.index}itemId"
-												 cssClass="fui-input"/>
+												 cssClass="fui-input fui-input-select"/>
 									<script type="text/javascript">
 										fui.ready(function() {
 											fui.ui.manageorders.makeItemSelect("lineItems${row.index}itemId", fui.workspace.getMessage("select"), <%=readOnly%>);
