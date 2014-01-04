@@ -53,9 +53,9 @@
 <%!
 
     private String prepareMenu(Menu menu, String context) {
-        String menuHtml = "<li>";
+        String menuHtml ="<li>";
         if (menu.isEnabled() && !StringUtil.isEmpty(menu.getLink())) {
-            menuHtml += "<a href='" + context + "/" + menu.getLink()+"'>" + menu.getName()+"</a>";
+            menuHtml += "<a class=\"fui-menu-link-text\" href='" + context + "/" + menu.getLink()+"'>" + menu.getName()+"</a>";
         } else {
             menuHtml += menu.getName();
         }
@@ -73,8 +73,9 @@
 %>
 
 <SCRIPT>
-fui.query("#accordion > li").click(function(){
-
+var menuLinks = fui.query("#accordion > li");
+menuLinks.addClass("fui-menu-link fui-menu-link-plus-icon");
+menuLinks.click(function(){
 	if(false == fui.query(this).next().is(':visible')) {
 		fui.query('#accordion > ul').slideUp(300);
 	}

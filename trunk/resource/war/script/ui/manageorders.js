@@ -166,7 +166,7 @@ fui.ui.manageorders.internal = {
 					"<td class=\"fui-col fui-col-content\"><span>{{lineNumber}}</span>" +
 						"<input type=\"hidden\" name=\"lineItems[{{index}}].lineNumber\" class=\"fui-input\" disabled=\"true\"/></td>" +
 					"<td class=\"fui-col fui-col-content\">" +
-						"<input type=\"text\" name=\"lineItems[{{index}}].itemId\" id=\"lineItems{{index}}itemId\" class=\"fui-input\"/>"+
+						"<input type=\"text\" name=\"lineItems[{{index}}].itemId\" id=\"lineItems{{index}}itemId\" class=\"fui-input fui-input-select\"/>"+
 						"<script type=\"text/javascript\">" +
 							"fui.ready(function() {" +
 								"fui.ui.manageorders.makeItemSelect(\"lineItems{{index}}itemId\", fui.workspace.getMessage(\"select\"));"+
