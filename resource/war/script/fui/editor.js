@@ -253,7 +253,7 @@ fui.editor = {
 		// in particular, to avoid that ELJ lose unsaved values.
 		var activeEditor = fui.editor.findActive();
 		if (activeEditor) {
-			activeEditor.deactivate(); 
+			activeEditor.deactivate();
 		}
 
 		// Setup handler
@@ -287,8 +287,8 @@ fui.editor = {
 				updateFunc(ui, editor, data);
 				var contentId = fui.editor.CONTENT_ID + '-' + editor.id;
 				//fui.query('#' + contentId).mousedown(deactivator);
-				//reset the size so that everything lays out correctly (like toolbars).  
-				//not calling the fui.vext.forceLayout(ui); since that will use the container size 
+				//reset the size so that everything lays out correctly (like toolbars).
+				//not calling the fui.vext.forceLayout(ui); since that will use the container size
 				//and for editors that is the body and is very big.
 				//ui.setSize(ui.getSize());
 			};
@@ -335,7 +335,7 @@ fui.editor = {
 			cloneId = editConfig.id;
 			editConfig.id = undefined;
 		}
-		
+
 		editor = new fui.editor.Editor({
 			id: editConfig.id || (cloneId ? fui.editor.getCloneEditorId() : fui.editor.getNewEditorId()),
 			collectors: editConfig.collectors,
@@ -353,6 +353,7 @@ fui.editor = {
 			editor.ACTION_KEY = editConfig.ACTION_KEY;
 		}
 		editor.load(requestData);
+
 	},
 
 	/**
@@ -402,7 +403,7 @@ fui.editor = {
 	 * @desc Check if the supplied ID is for a new editor for an item being cloned.
 	 * Note that a valid clone editor ID is also a valid new editor ID,
 	 * but not vice-versa.
-	 * 
+	 *
 	 * @param id The ID in question.
 	 * @returns <code>true</code> if the supplied ID is a new editor ID.
 	 * @public
@@ -590,7 +591,7 @@ fui.extend(fui.editor.Editor,
 
 			// Add the new editor
 			fui.editor.internal.add(this);
-			
+
 			// remove clone options if it is set
 			if ( this.cloneId ) {
 				this.cloneId = undefined;
@@ -613,13 +614,14 @@ fui.extend(fui.editor.Editor,
 
 			// This updates the content area with the new data and also creates new buttons with the new Id
 			updateFunc(this.ui, this, data);
+            fui.query('.ui-dialog-content').children().addClass('fui-editor-container');
 		});
 
 		this.deactivateListeners = [];
 
 		// Load the editor with the newly saved object
 		this.load(requestData);
-
+        
 		// Fire the reload event.
 		var e = new fui.editor.Event({
 			type: fui.editor.event.RELOAD,
@@ -627,6 +629,7 @@ fui.extend(fui.editor.Editor,
 		});
 
 		fui.publish(fui.editor.event.TOPIC_ROOT + oldId, e);
+
 	},
 
 	/**
@@ -638,7 +641,7 @@ fui.extend(fui.editor.Editor,
 		if ( (this.blocked === 0) || (--this.blocked > 0) ) {
 			return;
 		}
-		
+
 		if ( this.blockTimer ) {
 			clearInterval(this.blockTimer);
 			this.blockTimer = null;
@@ -702,13 +705,13 @@ fui.extend(fui.editor.Editor,
 		// Set clone id and readonly state
 		requestData.content[e.CLONE_ATTRIBUTE] = this.cloneId ? this.cloneId : undefined;
 		requestData.content[e.READONLY_ATTRIBUTE] = this.readOnly ? this.readOnly : undefined;
-		
+
 		// Set id
 		requestData.content[e.ID_ATTRIBUTE] = this.id || (this.cloneId ? e.getCloneEditorId() : e.getNewEditorId());
 
 		// Copy over content
 		fui.query.extend(this.requestContent, requestData.content);
-		
+
 		requestData.actionKey = requestData.actionKey || this.ACTION_KEY;
 		requestData.method = e.LOAD;
 
@@ -781,7 +784,7 @@ fui.extend(fui.editor.Editor,
 
 		// deactivate
 		this.deactivate();
-			
+
 		config = config || {};
 
 		var oldId = this.id;
@@ -1302,7 +1305,7 @@ fui.extend(fui.editor.Editor,
 	 * @public
 	 */
 	isReadOnly: function(){
-		return this.readOnly || (this.object && this.object.editorReadOnly);	
+		return this.readOnly || (this.object && this.object.editorReadOnly);
 	},
 
 	/**
@@ -1591,14 +1594,12 @@ fui.editor.internal = {
 						};
 						var reloadTitle = fui.editor.getMessage("reload.confirm.title");
 						var reloadText = fui.editor.getMessage("reload.confirm.text");
-						fui.msg.confirm(reloadTitle, reloadText, reloadFunc);
+						fui.msg.confirm(reloadTitle, reloadText, reloadFunc);                     
 					} else {
 						editor.reload();
 					}
 				}
 			});
-
-
 
 			ei.setupTools(editor, tools);
 
