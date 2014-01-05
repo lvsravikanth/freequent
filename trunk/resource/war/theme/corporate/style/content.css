@@ -267,4 +267,10 @@ label.error {
     width:  15em;
     font-size: 0.9em;}
 
+.fui-html input.fui-qty-input, .fui-html input.fui-price-input {
+	width: 140px;}
+
+#orderLineItemsTable .fui-input-select {
+	width: 250px;}edit
+
 /*** End Search panel css***/
