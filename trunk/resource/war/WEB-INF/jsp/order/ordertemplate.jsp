@@ -89,9 +89,9 @@
 			<tbody>
 			<tr>
 				<td>
-					<table id="orderLineItemsTable" border="1" class="fui-table">
+					<table id="orderLineItemsTable" class="fui-table ui-widget-content">
 						<tbody>
-						<tr>
+						<tr class="ui-widget-header">
 							<td class="fui-col fui-col-head"><span class="fui-label-text"><fmt:message key="<%=WorkspaceResource.SNO%>"/></span></td>
 							<td class="fui-col fui-col-head"><span class="fui-label-text"><fmt:message key="<%=WorkspaceResource.DESCRIPTION%>"/></span></td>
 							<td class="fui-col fui-col-head"><span class="fui-label-text"><fmt:message key="<%=WorkspaceResource.QTY%>"/></span></td>
@@ -138,6 +138,7 @@
 									fui.lineItemCount = fui.lineItemCount + 1;
 									lineItem.lineNumber = fui.lineItemCount;
 									fui.ui.manageorders.addLineItem("orderLineItemsTable", lineItem);
+                                    fui.query("#orderLineItemsTable").find("tr:odd").addClass("fui-order-item-odd-row-selection");
 									fui.query("#"+"lineItems"+lineItem.index+"itemId").select2("open");
 								});;
 						});
@@ -189,6 +190,7 @@
 </form:form>
 <script type="text/javascript">
 	fui.ready(function() {
+        fui.query("#orderLineItemsTable").find("tr:odd").addClass("fui-order-item-odd-row-selection");
 		var editor = fui.editor.find('<%=editorId%>');
 		editor.setFormId('<%=formId%>');
 		editor.readOnly = <%=readOnly%>;
