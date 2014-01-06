@@ -267,10 +267,15 @@ label.error {
     width:  15em;
     font-size: 0.9em;}
 
+
 .fui-html input.fui-qty-input, .fui-html input.fui-price-input {
-	width: 140px;}
+	width: 125px;}
+
+.fui-order-item-odd-row-selection {
+	background-color: palegreen;
+}
 
 #orderLineItemsTable .fui-input-select {
-	width: 250px;}edit
+	width: 300px; }
 
 /*** End Search panel css***/
