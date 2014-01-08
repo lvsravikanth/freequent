@@ -40,20 +40,26 @@ fui.ui.grid.rowaction.del = {
 	clickHandler: function(obj) {  
 		var ctx = fui.context.getContext();
 
-		var type = obj.type;     
-        var reloadFunc = function(btn) {
-			if (btn == 'yes') {
-                alert(" alerting delete confirmed");
-			    /*var requestData = {};
+		var type = obj.type;
+		var func = fui.scope(this, function() {
+			alert ("delete obj.id=" + obj.id);
+			// do the job
+			/*var requestData = {};
                 requestData.content.id = obj.id;
                 var c = fui.ui.content;
 		        c.internal.sendAPI(this, this.METHOD, requestData);*/
-			}
-        };
-        var reloadTitle = fui.editor.getMessage("reload.confirm.title");
-		var reloadText = fui.editor.getMessage("reload.confirm.text");
+		});
+        var confirmTitle = fui.workspace.getMessage("delete.confirm.title");
+		var confirmText = fui.string.replace(fui.workspace.getMessage("delete.confirm.text.single.1"),
+					{name: obj.name, type: type})
 
-        fui.msg.confirm(reloadTitle, reloadText, reloadFunc);
+        fui.msg.confirm(confirmTitle, confirmText, function(buttonId) {
+					if (buttonId === 'yes') {
+						func();
+					} else {
+						//do nothing.
+					}
+				});
 	}
 };
 
