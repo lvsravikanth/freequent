@@ -6,7 +6,8 @@ fui.provide("fui.ui.grid.rowaction.del");
 fui.ui.grid.rowaction.del = {
 	BUTTON_ID : 'fui-grid-action-delete',
 	BUTTON_CLASS : 'fui-grid-action-delete ui-icon ui-icon-trash',
-	DEFAULT_INDEX : 1,
+	DEFAULT_INDEX : 2,
+    DELETE_ID_ATTRIBUTE : 'fui.grid.item.delte.id',
     METHOD: 'delete',
 
 	/**
@@ -19,7 +20,7 @@ fui.ui.grid.rowaction.del = {
 			index : this.DEFAULT_INDEX,
 			supports: this.supports,
 			clickHandler:  this.clickHandler,
-			getTitle : function() { return fui.workspace.getMessage('grid.toolbar.edit.title'); }
+			getTitle : function() { return fui.workspace.getMessage('grid.toolbar.delte.title'); }
 		});
 	},
 
@@ -39,27 +40,25 @@ fui.ui.grid.rowaction.del = {
 	 */
 	clickHandler: function(obj) {  
 		var ctx = fui.context.getContext();
-
-		var type = obj.type;
+        this.obj = obj;
 		var func = fui.scope(this, function() {
-			alert ("delete obj.id=" + obj.id);
-			// do the job
-			/*var requestData = {};
-                requestData.content.id = obj.id;
-                var c = fui.ui.content;
-		        c.internal.sendAPI(this, this.METHOD, requestData);*/
+            var rowDelete = fui.ui.grid.rowaction.del;
+            var requestData = requestData || {};
+            requestData.content = requestData.content || {};
+            requestData.content[rowDelete.DELETE_ID_ATTRIBUTE] = obj.id;
+            this.ACTION_KEY = fui.ui.type.getActionKey(obj.type);            
+            var c = fui.ui.content;
+		    c.internal.sendAPI(this, rowDelete.METHOD, requestData);
 		});
         var confirmTitle = fui.workspace.getMessage("delete.confirm.title");
 		var confirmText = fui.string.replace(fui.workspace.getMessage("delete.confirm.text.single.1"),
-					{name: obj.name, type: type})
+					{name: obj.name, type: obj.type})
 
         fui.msg.confirm(confirmTitle, confirmText, function(buttonId) {
-					if (buttonId === 'yes') {
-						func();
-					} else {
-						//do nothing.
-					}
-				});
+            if (buttonId === 'yes') {
+                func();
+            }
+		});
 	}
 };
 

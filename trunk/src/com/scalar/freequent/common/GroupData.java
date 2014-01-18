@@ -23,7 +23,8 @@ public class GroupData implements HasRecord  {
 	public static final String ATTR_NAME = "name";
 	public static final String ATTR_DESCRIPTION = "description";
 	public static final String ATTR_RECORD = "record";
-    
+
+    public static final String PARAM_ID = "id";
     public static final String PARAM_NAME = "name";
 	public String getId() {
 		return id;
