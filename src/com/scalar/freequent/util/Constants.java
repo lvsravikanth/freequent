@@ -16,6 +16,7 @@ public final class Constants {
 	/**
 	 * consttant used to identify the item name.
 	 */
+    public static final String DELTE_ITEM_ID_ATTRIBUTE = "fui.grid.item.delte.id";
 	public static final String ITEM_NAME_ATTRIBUTE = "name";
 	public static final String CAPABILITIES_ATTRIBUTE = "capabilities";
 
