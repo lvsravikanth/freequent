@@ -7,7 +7,6 @@ fui.ui.grid.rowaction.del = {
 	BUTTON_ID : 'fui-grid-action-delete',
 	BUTTON_CLASS : 'fui-grid-action-delete ui-icon ui-icon-trash',
 	DEFAULT_INDEX : 2,
-    DELETE_ID_ATTRIBUTE : 'fui.grid.item.delte.id',
     METHOD: 'delete',
 
 	/**
@@ -39,21 +38,34 @@ fui.ui.grid.rowaction.del = {
 	 * @param obj the object
 	 */
 	clickHandler: function(obj) {  
-		var ctx = fui.context.getContext();
+		var ctx = fui.context.getContext(),
+            confirmTitle = fui.workspace.getMessage("delete.confirm.title"),
+		    confirmText = fui.string.replace(fui.workspace.getMessage("delete.confirm.text.single.1"),
+					                {name: obj.name, type: obj.type});
         this.obj = obj;
 		var func = fui.scope(this, function() {
-            var rowDelete = fui.ui.grid.rowaction.del;
-            var requestData = requestData || {};
+            var rowDelete = fui.ui.grid.rowaction.del,
+                requestData = requestData || {};                
+            
+            this.ACTION_KEY = fui.ui.type.getActionKey(obj.type);
             requestData.content = requestData.content || {};
-            requestData.content[rowDelete.DELETE_ID_ATTRIBUTE] = obj.id;
-            this.ACTION_KEY = fui.ui.type.getActionKey(obj.type);            
+            requestData.content.id = obj.id;
+            requestData.handler = fui.scope(this, function() {
+                var w = fui.workspace,
+                    msg = w.getMessage("message.success.single"),
+		            action = fui.workspace.getMessage( "message.action.deleted"),
+                    name = fui.html.escape(obj.name),
+                    type = fui.html.escape(obj.type);
+                // show success msg
+                fui.notification.message(fui.string.replace(msg, {
+                    name: name,
+                    type: type,
+                    action: action
+                }));
+            });
             var c = fui.ui.content;
 		    c.internal.sendAPI(this, rowDelete.METHOD, requestData);
-		});
-        var confirmTitle = fui.workspace.getMessage("delete.confirm.title");
-		var confirmText = fui.string.replace(fui.workspace.getMessage("delete.confirm.text.single.1"),
-					{name: obj.name, type: obj.type})
-
+		});        
         fui.msg.confirm(confirmTitle, confirmText, function(buttonId) {
             if (buttonId === 'yes') {
                 func();
