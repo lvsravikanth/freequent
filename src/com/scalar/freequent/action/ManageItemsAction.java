@@ -163,6 +163,21 @@ public class ManageItemsAction extends AbstractActionController {
 		data.put(Response.ITEM_ATTRIBUTE, item.toMap());
 	}
 
+    public void delete(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
+		ItemDataService itemDataService = ServiceFactory.getService(ItemDataService.class, request);
+        String id = request.getParameter(Constants.ITEM_ID_ATTRIBUTE);
+        boolean isDeleteed = false;
+        if (logger.isDebugEnabled()) {
+			logger.debug("item editor id: " + id);
+		}
+		try {
+			isDeleteed = itemDataService.remove(id);
+		} catch (ScalarServiceException e) {
+			throw getActionException(e);
+		}
+        data.put(Response.ITEMS_ATTRIBUTE, isDeleteed);
+	}
+
 	/**
 	 *
 	 * @param request
@@ -210,7 +225,9 @@ public class ManageItemsAction extends AbstractActionController {
 			return new Capability[]{Capability.ITEM_READ};
 		} else if ("save".equals(request.getMethod())) {
 			return new Capability[]{Capability.ITEM_WRITE};
-		}
+		} else if ("delete".equals(request.getMethod())) {
+            return new Capability[]{Capability.GROUP_DELETE};
+        }
 
 		return new Capability[0];
 	}

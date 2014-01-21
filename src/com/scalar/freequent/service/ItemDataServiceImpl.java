@@ -163,7 +163,7 @@ public class ItemDataServiceImpl extends AbstractService implements ItemDataServ
 		ItemDataDAO itemDataDAO = DAOFactory.getDAO(ItemDataDAO.class, getRequest());
 		CategoryAssocDataDAO categoryAssocDataDAO = DAOFactory.getDAO(CategoryAssocDataDAO.class, getRequest());
 		categoryAssocDataDAO.removeByObjectId(id);
-		itemDataDAO.removeByName(id);
+		itemDataDAO.removeById(id);
 		return true;
 	}
 

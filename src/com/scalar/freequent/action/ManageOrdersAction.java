@@ -10,6 +10,7 @@ import com.scalar.freequent.service.*;
 import com.scalar.freequent.util.EditorUtils;
 import com.scalar.freequent.util.StringUtil;
 import com.scalar.freequent.util.DateTimeUtil;
+import com.scalar.freequent.util.Constants;
 import com.scalar.freequent.l10n.ServiceResource;
 import com.scalar.freequent.l10n.ActionResource;
 import com.scalar.core.request.Request;
@@ -182,6 +183,21 @@ public class ManageOrdersAction extends AbstractActionController {
 		data.put(Response.ITEM_ATTRIBUTE, order.toMap());
 	}
 
+    public void delete(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
+		OrderDataService orderDataService = ServiceFactory.getService(OrderDataService.class, request);
+        String id = request.getParameter(Constants.ITEM_ID_ATTRIBUTE);
+        boolean isDeleteed = false;
+        if (logger.isDebugEnabled()) {
+			logger.debug("item editor id: " + id);
+		}
+		try {           
+			isDeleteed = orderDataService.remove(id);
+		} catch (ScalarServiceException e) {
+			throw getActionException(e);
+		}
+        data.put(Response.ITEMS_ATTRIBUTE, isDeleteed);
+	}
+
 	public void getinvoiceid(Request request, Object command, Map<String, Object> data) throws ScalarActionException, ScalarValidationException {
 		String id = request.getParameter(PARAM_ORDER_ID);
 		if (StringUtil.isEmpty(id)) {
@@ -276,7 +292,9 @@ public class ManageOrdersAction extends AbstractActionController {
 			return new Capability[]{Capability.ITEM_READ};
 		} else if ("save".equals(request.getMethod())) {
 			return new Capability[]{Capability.ITEM_WRITE};
-		}
+		} else if ("delete".equals(request.getMethod())) {
+            return new Capability[]{Capability.GROUP_DELETE};
+        }
 
 		return new Capability[0];
 	}
