@@ -132,9 +132,13 @@ public class ManageGroupsAction extends AbstractActionController {
 
     public void delete(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
 		GroupDataService groupDataService = ServiceFactory.getService(GroupDataService.class, request);
+        String id = request.getParameter(Constants.ITEM_ID_ATTRIBUTE);
         boolean isDeleteed = false;
+        if (logger.isDebugEnabled()) {
+			logger.debug("item editor id: " + id);
+		}
 		try {
-			isDeleteed = groupDataService.remove(request.getParameter(Constants.ITEM_ID_ATTRIBUTE));
+			isDeleteed = groupDataService.remove(id);
 		} catch (ScalarServiceException e) {
 			throw getActionException(e);
 		}
