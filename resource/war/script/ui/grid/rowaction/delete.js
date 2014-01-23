@@ -29,7 +29,9 @@ fui.ui.grid.rowaction.del = {
 	 * @param type the type to check
 	 */
 	supports: function(type, objectTypeXmlName) {
-		return true;
+		if(type !== fui.ui.type.USER) {
+            return true;
+        }        
 	},
 
 	/**
@@ -50,6 +52,7 @@ fui.ui.grid.rowaction.del = {
             this.ACTION_KEY = fui.ui.type.getActionKey(obj.type);
             requestData.content = requestData.content || {};
             requestData.content.id = obj.id;
+            requestData.content.name = obj.name;
             requestData.handler = fui.scope(this, function() {
                 var w = fui.workspace,
                     msg = w.getMessage("message.success.single"),
