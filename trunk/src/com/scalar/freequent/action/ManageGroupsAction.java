@@ -131,18 +131,33 @@ public class ManageGroupsAction extends AbstractActionController {
 	}
 
     public void delete(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
-		GroupDataService groupDataService = ServiceFactory.getService(GroupDataService.class, request);
-        String id = request.getParameter(Constants.ITEM_ID_ATTRIBUTE);
         boolean isDeleteed = false;
+		GroupDataService groupDataService = ServiceFactory.getService(GroupDataService.class, request);
+        ItemDataService itemDataService = ServiceFactory.getService(ItemDataService.class, request);
+        String id = request.getParameter(Constants.ITEM_ID_ATTRIBUTE);
+        String groupName = request.getParameter(Item.PARAM_NAME);
+        
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(Item.PARAM_GROUP, groupName);
+        List<Item> items= itemDataService.search(params);
+
         if (logger.isDebugEnabled()) {
-			logger.debug("item editor id: " + id);
+			logger.debug("Deleted group id: " + id);
+            logger.debug("Deleted group name: " + groupName);
 		}
-		try {
-			isDeleteed = groupDataService.remove(id);
-		} catch (ScalarServiceException e) {
-			throw getActionException(e);
-		}
-        data.put(Response.ITEMS_ATTRIBUTE, isDeleteed);       
+        
+        if (items.size() > 0) {
+            throw ScalarServiceException.create(MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_DELETE_ASSOCIATED_GROUP, ObjectType.GROUP, groupName), null);
+        } else {
+            try {
+                isDeleteed = groupDataService.remove(id);
+            } catch (ScalarServiceException e) {
+			    throw getActionException(e);
+		    }
+        }
+        Map<String, Boolean> succes = new HashMap<String, Boolean>();
+        succes.put("success", isDeleteed);
+        data.put(Response.ITEMS_ATTRIBUTE, succes);
 	}
     
 	protected void validate(Object command, BindException errors) throws ScalarValidationException {
