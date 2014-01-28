@@ -22,6 +22,7 @@ import com.scalar.core.ScalarServiceException;
 import com.scalar.core.ScalarValidationException;
 import com.scalar.core.jdbc.DAOFactory;
 import com.scalar.core.util.MsgObjectUtil;
+import com.scalar.core.util.GUID;
 import com.scalar.core.service.ServiceFactory;
 import com.scalar.core.response.Response;
 
@@ -64,9 +65,7 @@ public class ManageItemsAction extends AbstractActionController {
 			params.put(Item.PARAM_NAME, request.getParameter(Item.PARAM_NAME));
 			params.put(Item.PARAM_GROUP, request.getParameter(Item.PARAM_GROUP));
 			params.put(Item.PARAM_CATEGORY, request.getParameter(Item.PARAM_CATEGORY));
-
 			List<Item> items = itemDataService.search(params);
-
 			data.put(Response.ITEMS_ATTRIBUTE, convertToMap(items));
 			data.put(Response.TOTAL_ATTRIBUTE, items.size() + "");
 		} catch (ScalarServiceException e) {
@@ -164,14 +163,38 @@ public class ManageItemsAction extends AbstractActionController {
 	}
 
     public void delete(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
-		ItemDataService itemDataService = ServiceFactory.getService(ItemDataService.class, request);
-        String id = request.getParameter(Constants.ITEM_ID_ATTRIBUTE);
+        Map<String, Object> params = new HashMap<String, Object>();
         boolean isDeleteed = false;
+		ItemDataService itemDataService = ServiceFactory.getService(ItemDataService.class, request);
+        OrderDataService orderDataService = ServiceFactory.getService(OrderDataService.class, request);
+        
+        String id = request.getParameter(Constants.ITEM_ID_ATTRIBUTE);
+        String itemName = request.getParameter(Constants.ITEM_NAME_ATTRIBUTE);
+        params.put(OrderData.PARAM_ITEM_ID, id);
+
         if (logger.isDebugEnabled()) {
-			logger.debug("item editor id: " + id);
+			logger.debug("Deleted item id: " + id);
+            logger.debug("Deleted item name: " + itemName);
+		}
+        
+        if (StringUtil.isEmpty(id)) {
+			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.PARAM_REQUIRED, id), null);
+		}
+
+		if (!GUID.isValid(id)) {
+			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.INVALID_PARAM_VALUE, itemName, id), null);
+		}
+        
+        List<OrderData> items = orderDataService.search(params);
+        if (logger.isDebugEnabled()) {
+			logger.debug("deleted item id: " + id);         
 		}
 		try {
-			isDeleteed = itemDataService.remove(id);
+            if ( items.size() > 0) {
+                throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.UNABLE_TO_DELETE_ASSOCIATED_GROUP, ObjectType.ITEM, itemName), null);
+            } else {
+                isDeleteed = itemDataService.remove(id);   
+            }
 		} catch (ScalarServiceException e) {
 			throw getActionException(e);
 		}
