@@ -19,7 +19,7 @@ fui.ui.grid.rowaction.del = {
 			index : this.DEFAULT_INDEX,
 			supports: this.supports,
 			clickHandler:  this.clickHandler,
-			getTitle : function() { return fui.workspace.getMessage('grid.toolbar.delte.title'); }
+			getTitle : function() { return fui.workspace.getMessage('grid.toolbar.delete.title'); }
 		});
 	},
 

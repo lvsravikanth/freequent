@@ -18,6 +18,7 @@ fui.ui.type = {
 	ITEM: "item",
     GROUP: "group",
 	ORDER: "order",
+    CATEGORY: "category",
 
 	getActionKey: function (type) {
 		if (type === fui.ui.type.USER) {
@@ -28,6 +29,8 @@ fui.ui.type = {
             return fui.ui.managegroups.ACTION_KEY;
         } else if (type === fui.ui.type.ORDER) {
 			return fui.ui.manageorders.ACTION_KEY;
+		}  else if (type === fui.ui.type.CATEGORY) {
+			return fui.ui.managecategories.ACTION_KEY;
 		}
 
 		return null;

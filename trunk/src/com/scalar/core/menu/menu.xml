@@ -21,6 +21,12 @@
                 <display>true</display>
                 <capability type="read"><name>GROUP</name></capability>
             </menu>
+            <menu name="Manage Categories" id="1.2">
+                <link>managecategories</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>CATEGORY</name></capability>
+            </menu>
 			<menu name="Manage Items" id="1.2">
                 <link>manageitems</link>
                 <enabled>true</enabled>
