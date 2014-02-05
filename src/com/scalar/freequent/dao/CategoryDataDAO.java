@@ -9,6 +9,7 @@ import com.scalar.core.util.GUID;
 import com.scalar.core.ScalarException;
 import com.scalar.freequent.common.CategoryData;
 import com.scalar.freequent.common.ObjectType;
+import com.scalar.freequent.util.StringUtil;
 
 import java.util.*;
 import java.sql.Types;
@@ -42,10 +43,10 @@ public class CategoryDataDAO extends AbstractDAO {
 		COL_SQL_TYPES.put (COL_DESCRIPTION, Types.VARCHAR);
 	}
 
-	public boolean existsByName (String groupName) {
+	public boolean existsByName (String categoryName) {
 		String query = "SELECT COUNT(*) FROM " + TABLE_NAME
                             + " WHERE " + COL_NAME + " = ? ";
-		return getJdbcTemplate().queryForInt(query, groupName) != 0;
+		return getJdbcTemplate().queryForInt(query, categoryName) != 0;
 	}
 
 	/**
@@ -69,6 +70,59 @@ public class CategoryDataDAO extends AbstractDAO {
                 return row;
             }
         }, id);
+
+        return categories.get(0);
+    }
+
+    /**
+     * Returns the User object for the given userId.
+     *
+     * @param searchParams
+     *
+     * @return the User object for the given userId.
+     */
+    public List<CategoryDataRow> getCategories(Map<String, Object> searchParams) {
+        String query = SQL_SelectAllColumns;
+        List<Object> args = new ArrayList<Object>();
+        String categoryName = (String)searchParams.get(CategoryData.PARAM_NAME);
+        if (!StringUtil.isEmpty(categoryName)) {
+            query +="WHERE " + COL_NAME + " like ? ";
+            args.add(categoryName + "%");
+        }
+        return getJdbcTemplate().query(query, args.toArray(new Object[args.size()]),
+            new RowMapper<CategoryDataRow>() {
+                public CategoryDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    CategoryDataRow row = new CategoryDataRow();
+                    row.setName(rs.getString(COL_NAME));
+                    row.setDescription(rs.getString(COL_DESCRIPTION));
+                    row.setId(new GUID(rs.getString(COL_ID)));
+                    row.clean();
+                    return row;
+                }
+        });
+    }
+
+	/**
+     * Returns the Category object for the given categoryId.
+     *
+     * @param categoryId
+     *
+     * @return the Category object for the given categoryId.
+     */
+    public CategoryDataRow findById(String categoryId) {
+        String query = SQL_SelectAllColumns +
+                        " WHERE " + COL_ID + " = ? ";
+        List<CategoryDataRow> categories = getJdbcTemplate().query(query,
+        new RowMapper<CategoryDataRow>() {
+            public CategoryDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+                CategoryDataRow row = new CategoryDataRow();
+                row.setId(new GUID(rs.getString(COL_ID)));
+                row.setName(rs.getString(COL_NAME));
+                row.setDescription(rs.getString(COL_DESCRIPTION));
+				row.clean();
+                return row;
+            }
+        }, categoryId);
 
         return categories.get(0);
     }

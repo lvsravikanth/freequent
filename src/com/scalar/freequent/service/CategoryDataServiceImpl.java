@@ -7,11 +7,8 @@ import com.scalar.core.service.AbstractService;
 import com.scalar.core.util.GUID;
 import com.scalar.core.util.MsgObject;
 import com.scalar.core.util.MsgObjectUtil;
-import com.scalar.freequent.common.GroupData;
 import com.scalar.freequent.common.ObjectType;
 import com.scalar.freequent.common.CategoryData;
-import com.scalar.freequent.dao.GroupDataDAO;
-import com.scalar.freequent.dao.GroupDataRow;
 import com.scalar.freequent.dao.CategoryDataRow;
 import com.scalar.freequent.dao.CategoryDataDAO;
 import com.scalar.freequent.l10n.ServiceResource;
@@ -21,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -50,6 +48,34 @@ public class CategoryDataServiceImpl extends AbstractService implements Category
 		return categoryData;
 	}
 
+    public CategoryData findById(String id) {
+		CategoryDataDAO categoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
+		CategoryDataRow row = categoryDataDAO.findById(id);
+		CategoryData categoryData = null;
+        if (row != null) {
+            categoryData = CategoryDataDAO.rowToData(row);
+            setRecord(categoryData, categoryData.getId());
+        }
+		return categoryData;
+	}
+
+    public boolean exists(String categoryName) throws ScalarServiceException {
+        CategoryDataDAO categoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
+		return categoryDataDAO.existsByName(categoryName);
+    }
+
+    public List<CategoryData> search(Map<String, Object> searchParams) throws ScalarServiceException {
+        CategoryDataDAO categoryDataDAO = DAOFactory.getDAO(CategoryDataDAO.class, getRequest());
+        List<CategoryDataRow> categoryDataRows = categoryDataDAO.getCategories(searchParams);
+        List<CategoryData> categoryDataList = new ArrayList<CategoryData>(categoryDataRows.size());
+        for (CategoryDataRow row: categoryDataRows) {
+			CategoryData categoryData = CategoryDataDAO.rowToData(row);
+            setRecord(categoryData, categoryData.getId());
+			categoryDataList.add(categoryData);
+		}
+        return categoryDataList;
+    }
+
 	@Transactional
 	public boolean insertOrUpdate(CategoryData categoryData) throws ScalarServiceException {
 		boolean isNew = categoryData.getId() == null;
@@ -57,7 +83,7 @@ public class CategoryDataServiceImpl extends AbstractService implements Category
 		if (isNew) {
 			// insert
 			try {
-				categoryData.setId (GUID.generateString(ObjectType.TYPE_CODE_GROUP));
+				categoryData.setId (GUID.generateString(ObjectType.TYPE_CODE_CATEGORY));
 				categoryDataDAO.insert(CategoryDataDAO.dataToRow(categoryData));
 			} catch (ScalarException ex) {
 				MsgObject msgObject = MsgObjectUtil.getMsgObject(ServiceResource.BASE_NAME, ServiceResource.UNABLE_TO_CREATE_CATEGORY, categoryData.getName());

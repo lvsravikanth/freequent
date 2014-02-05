@@ -2,9 +2,9 @@ package com.scalar.freequent.service;
 
 import com.scalar.core.ScalarServiceException;
 import com.scalar.freequent.common.CategoryData;
-import com.scalar.freequent.common.GroupData;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -14,6 +14,9 @@ import java.util.List;
 public interface CategoryDataService {
 	List<CategoryData> findAll();
 	CategoryData findByName(String name);
+    CategoryData findById(String id);
+    public boolean exists (String id) throws ScalarServiceException;
+    List<CategoryData> search(Map<String, Object> searchParams) throws ScalarServiceException;
 	boolean insertOrUpdate(CategoryData categoryData) throws ScalarServiceException;
 	boolean removeByName(String name);
 	boolean remove(String id);

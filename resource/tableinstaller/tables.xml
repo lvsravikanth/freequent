@@ -212,6 +212,12 @@
 				<item column="supportsWrite" value="true"/>
 				<item column="supportsDelete" value="true"/>
 			</row>
+            <row>
+				<item column="name" value="CATEGORY"/>
+				<item column="supportsRead" value="true"/>
+				<item column="supportsWrite" value="true"/>
+				<item column="supportsDelete" value="true"/>
+			</row>
 		</rowset>
 
 		<rowset table="ftUnit">

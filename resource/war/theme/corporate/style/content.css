@@ -272,10 +272,12 @@ label.error {
 	width: 125px;}
 
 .fui-order-item-odd-row-selection {
-	background-color: palegreen;
-}
+	background-color: palegreen; }
 
 #orderLineItemsTable .fui-input-select {
 	width: 300px; }
+
+.fui-workspace-cateory-name-search-row {
+    max-width: 100%; }
 
 /*** End Search panel css***/
