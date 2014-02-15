@@ -14,6 +14,7 @@
     <bean id="manageitems" class="com.scalar.freequent.action.ManageItemsAction"/>
     <bean id="managegroups" class="com.scalar.freequent.action.ManageGroupsAction" />
     <bean id="managecategories" class="com.scalar.freequent.action.ManageCategoriesAction" />
+    <bean id="manageunits" class="com.scalar.freequent.action.ManageUnitsAction" />
     <bean id="resource" class="com.scalar.freequent.action.ResourceAction"/>
     <bean id="manageorders" class="com.scalar.freequent.action.ManageOrdersAction"/>
 

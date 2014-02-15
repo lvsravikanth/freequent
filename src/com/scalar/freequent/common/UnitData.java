@@ -19,6 +19,10 @@ public class UnitData implements HasRecord {
 	private String description;
 	private Record record;
 
+    public static final String PARAM_ID = "id";
+	public static final String PARAM_NAME = "name";
+	public static final String PARAM_DESCRIPTION = "description";
+
 	public static final String ATTR_ID = "id";
 	public static final String ATTR_NAME = "name";
 	public static final String ATTR_DESCRIPTION = "description";
@@ -52,12 +56,16 @@ public class UnitData implements HasRecord {
 		return record;
 	}
 
-	public Map<String, Object> toMap() {
+    public Map<String, Object> toMap() {
+        return toMap(this);
+    }
+
+	public Map<String, Object> toMap(UnitData unitData) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put (ATTR_ID, id);
 		map.put (ATTR_NAME, name);
 		map.put (ATTR_DESCRIPTION, description);
-		map.put (ATTR_RECORD, record.toMap());
+		map.put (ATTR_RECORD, unitData.getRecord().toMap());
 
 		return map;
 	}

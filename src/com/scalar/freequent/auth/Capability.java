@@ -39,6 +39,11 @@ public class Capability {
 	public static final Capability CATEGORY_WRITE = new Capability(CATEGORY_CAPABILITY, false, true, false);
 	public static final Capability CATEGORY_DELETE = new Capability(CATEGORY_CAPABILITY, false, false, true);
 
+    public static final String UNIT_CAPABILITY = "UNIT";
+	public static final Capability UNIT_READ = new Capability(UNIT_CAPABILITY, true, false, false);
+	public static final Capability UNIT_WRITE = new Capability(UNIT_CAPABILITY, false, true, false);
+	public static final Capability UNIT_DELETE = new Capability(UNIT_CAPABILITY, false, false, true);
+
 	public Capability() {
     }
 

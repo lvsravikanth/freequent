@@ -75,11 +75,11 @@ public class CategoryDataDAO extends AbstractDAO {
     }
 
     /**
-     * Returns the User object for the given userId.
+     * Returns the Categories object for the given categoryname.
      *
      * @param searchParams
      *
-     * @return the User object for the given userId.
+     * @return the Categories object for the given categoryname.
      */
     public List<CategoryDataRow> getCategories(Map<String, Object> searchParams) {
         String query = SQL_SelectAllColumns;

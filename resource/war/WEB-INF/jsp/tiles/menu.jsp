@@ -8,7 +8,7 @@
 #accordion {
 	list-style: none;
 	padding: 0 0 0 0;
-	width: 140px;
+	width: 160px;
 }
 #accordion li{
 	display: block;

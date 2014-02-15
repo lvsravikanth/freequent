@@ -19,6 +19,7 @@ fui.ui.type = {
     GROUP: "group",
 	ORDER: "order",
     CATEGORY: "category",
+    UNIT: "unit",
 
 	getActionKey: function (type) {
 		if (type === fui.ui.type.USER) {
@@ -31,6 +32,8 @@ fui.ui.type = {
 			return fui.ui.manageorders.ACTION_KEY;
 		}  else if (type === fui.ui.type.CATEGORY) {
 			return fui.ui.managecategories.ACTION_KEY;
+		}  else if (type === fui.ui.type.UNIT) {
+			return fui.ui.manageunits.ACTION_KEY;
 		}
 
 		return null;
