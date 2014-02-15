@@ -1,7 +1,7 @@
 <%@ page import="com.scalar.core.ContextUtil" %>
 <%@ page import="com.scalar.core.request.Request" %>
 <%@ page import="com.scalar.freequent.l10n.WorkspaceResource" %>
-<%@ page import="com.scalar.freequent.common.CategoryData" %>
+<%@ page import="com.scalar.freequent.common.UnitData" %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -16,16 +16,16 @@
 <div class="fui-workspace-container">
     <div class="fui-workspace-search-panel">
         <div>
-            <div class="fui-workspace-search-header ui-widget-header ui-corner-top"><fmt:message key="<%=WorkspaceResource.MANAGECATEGORIES_TITLE%>"/></div>
-            <form id="managecategories">
+            <div class="fui-workspace-search-header ui-widget-header ui-corner-top"><fmt:message key="<%=WorkspaceResource.MANAGEUNITS_TITLE%>"/></div>
+            <form id="manageunits">
                     <div class="fui-workspace-search-container">
                         <div >
                             <span class="fui-workspace-search-row fui-workspace-cateory-name-search-row">
                                 <div class="fui-workspace-search-container-column">
-                                    <label for="<%=CategoryData.PARAM_NAME%>"><fmt:message key="<%=WorkspaceResource.CATEGORY_NAME%>"/></label>
+                                    <label for="<%=UnitData.PARAM_NAME%>"><fmt:message key="<%=WorkspaceResource.UNIT_NAME%>"/></label>
                                 </div>
                                 <div class="fui-workspace-search-container-column">
-                                    <input type="text" name="<%=CategoryData.PARAM_NAME%>" id="<%=CategoryData.PARAM_NAME%>">
+                                    <input type="text" name="<%=UnitData.PARAM_NAME%>" id="<%=UnitData.PARAM_NAME%>">
                                 </div>
                             </span>
                             <span class="fui-workspace-search-row">
@@ -42,7 +42,7 @@
             </div>
             <div class="fui-workspace-search-footer">
                 <div class="fui-workspace-footer-search-newuser">
-                    <button type="button" id="newcategory"><fmt:message key="<%=WorkspaceResource.NEW_CATEGORY%>"/></button>
+                    <button type="button" id="newunit"><fmt:message key="<%=WorkspaceResource.NEW_UNIT%>"/></button>
                 </div>
             </div>
         </div>
@@ -52,28 +52,28 @@
     fui.ready(function() {
 		var params = {};
 		params.name = fui.byId("name").value;
-		fui.ui.managecategories.internal.setSearchParams(params);
+		fui.ui.manageunits.internal.setSearchParams(params);
 
         fui.query("#search").button()
             .click( function(event) {
                 var params = {};
                 params.name = fui.byId("name").value;
-                fui.ui.managecategories.internal.setSearchParams(params);
-				fui.grid.find(fui.ui.type.CATEGORY).refresh();
+                fui.ui.manageunits.internal.setSearchParams(params);
+				fui.grid.find(fui.ui.type.UNIT).refresh();
             }
         );
-		fui.query("#newcategory").button()
+		fui.query("#newunit").button()
 			.click( function(event) {
-		    	fui.ui.managecategories.edit();
+		    	fui.ui.manageunits.edit();
 		});
 		fui.query("#reset").button();
 
         //Register grid
-        fui.grid.register(fui.ui.type.CATEGORY, fui.ui.grid.managecategories.get());
+        fui.grid.register(fui.ui.type.UNIT, fui.ui.grid.manageunits.get());
 
         //build grid
         var config = {
-            type: fui.ui.type.CATEGORY
+            type: fui.ui.type.UNIT
         };
         fui.workspace.load(config);
     });

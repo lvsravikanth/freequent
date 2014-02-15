@@ -7,9 +7,9 @@ import org.springframework.jdbc.core.RowMapper;
 import com.scalar.core.jdbc.AbstractDAO;
 import com.scalar.core.util.GUID;
 import com.scalar.core.ScalarException;
-import com.scalar.freequent.common.CategoryData;
 import com.scalar.freequent.common.UnitData;
 import com.scalar.freequent.common.ObjectType;
+import com.scalar.freequent.util.StringUtil;
 
 import java.util.*;
 import java.sql.Types;
@@ -72,6 +72,59 @@ public class UnitDataDAO extends AbstractDAO {
         }, id);
 
         return unitDataRows.get(0);
+    }
+
+    /**
+     * Returns the Unit object for the given unitName.
+     *
+     * @param searchParams
+     *
+     * @return the Unit object for the given userId.
+     */
+    public List<UnitDataRow> getUnits(Map<String, Object> searchParams) {
+        String query = SQL_SelectAllColumns;
+        List<Object> args = new ArrayList<Object>();
+        String unitName = (String)searchParams.get(UnitData.PARAM_NAME);
+        if (!StringUtil.isEmpty(unitName)) {
+            query +="WHERE " + COL_NAME + " like ? ";
+            args.add(unitName + "%");
+        }
+        return getJdbcTemplate().query(query, args.toArray(new Object[args.size()]),
+            new RowMapper<UnitDataRow>() {
+                public UnitDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    UnitDataRow row = new UnitDataRow();
+                    row.setName(rs.getString(COL_NAME));
+                    row.setDescription(rs.getString(COL_DESCRIPTION));
+                    row.setId(new GUID(rs.getString(COL_ID)));
+                    row.clean();
+                    return row;
+                }
+        });
+    }
+
+    /**
+     * Returns the Unit object for the given unitId.
+     *
+     * @param unitId
+     *
+     * @return the Unit object for the given unitId.
+     */
+    public UnitDataRow findById(String unitId) {
+        String query = SQL_SelectAllColumns +
+                        " WHERE " + COL_ID + " = ? ";
+        List<UnitDataRow> units = getJdbcTemplate().query(query,
+        new RowMapper<UnitDataRow>() {
+            public UnitDataRow mapRow(ResultSet rs, int rowNum) throws SQLException {
+                UnitDataRow row = new UnitDataRow();
+                row.setId(new GUID(rs.getString(COL_ID)));
+                row.setName(rs.getString(COL_NAME));
+                row.setDescription(rs.getString(COL_DESCRIPTION));
+				row.clean();
+                return row;
+            }
+        }, unitId);
+
+        return units.get(0);
     }
 
 	/**

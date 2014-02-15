@@ -27,6 +27,12 @@
                 <display>true</display>
                 <capability type="read"><name>CATEGORY</name></capability>
             </menu>
+            <menu name="Manage Units" id="1.2">
+                <link>manageunits</link>
+                <enabled>true</enabled>
+                <display>true</display>
+                <capability type="read"><name>UNIT</name></capability>
+            </menu>
 			<menu name="Manage Items" id="1.2">
                 <link>manageitems</link>
                 <enabled>true</enabled>

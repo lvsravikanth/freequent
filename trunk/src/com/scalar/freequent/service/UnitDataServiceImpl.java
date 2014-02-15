@@ -18,6 +18,7 @@ import com.scalar.freequent.l10n.ServiceResource;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * User: Sujan Kumar Suppala
@@ -46,6 +47,34 @@ public class UnitDataServiceImpl extends AbstractService implements UnitDataServ
 		setRecord(unitData, unitData.getId());
 		return unitData;
 	}
+
+    public UnitData findById(String id) {
+        UnitDataDAO unitDataDAO = DAOFactory.getDAO(UnitDataDAO.class, getRequest());
+        UnitDataRow row = unitDataDAO.findById(id);
+        UnitData unitData = null;
+        if (row != null) {
+            unitData = UnitDataDAO.rowToData(row);
+            setRecord(unitData, unitData.getId());
+        }
+        return unitData;
+    }
+
+    public boolean exists(String unitName) throws ScalarServiceException {
+        UnitDataDAO unitDataDAO = DAOFactory.getDAO(UnitDataDAO.class, getRequest());
+        return unitDataDAO.existsByName(unitName);
+    }
+
+    public List<UnitData> search(Map<String, Object> searchParams) throws ScalarServiceException {
+        UnitDataDAO unitDataDAO = DAOFactory.getDAO(UnitDataDAO.class, getRequest());
+        List<UnitDataRow> unitDataRows = unitDataDAO.getUnits(searchParams);
+        List<UnitData> unitDataList = new ArrayList<UnitData>(unitDataRows.size());
+        for (UnitDataRow row: unitDataRows) {
+            UnitData unitData = UnitDataDAO.rowToData(row);
+            setRecord(unitData, unitData.getId());
+            unitDataList.add(unitData);
+        }
+        return unitDataList;
+    }
 
 	@Transactional
 	public boolean insertOrUpdate(UnitData unitData) throws ScalarServiceException {
