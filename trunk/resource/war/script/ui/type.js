@@ -20,6 +20,7 @@ fui.ui.type = {
 	ORDER: "order",
     CATEGORY: "category",
     UNIT: "unit",
+	INVOICE: "invoice",
 
 	getActionKey: function (type) {
 		if (type === fui.ui.type.USER) {
@@ -34,6 +35,8 @@ fui.ui.type = {
 			return fui.ui.managecategories.ACTION_KEY;
 		}  else if (type === fui.ui.type.UNIT) {
 			return fui.ui.manageunits.ACTION_KEY;
+		} else if (type === fui.ui.type.INVOICE) {
+			return fui.ui.manageinvoices.ACTION_KEY;
 		}
 
 		return null;

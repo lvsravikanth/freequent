@@ -40,8 +40,9 @@ public interface Request extends Serializable {
      * Constant used to identify the request content attribute.
      */
     public static final String REQUEST_CONTENT = "request.content";
+	String PARAM_REPORT_NAME = "reportname";
 
-    /**
+	/**
      * Sets the <code>Service</code> that generated this <code>Request</code>.
      *
      * @param service the <code>Service</code>

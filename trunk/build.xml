@@ -85,8 +85,12 @@
 		</antcall>
 	</target>
 
+	<!-- Compiles jasper reports -->
+	<target  name="compile_reports" depends="docs" description="Compiles jasper reports">
+		<antcall target="compile_jasper_reports"/>
+	</target>
 	<!-- jar -->
-	<target name="jar" depends="compile, testprops, replace-datasource-properties" description="Build jars">
+	<target name="jar" depends="compile, testprops, replace-datasource-properties, compile_reports" description="Build jars">
 		<mkdir dir="${jars.dir}" />
 
 		<jar destfile="${scalar-freequent.jar}" duplicate="fail">
@@ -131,6 +135,7 @@
 		<copy todir="${resources.dir}" includeEmptyDirs="false">
 			<fileset dir="${war.resource.dir}">
 				<exclude name="script/**/*" />
+				<exclude name="WEB-INF/reports/**/*" />
 			</fileset>
 		</copy>
 
@@ -255,6 +260,9 @@
             <fileset file="${jaxb-api.jar}" />
             <fileset file="${jaxb-impl.jar}" />
             <fileset file="${jaxb-xjc.jar}" />
+            <fileset file="${jasperreports.jar}" />
+            <fileset file="${groovy.jar}" />
+            <fileset file="${itext.jar}" />
 		</copy>
 
 		<!-- root config -->

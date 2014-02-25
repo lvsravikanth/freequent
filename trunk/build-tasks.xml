@@ -87,6 +87,7 @@
 	<property name="wars.dir" value="${temp.dir}/wars" />
 	<property name="ears.dir" value="${temp.dir}/ears" />
 	<property name="ptree.dir" value="${basedir}/ptree" />
+	<property name="reports.dest.dir" value="${resources.dir}/WEB-INF/reports"/>
 
 	<!-- source -->
 	<property name="source.dir" value="${basedir}/src" />
@@ -103,6 +104,7 @@
 	<property name="war.meta-inf.dir" value="${war.resource.dir}/META-INF" />
 	<property name="ear.meta-inf.dir" value="${ear.resource.dir}/META-INF" />
 	<property name="gen.source.dir" value="${temp.dir}/gen-src" />
+	<property name="reports.source.dir" value="${war.resource.dir}/WEB-INF/reports"/>
 
 	<!-- test dirs and tools -->
 	<property name="test.dir" value="${basedir}/tests"/>
@@ -198,6 +200,9 @@
 	<property name="jaxb-api.jar" value="${thirdparty.dir}/jaxb-ri/2.0.5/jaxb-api.jar"/>
 	<property name="jaxb-impl.jar" value="${thirdparty.dir}/jaxb-ri/2.0.5/jaxb-impl.jar"/>
 	<property name="jaxb-xjc.jar" value="${thirdparty.dir}/jaxb-ri/2.0.5/jaxb-xjc.jar"/>
+	<property name="jasperreports.jar" value="${thirdparty.dir}/jasperreports/5.5.0/jasperreports-5.5.0.jar"/>
+	<property name="groovy.jar" value="${thirdparty.dir}/groovy/groovy-all-2.0.1.jar"/>
+	<property name="itext.jar" value="${thirdparty.dir}/iText/iText-2.1.7.js2.jar"/>
 
 	<path id="axis.jars.ref">
 		<fileset dir="${thirdparty.dir}/apache-axis/lib">
@@ -280,6 +285,9 @@
         <fileset file="${jaxb-api.jar}" />
         <fileset file="${jaxb-impl.jar}" />
         <fileset file="${jaxb-xjc.jar}" />
+        <fileset file="${jasperreports.jar}" />
+        <fileset file="${groovy.jar}" />
+        <fileset file="${itext.jar}" />
 
 		<!--<fileset file="${dom4j.jar}" />
 		<fileset file="${javassist.jar}" />
@@ -299,6 +307,10 @@
     <!-- to generate JAXB classes from xsd -->
    <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpath="${jaxb-xjc.jar}">
        </taskdef>
+	<!-- jasper reports compiler task -->
+	<taskdef name="jrc" classname="net.sf.jasperreports.ant.JRAntCompileTask">
+		<classpath refid="classpath.ref"/>
+	</taskdef>
 
    
 	<tstamp>
@@ -459,6 +471,28 @@
 				<include name="**/*.xsl" />
 			</fileset>
 		</copy>
+	</target>
+
+	<!-- compile jasper reports -->
+	<target name="compile_jasper_reports" description="Compiles report designs specified using the &quot;srcdir&quot; in the &lt;jrc&gt; tag.">
+		<mkdir dir="${reports.dest.dir}"/>
+
+		<depend srcdir="${reports.source.dir}" destdir="${reports.dest.dir}" cache="${depend-cache.dir}" closure="false">
+			<classpath refid="dependpath.ref" />
+		</depend>
+
+		<jrc
+				srcdir="${reports.source.dir}"
+				destdir="${reports.dest.dir}"
+				tempdir="${temp.dir}"
+				keepjava="false"
+				xmlvalidation="true">
+			<classpath refid="classpath.ref" />
+			<classpath>
+				<pathelement path="${classes.dir}"/>
+			</classpath>
+			<include name="**/*.jrxml"/>
+		</jrc>
 	</target>
 
 	<!-- jar -->

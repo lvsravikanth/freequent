@@ -162,7 +162,7 @@ public class ManageItemsAction extends AbstractActionController {
 		data.put(Response.ITEM_ATTRIBUTE, item.toMap());
 	}
 
-    public void delete(Request request, Object command, Map<String, Object> data) throws ScalarActionException {
+    public void delete(Request request, Object command, Map<String, Object> data) throws ScalarActionException, ScalarValidationException {
         Map<String, Object> params = new HashMap<String, Object>();
         boolean isDeleteed = false;
 		ItemDataService itemDataService = ServiceFactory.getService(ItemDataService.class, request);
@@ -178,11 +178,11 @@ public class ManageItemsAction extends AbstractActionController {
 		}
         
         if (StringUtil.isEmpty(id)) {
-			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.PARAM_REQUIRED, id), null);
+			throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.PARAM_REQUIRED, id), null);
 		}
 
 		if (!GUID.isValid(id)) {
-			throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.INVALID_PARAM_VALUE, itemName, id), null);
+			throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.INVALID_PARAM_VALUE, itemName, id), null);
 		}
         
         List<OrderData> items = orderDataService.search(params);
@@ -191,7 +191,7 @@ public class ManageItemsAction extends AbstractActionController {
 		}
 		try {
             if ( items.size() > 0) {
-                throw ScalarActionException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.UNABLE_TO_DELETE_ASSOCIATED_GROUP, ObjectType.ITEM, itemName), null);
+                throw ScalarValidationException.create(MsgObjectUtil.getMsgObject(ActionResource.BASE_NAME, ActionResource.UNABLE_TO_DELETE_ASSOCIATED_GROUP, ObjectType.ITEM, itemName), null);
             } else {
                 isDeleteed = itemDataService.remove(id);   
             }

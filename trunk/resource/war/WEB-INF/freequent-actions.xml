@@ -6,9 +6,7 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<bean id="auth" class="com.scalar.freequent.auth.action.AuthAction">
-	</bean>
-
+	<bean id="auth" class="com.scalar.freequent.auth.action.AuthAction"/>
     <bean id="demo" class="com.scalar.freequent.action.demo.DemoAction"/>
     <bean id="manageusers" class="com.scalar.freequent.action.ManageUsersAction"/>
     <bean id="manageitems" class="com.scalar.freequent.action.ManageItemsAction"/>
@@ -17,6 +15,7 @@
     <bean id="manageunits" class="com.scalar.freequent.action.ManageUnitsAction" />
     <bean id="resource" class="com.scalar.freequent.action.ResourceAction"/>
     <bean id="manageorders" class="com.scalar.freequent.action.ManageOrdersAction"/>
+    <bean id="report" class="com.scalar.freequent.action.ReportAction"/>
 
 </beans>
 

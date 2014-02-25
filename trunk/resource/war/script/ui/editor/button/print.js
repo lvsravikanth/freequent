@@ -141,14 +141,17 @@ fui.ui.editor.button.print = {
 			// add collector to set the createinvoice flag
 			editor.addCollector(function (editor, data, requestData) {
 				data = data || {};
-				fui.combine(data, {createinvoice: true});
+				// remove the flag
+				delete data['createinvoice'];
+				if (requestData && requestData.addCreateInvoiceFlag) {
+					fui.combine(data, {createinvoice: true});
+				}
 				return data;
 			}, this.CREATE_INVOICE_COLLECTOR_ID);
 
-			editor.save(config);
+			var requestData = {addCreateInvoiceFlag:true};
+			editor.save(config, requestData);
 
-			// remove the collector
-			editor.removeCollector(this.CREATE_INVOICE_COLLECTOR_ID);
 			return; // print will be handled in the save callback handler.
 		}
 

@@ -19,6 +19,9 @@
 
 </div>
 <button id="opener">Click to Open The Dialog</button>
+<button id="viewAndPrint">Click to View and Print</button>
+<div id="viewAndPrintDialog" title="View">
+</div>
 <div id="testmask">
 	click mask to mask me.
 	<div style="heigh:100px">what's up?</div>
@@ -87,6 +90,40 @@
 		fui.query('#validatetestbtn').button()
 		.click(function(){
 			fui.query('#validatortestform').valid();
+		});
+
+		//
+		//initialize
+		fui.query( "#viewAndPrintDialog" ).dialog(
+			{
+				autoOpen: false,
+				modal: true,
+				height: 'auto',
+				width: 650,
+				close: function( event, ui ) {alert('in close');},
+				buttons: {
+				"Create an account": function() {
+				  alert ('in create an account');
+				},
+				Cancel: function() {
+				  fui.query( this ).dialog( "close" );
+				  fui.query( this ).empty();
+				  //fui.query( this ).dialog( "destroy" );
+				}
+			  }
+			}
+		);
+		fui.query('#viewAndPrint').button()
+		.click(function() {
+			//show the dialog
+	  		fui.query( "#viewAndPrintDialog" ).dialog( "open" );
+			//fui.query( "#viewAndPrintDialog" ).append('<iframe src="/freequent/common/test.pdf" id="printme" height="100%" width="100%"></iframe>');
+			fui.query( "#viewAndPrintDialog" ).append('<iframe src="/freequent/report/getreport?reportname=demo" id="objAdobePrint" name="objAdobePrint" height="95%" width="100%" frameborder=0></iframe>');
+			
+			//fui.query( "#viewAndPrintDialog" ).append('<object id="printme" data="/freequent/common/test.pdf#navpanes=1&amp;toolbar=1&amp;statusbar=0" type="application/pdf" width="100%" height="100%"></object>');
+			//fui.query("#printme").attr('src', "/freequent/manageusers");
+			fui.query("#printme").focus();
+			document.getElementById("printme").contentWindow.print();
 		});
 	}
             );
