@@ -54,7 +54,7 @@
 							<td><form:label path="<%=OrderData.ATTR_CUST_NAME%>" cssClass="fui-label-text"><fmt:message
 									key="<%=WorkspaceResource.CUST_NAME%>"/></form:label></td>
 							<td><form:input path="<%=OrderData.ATTR_CUST_NAME%>" id="<%=OrderData.ATTR_CUST_NAME%>"
-											cssClass="fui-input fui-input-text"/></td>
+											cssClass="fui-input fui-input-text" disabled="<%=Boolean.toString(readOnly)%>"/></td>
 						</tr>
 						</tbody>
 					</table>
@@ -116,7 +116,7 @@
 										});
 									</script>
 								</td>
-								<td class="fui-col fui-col-content"><form:input path="lineItems[${row.index}].qty" id="lineItems${row.index}qty" onchange="fui.ui.manageorders.calculateTotals()" cssClass="fui-input fui-qty-input"/></td>
+								<td class="fui-col fui-col-content"><form:input path="lineItems[${row.index}].qty" id="lineItems${row.index}qty" disabled="<%=Boolean.toString(readOnly)%>" onchange="fui.ui.manageorders.calculateTotals()" cssClass="fui-input fui-qty-input"/></td>
 								<td class="fui-col fui-col-content"><form:input path="lineItems[${row.index}].price" id="lineItems${row.index}price" onchange="fui.ui.manageorders.calculateTotals()" cssClass="fui-input fui-price-input" disabled="true"/></td>
 								<td class="fui-col fui-col-content"><form:input path="lineItems[${row.index}].amount" id="lineItems${row.index}amount" cssClass="fui-input fui-price-input" disabled="true"/></td>
 							</tr>

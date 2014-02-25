@@ -134,6 +134,7 @@
 		fui.query("#reset").button()
 				.click( function(event) {
 			fui.query("#<%=OrderData.PARAM_ITEM_ID%>").select2("val", "");
+			fui.query("#<%=OrderData.PARAM_STATUS%>").select2("val", fui.query('#<%=OrderData.PARAM_STATUS%>').find(':selected').val());
 		});
 
 		fui.query( "#<%=OrderData.PARAM_FROM_DATE%>" ).datepicker({

@@ -53,19 +53,19 @@ fui.ui.grid.rowaction.del = {
             requestData.content = requestData.content || {};
             requestData.content.id = obj.id;
             requestData.content.name = obj.name;
-            requestData.handler = fui.scope(this, function() {
-                var w = fui.workspace,
-                    msg = w.getMessage("message.success.single"),
-		            action = fui.workspace.getMessage( "message.action.deleted"),
-                    name = fui.html.escape(obj.name),
-                    type = fui.html.escape(obj.type);
-                // show success msg
-                fui.notification.message(fui.string.replace(msg, {
-                    name: name,
-                    type: type,
-                    action: action
-                }));
-            });
+			requestData.handler = function(data) {
+				var w = fui.workspace,
+				msg = w.getMessage("message.success.single"),
+				action = w.getMessage("message.action.deleted"),
+				name = fui.html.escape(obj.name),
+				type = fui.html.escape(obj.type);
+				// show success msg
+				fui.notification.message(fui.string.replace(msg, {
+					name: name,
+					type: type,
+					action: action
+				}));
+			};
             var c = fui.ui.content;
 		    c.internal.sendAPI(this, rowDelete.METHOD, requestData);
 		});        

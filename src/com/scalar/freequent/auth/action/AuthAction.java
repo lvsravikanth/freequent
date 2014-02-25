@@ -62,8 +62,9 @@ public class AuthAction extends AbstractActionController {
 		if (isAuthenticated(request)) {
 			// if authenticated show the home page
 			data.put(Response.TEMPLATE_ATTRIBUTE, "common/home");
+		} else {
+			data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
 		}
-		data.put(Response.TEMPLATE_ATTRIBUTE, "auth/login");
 	}
 
     public void logout (Request request, Object command, Map<String, Object> data) throws ScalarActionException {

@@ -52,7 +52,8 @@
 		<param-value>
 			/WEB-INF/applicationContext-service.xml,
             /WEB-INF/applicationContext-data.xml,
-            /WEB-INF/freequent-actions.xml
+            /WEB-INF/freequent-actions.xml,
+			/WEB-INF/freequent-reports.xml
         </param-value>
 	</context-param>
 
@@ -134,6 +135,10 @@
 	<servlet-mapping>
 		<servlet-name>default1</servlet-name>
 		<url-pattern>*.swf</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>default1</servlet-name>
+		<url-pattern>*.pdf</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

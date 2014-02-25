@@ -76,9 +76,11 @@ fui.ui.manageorders = {
 				formatResult: fui.ui.manageorders.internal.itemformat,
 				placeholder: placeholder ? placeholder : null,
 				allowClear: true,
-				dropdownCssClass:"ui-dialog",
-				disabled: readOnly || false
+				dropdownCssClass:"ui-dialog"
 			});
+		if (readOnly) {
+			fui.query("#"+fieldId).select2("readonly",true);
+		}
 
 		fui.query("#"+fieldId).on("change", function(e) { fui.ui.manageorders.itemChanged(this.id, e.added, e.removed);});
 	},
@@ -131,9 +133,7 @@ fui.ui.manageorders = {
 	print: function(id) {
 		var invoiceid = this.getInvoiceId(id);
 	   if (invoiceid) {
-			// print the invoice
-			alert ("invoice id: " + invoiceid);
-			//todo
+			fui.ui.manageinvoices.print(invoiceid);
 	   }
 	},
 
